@@ -20,6 +20,7 @@
     "@nuxtjs/eslint-config-typescript": "^10.0.0",
     "@tauri-apps/cli": "^1.0.5",
     "eslint": "^8.22.0",
+    "naive-ui": "^2.32.2",
     "nuxt": "3.0.0-rc.8"
   }
 }

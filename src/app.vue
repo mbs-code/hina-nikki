@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { Database } from '~~/src/databases/Database';
+import { Database } from '~~/src/databases/Database'
 
 onMounted(async () => {
   const { migrator } = Database.getInstance()
@@ -14,10 +14,10 @@ onMounted(async () => {
   const { insertId } = await Database.getDB()
     .insertInto('pages')
     .values({
-      title: "20220826",
-      text: "あいうえお\nかきくけこ",
+      title: '20220826',
+      text: 'あいうえお\nかきくけこ',
       created_at: new Date(),
-      updated_at: new Date(),
+      updated_at: new Date()
     })
     .executeTakeFirst()
   console.log(insertId)

@@ -2,7 +2,7 @@
 import {
   Kysely,
   Migration,
-  Migrator,
+  Migrator
 } from 'kysely'
 import { TauriSqliteDialect } from './libs/TauriSqliteDialect'
 import { BuildinMigrationProvider } from './libs/BuildinMigrationProvider'
@@ -20,7 +20,7 @@ export interface Tables {
 
 // migrations
 export const migrations: Record<string, Migration> = {
-  '20220826_create_init_table': CreateInitTable,
+  '20220826_create_init_table': CreateInitTable
 }
 
 // singleton connection
@@ -36,7 +36,7 @@ export class Database {
       const db = new Kysely<Tables>({
         dialect: new TauriSqliteDialect({
           path: this.path,
-          debug: this.debug,
+          debug: this.debug
         })
       })
 
@@ -51,7 +51,7 @@ export class Database {
 
     return {
       db: this.#instance,
-      migrator: this.#migrator,
+      migrator: this.#migrator
     }
   }
 

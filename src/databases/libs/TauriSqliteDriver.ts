@@ -1,8 +1,9 @@
+/* eslint-disable import/named */
 import {
   Driver,
   DatabaseConnection,
   CompiledQuery,
-  QueryResult,
+  QueryResult
 } from 'kysely'
 import TauriDatabase from 'tauri-plugin-sql-api'
 import { TauriSqliteDialectConfig } from './TauriSqliteDialectConfig'
@@ -60,7 +61,7 @@ class TauriSqliteConnection implements DatabaseConnection {
     this.#db = db
   }
 
-  streamQuery<R>(compiledQuery: CompiledQuery, chunkSize?: number): AsyncIterableIterator<QueryResult<R>> {
+  streamQuery<R> (_compiledQuery: CompiledQuery, _chunkSize?: number): AsyncIterableIterator<QueryResult<R>> {
     throw new Error('Method not implemented.')
   }
 
@@ -94,7 +95,7 @@ class TauriSqliteConnection implements DatabaseConnection {
         })
 
       return {
-        rows: transforms as unknown as O[],
+        rows: transforms as unknown as O[]
       }
     } else {
       const res = await this.#db.execute(sql, parameters as unknown[])
@@ -102,7 +103,7 @@ class TauriSqliteConnection implements DatabaseConnection {
       return {
         numUpdatedOrDeletedRows: BigInt(res.rowsAffected),
         insertId: BigInt(res.lastInsertId),
-        rows: [],
+        rows: []
       }
     }
   }

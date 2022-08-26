@@ -8,7 +8,7 @@ import {
   Driver,
   QueryCompiler,
   DialectAdapter,
-  DatabaseIntrospector,
+  DatabaseIntrospector
 } from 'kysely'
 import { TauriSqliteDialectConfig } from './TauriSqliteDialectConfig'
 import { TauriSqliteDriver } from './TauriSqliteDriver'

@@ -2,11 +2,11 @@ import { defineNuxtConfig } from 'nuxt'
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
-  srcDir: "src/",
+  srcDir: 'src/',
   ssr: false,
-  target: "static",
+  target: 'static',
 
   build: {
-    transpile: ['kysely'],
-  },
+    transpile: ['kysely']
+  }
 })

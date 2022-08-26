@@ -7,14 +7,19 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "tauri": "tauri",
-    "nuxt": "nuxt"
-  },
-  "devDependencies": {
-    "@tauri-apps/cli": "^1.0.5",
-    "nuxt": "3.0.0-rc.8"
+    "nuxt": "nuxt",
+    "lint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore"
   },
   "dependencies": {
     "kysely": "^0.21.4",
-    "tauri-plugin-sql-api": "github:mbs-code/tauri-plugin-sql#bed077ab82d05fb07e64634cba8826e1af6057e1"
+    "tauri-plugin-sql-api": "github:mbs-code/tauri-plugin-sql#bed077ab82d05fb07e64634cba8826e1af6057e1",
+    "typescript": "^4.8.2"
+  },
+  "devDependencies": {
+    "@nuxtjs/eslint-config": "^10.0.0",
+    "@nuxtjs/eslint-config-typescript": "^10.0.0",
+    "@tauri-apps/cli": "^1.0.5",
+    "eslint": "^8.22.0",
+    "nuxt": "3.0.0-rc.8"
   }
 }

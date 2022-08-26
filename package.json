@@ -4,9 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "tauri": "tauri"
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "tauri": "tauri",
+    "nuxt": "nuxt"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^1.0.5"
+    "@tauri-apps/cli": "^1.0.5",
+    "nuxt": "3.0.0-rc.8"
   }
 }

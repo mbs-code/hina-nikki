@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   ssr: false,
   target: "static",
 
-  vite: {
-    clearScreen: false,
+  build: {
+    transpile: ['kysely'],
   },
 })

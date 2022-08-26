@@ -1,6 +1,6 @@
 import { Tag } from '~~/src/databases/models/Tag'
 
-export interface Page {
+export type Page = {
   id: number
   title: string
   text: string
@@ -8,6 +8,12 @@ export interface Page {
   updated_at: Date
 }
 
-export type PageWithTags = Page & {
+export type PageWithTag = Page & {
   tags: Tag[]
+}
+
+export type FormPage = {
+  title: string
+  text: string
+  // tags: string[]
 }

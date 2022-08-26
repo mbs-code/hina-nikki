@@ -1,4 +1,4 @@
-export interface Tag {
+export type Tag = {
   id: number
   page_id: number
   name: string

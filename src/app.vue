@@ -18,7 +18,7 @@
           <Sidebar :key="key" />
         </n-layout-sider>
 
-        <n-layout content-style="padding: 0.5rem; height: 100%" :native-scrollbar="false">
+        <n-layout content-style="height: 100%" :native-scrollbar="false">
           <NuxtPage :key="key" />
         </n-layout>
       </n-layout>

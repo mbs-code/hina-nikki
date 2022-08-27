@@ -19,14 +19,18 @@ import 'ace-builds/src-noconflict/theme-one_dark.js'
 
 const editorCtx = inject(EditorCtxKey)
 
-const style = computed(() => ({
-  fontSize: editorCtx.fontSize.value + 'px'
-}))
+// TODO: 設定画面を作る
+const options = {
+  fontSize: 14,
+  tabSize: 2,
+}
 
-///
+const style = computed(() => ({
+  fontSize: options.fontSize + 'px',
+}))
 
 const onInit = (e: Ace.Editor) => {
   editorCtx.editor.value = e
+  editorCtx.editor.value.session.setTabSize(options.tabSize)
 }
-
 </script>

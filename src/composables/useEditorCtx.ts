@@ -6,7 +6,6 @@ import { FormReport, Report } from '~~/src/databases/models/Report'
 
 export const useEditorCtx = () => {
   const editor = ref<Ace.Editor>()
-  const fontSize = ref<number>(14)
   const selectedDate = ref<Date>() // カレンダー日付
 
   /// //////////
@@ -19,9 +18,14 @@ export const useEditorCtx = () => {
   })
 
   const loadReport = async () => {
+    // 今ページを開いていたら一度保存する
+    await onSave()
+
+    // タイトルを生成
     const title = selectedDate.value
       ? dateFormat(selectedDate.value, 'yyyyMMdd')
       : ''
+    formReport.title = title
 
     const report = await ReportAPI.getByTitle(title)
     _attachReport(report)
@@ -29,6 +33,7 @@ export const useEditorCtx = () => {
 
   const _attachReport = (report?: Report) => {
     _selectedReport.value = report
+    formReport.title = report?.title ?? formReport.title
     formReport.text = report?.text ?? ''
   }
 
@@ -56,7 +61,6 @@ export const useEditorCtx = () => {
 
   return {
     editor,
-    fontSize,
     selectedDate,
 
     formReport, // 現在選択されているレポート

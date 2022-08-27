@@ -1,6 +1,6 @@
 import { Tag } from '~~/src/databases/models/Tag'
 
-export type Page = {
+export type Report = {
   id: number
   title: string
   text: string
@@ -8,11 +8,11 @@ export type Page = {
   updated_at: Date
 }
 
-export type PageWithTag = Page & {
+export type ReportWithTag = Report & {
   tags: Tag[]
 }
 
-export type FormPage = {
+export type FormReport = {
   title: string
   text: string
   // tags: string[]

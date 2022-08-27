@@ -2,7 +2,7 @@ import { Kysely } from 'kysely'
 
 export async function up (db: Kysely<unknown>): Promise<void> {
   await db.schema
-    .createTable('pages')
+    .createTable('reports')
     .addColumn('id', 'integer', col => col.primaryKey())
     .addColumn('title', 'text', col => col.notNull())
     .addColumn('text', 'text', col => col.notNull())
@@ -13,7 +13,7 @@ export async function up (db: Kysely<unknown>): Promise<void> {
   await db.schema
     .createTable('tags')
     .addColumn('id', 'integer', col => col.primaryKey())
-    .addColumn('page_id', 'integer', col => col.notNull())
+    .addColumn('report_id', 'integer', col => col.notNull())
     .addColumn('name', 'text', col => col.notNull())
     .addColumn('created_at', 'datetime', col => col.notNull())
     .execute()
@@ -21,5 +21,5 @@ export async function up (db: Kysely<unknown>): Promise<void> {
 
 export async function down (db: Kysely<unknown>): Promise<void> {
   await db.schema.dropTable('tags').ifExists().execute()
-  await db.schema.dropTable('pages').ifExists().execute()
+  await db.schema.dropTable('reports').ifExists().execute()
 }

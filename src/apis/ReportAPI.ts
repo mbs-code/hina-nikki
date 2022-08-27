@@ -1,39 +1,39 @@
 import { Database } from '~~/src/databases/Database'
-import { FormPage, PageWithTag } from '~~/src/databases/models/Page'
+import { FormReport, ReportWithTag } from '~~/src/databases/models/Report'
 
-export class PageAPI {
-  public static async getAll (): Promise<PageWithTag[]> {
-    // ページの取得
-    const pages = await Database.getDB()
-      .selectFrom('pages')
-      .selectAll('pages')
+export class ReportAPI {
+  public static async getAll (): Promise<ReportWithTag[]> {
+    // レポートの取得
+    const reports = await Database.getDB()
+      .selectFrom('reports')
+      .selectAll('reports')
       .execute()
 
     // 関連タグを取得
-    const pageIds = Array.from(new Set(pages.map(page => page.id)))
+    const pageIds = Array.from(new Set(reports.map(page => page.id)))
     const tags = await Database.getDB()
       .selectFrom('tags')
       .selectAll()
-      .where('page_id', 'in', pageIds)
+      .where('report_id', 'in', pageIds)
       .execute()
 
-    // ページに紐づけていく
-    const pageWithTags = pages.map((page) => {
+    // レポートに紐づけていく
+    const reportWithTags = reports.map((report) => {
       return {
-        ...page,
+        ...report,
         tags: tags
-          .filter(t => t.page_id === page.id)
+          .filter(t => t.report_id === report.id)
           .map(t => ({ ...t }))
       }
     })
 
-    return pageWithTags
+    return reportWithTags
   }
 
-  public static async get (pageId: number): Promise<PageWithTag> {
-    // ページの取得
-    const page = await Database.getDB()
-      .selectFrom('pages')
+  public static async get (pageId: number): Promise<ReportWithTag> {
+    // レポートの取得
+    const report = await Database.getDB()
+      .selectFrom('reports')
       .selectAll()
       .where('id', '=', pageId)
       .executeTakeFirstOrThrow()
@@ -42,23 +42,23 @@ export class PageAPI {
     const tags = await Database.getDB()
       .selectFrom('tags')
       .selectAll()
-      .where('page_id', 'in', pageId)
+      .where('report_id', 'in', pageId)
       .execute()
 
-    // ページに紐づけていく
-    const pageWithTag = {
-      ...page,
+    // レポートに紐づけていく
+    const reportWithTag = {
+      ...report,
       tags: tags.map(tag => ({ ...tag }))
     }
 
-    return pageWithTag
+    return reportWithTag
   }
 
-  public static async create (form: FormPage): Promise<PageWithTag> {
-    // ページを作成
+  public static async create (form: FormReport): Promise<ReportWithTag> {
+    // レポートを作成
     const now = new Date()
     const { insertId } = await Database.getDB()
-      .insertInto('pages')
+      .insertInto('reports')
       .values({
         text: form.text,
         created_at: now,
@@ -71,17 +71,17 @@ export class PageAPI {
     return await this.get(Number(insertId))
   }
 
-  public static async update (pageId: number, form: FormPage): Promise<PageWithTag> {
-    // ページを更新
+  public static async update (reportId: number, form: FormReport): Promise<ReportWithTag> {
+    // レポートを更新
     const now = new Date()
     const { numUpdatedRows } = await Database.getDB()
-      .updateTable('pages')
+      .updateTable('reports')
       .set({
         title: form.title, // TODO: タイトルを変更することは無い？
         text: form.text,
         updated_at: now,
       })
-      .where('id', '=', pageId)
+      .where('id', '=', reportId)
       .executeTakeFirst()
 
     if (Number(numUpdatedRows) === 0) {
@@ -93,17 +93,17 @@ export class PageAPI {
     return await this.get(Number(numUpdatedRows))
   }
 
-  public static async remove (pageId: number): Promise<boolean> {
+  public static async remove (reportId: number): Promise<boolean> {
     // 関連するタグを消去
     await Database.getDB()
       .deleteFrom('tags')
-      .where('page_id', '=', pageId)
+      .where('report_id', '=', reportId)
       .executeTakeFirst()
 
-    // ページを削除
+    // レポートを削除
     const { numDeletedRows } = await Database.getDB()
-      .deleteFrom('pages')
-      .where('id', '=', pageId)
+      .deleteFrom('reports')
+      .where('id', '=', reportId)
       .executeTakeFirst()
 
     if (Number(numDeletedRows) === 0) {

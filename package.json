@@ -11,10 +11,11 @@
     "lint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore"
   },
   "dependencies": {
+    "ace-builds": "^1.9.6",
     "date-fns": "^2.29.2",
     "kysely": "^0.21.4",
     "tauri-plugin-sql-api": "github:mbs-code/tauri-plugin-sql#bed077ab82d05fb07e64634cba8826e1af6057e1",
-    "typescript": "^4.8.2"
+    "vue3-ace-editor": "^2.2.2"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^10.0.0",
@@ -23,6 +24,10 @@
     "@vicons/ionicons5": "^0.12.0",
     "eslint": "^8.22.0",
     "naive-ui": "^2.32.2",
-    "nuxt": "3.0.0-rc.8"
+    "nuxt": "3.0.0-rc.8",
+    "nuxt-windicss": "^2.5.1",
+    "sass": "^1.54.5",
+    "typescript": "^4.8.2",
+    "vfonts": "^0.0.3"
   }
 }

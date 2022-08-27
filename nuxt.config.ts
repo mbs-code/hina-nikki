@@ -6,7 +6,11 @@ export default defineNuxtConfig({
   ssr: false,
   target: 'static',
 
+  css: ['@/assets/index.scss'],
+
+  modules: ['nuxt-windicss'],
+
   build: {
-    transpile: ['kysely']
-  }
+    transpile: ['kysely'],
+  },
 })

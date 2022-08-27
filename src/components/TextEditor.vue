@@ -8,7 +8,11 @@
     theme="one_dark"
     :style="style"
     @init="onInit"
-    @keydown.ctrl.s="editorCtx.onSave()"
+    @keyup.ctrl.s="editorCtx.onSave()"
+    @keyup.alt.shift.w="editorCtx.onMoveDate(-7)"
+    @keyup.alt.shift.a="editorCtx.onMoveDate(-1)"
+    @keyup.alt.shift.s="editorCtx.onMoveDate(7)"
+    @keyup.alt.shift.d="editorCtx.onMoveDate(1)"
   />
 </template>
 

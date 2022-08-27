@@ -11,15 +11,22 @@ export const useEditorCtx = () => {
   /// //////////
   /// データ更新系
 
-  const _selectedReport = ref<Report>()
+  const selectedReport = ref<Report>()
   const formReport = reactive<FormReport>({
     title: '',
     text: '',
   })
 
+  const isNew = computed(() => !selectedReport.value)
+
+  const isDirty = computed(() => isNew.value
+    ? Boolean(formReport.text)
+    : selectedReport.value?.text !== formReport.text
+  )
+
   const loadReport = async () => {
     // 今ページを開いていたら一度保存する
-    await onSave()
+    if (isDirty.value) { await onSave() }
 
     // タイトルを生成
     const title = selectedDate.value
@@ -32,8 +39,8 @@ export const useEditorCtx = () => {
   }
 
   const _attachReport = (report?: Report) => {
-    _selectedReport.value = report
-    formReport.title = report?.title ?? formReport.title
+    selectedReport.value = report
+    formReport.title = report?.title ?? formReport.title ?? ''
     formReport.text = report?.text ?? ''
   }
 
@@ -47,9 +54,9 @@ export const useEditorCtx = () => {
   /// イベント系
 
   const onSave = async () => {
-    const id = _selectedReport.value?.id
-    const resReport = id
-      ? await ReportAPI.update(id, { ...formReport })
+    const reportId = selectedReport.value?.id
+    const resReport = reportId
+      ? await ReportAPI.update(reportId, { ...formReport })
       : await ReportAPI.create({ ...formReport })
     _attachReport(resReport)
   }
@@ -63,7 +70,10 @@ export const useEditorCtx = () => {
     editor,
     selectedDate,
 
-    formReport, // 現在選択されているレポート
+    selectedReport, // 現在選択されているレポート
+    formReport, // temp値
+    isNew, // 新しい要素か
+    isDirty, // 編集中か
     loadReport,
 
     onSave,

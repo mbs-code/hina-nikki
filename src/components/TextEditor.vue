@@ -1,5 +1,7 @@
 <template>
+  <!-- NOTE: タイトル要素が無いバグ時は非表示にする -->
   <v-ace-editor
+    v-if="editorCtx.formReport.title"
     v-model:value="editorCtx.formReport.text"
     class="editor"
     lang="markdown"

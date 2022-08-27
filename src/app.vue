@@ -24,7 +24,7 @@
       </n-layout>
 
       <n-layout-footer class="app-footer" position="absolute" bordered>
-        最下部
+        <Footer />
       </n-layout-footer>
     </n-layout>
   </n-config-provider>
@@ -34,7 +34,7 @@
 import { darkTheme } from 'naive-ui'
 import { Database } from '~~/src/databases/Database'
 
-Database.debug = true
+// Database.debug = true
 
 const key = ref<number>(Date.now())
 

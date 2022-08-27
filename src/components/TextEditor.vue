@@ -1,11 +1,12 @@
 <template>
   <v-ace-editor
-    v-model:value="editorCtx.content.value"
+    v-model:value="editorCtx.formReport.text"
     class="editor"
     lang="markdown"
     theme="one_dark"
     :style="style"
     @init="onInit"
+    @keydown.ctrl.s="editorCtx.onSave()"
   />
 </template>
 

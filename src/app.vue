@@ -3,6 +3,9 @@
     <n-layout style="height: 100vh">
       <n-layout-header class="app-header" bordered>
         最上部ヘッダ
+        <button @click="onWipe">
+          wipe
+        </button>
       </n-layout-header>
 
       <n-layout class="app-body" position="absolute" has-sider>
@@ -31,7 +34,12 @@
 import { darkTheme } from 'naive-ui'
 import { Database } from '~~/src/databases/Database'
 
+Database.debug = true
+
 const key = ref<number>(Date.now())
+
+const editorCtx = useEditorCtx()
+provide(EditorCtxKey, editorCtx)
 
 onMounted(async () => {
   // DB migrate
@@ -39,6 +47,9 @@ onMounted(async () => {
   await migrator.migrateToLatest()
 })
 
+const onWipe = async () => {
+  await Database.dbWipe()
+}
 </script>
 
 <style scoped lang="scss">

@@ -1,6 +1,8 @@
 <template>
   <div class="h-full flex flex-col gap-2">
-    <div>
+    <div class="flex items-center gap-2">
+      <span>{{ editorCtx.formReport.title }}</span>
+
       <n-button @click="editorCtx.getSelectedText()">
         Get Selected Text
       </n-button>
@@ -11,6 +13,5 @@
 </template>
 
 <script setup lang="ts">
-const editorCtx = useEditorCtx()
-provide(EditorCtxKey, editorCtx)
+const editorCtx = inject(EditorCtxKey)
 </script>

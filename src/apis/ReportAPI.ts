@@ -42,7 +42,33 @@ export class ReportAPI {
     const tags = await Database.getDB()
       .selectFrom('tags')
       .selectAll()
-      .where('report_id', 'in', pageId)
+      .where('report_id', '=', pageId)
+      .execute()
+
+    // レポートに紐づけていく
+    const reportWithTag = {
+      ...report,
+      tags: tags.map(tag => ({ ...tag }))
+    }
+
+    return reportWithTag
+  }
+
+  public static async getByTitle (pageTitle: string): Promise<ReportWithTag | undefined> {
+    // レポートの取得
+    const report = await Database.getDB()
+      .selectFrom('reports')
+      .selectAll()
+      .where('title', '=', pageTitle)
+      .executeTakeFirst()
+
+    if (!report) { return undefined }
+
+    // 関連タグを取得
+    const tags = await Database.getDB()
+      .selectFrom('tags')
+      .selectAll()
+      .where('report_id', '=', report.id)
       .execute()
 
     // レポートに紐づけていく
@@ -60,6 +86,7 @@ export class ReportAPI {
     const { insertId } = await Database.getDB()
       .insertInto('reports')
       .values({
+        title: form.title,
         text: form.text,
         created_at: now,
         updated_at: now,
@@ -90,7 +117,7 @@ export class ReportAPI {
 
     // TODO: タグを抽出して更新
 
-    return await this.get(Number(numUpdatedRows))
+    return await this.get(Number(reportId))
   }
 
   public static async remove (reportId: number): Promise<boolean> {

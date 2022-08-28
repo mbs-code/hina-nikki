@@ -22,6 +22,24 @@
       </n-button>
     </div>
 
+    <div class="flex items-center gap-1">
+      <n-tooltip trigger="hover" placement="top">
+        <template #trigger>
+          <n-button
+            size="small"
+            :type="lineWrap ? 'primary' : 'default'"
+            strong
+            @click="toggleLineWrap()"
+          >
+            <template #icon>
+              <n-icon><ReturnDownBackSharp /></n-icon>
+            </template>
+          </n-button>
+        </template>
+        折り返し設定
+      </n-tooltip>
+    </div>
+
     <TextEditor class="grow" />
   </div>
 </template>
@@ -30,6 +48,7 @@
 import {
   PricetagOutline,
   Document,
+  ReturnDownBackSharp,
 } from '@vicons/ionicons5'
 
 const loaderCtx = inject(LoaderCtxKey)
@@ -60,5 +79,14 @@ const hashtags = computed(() => {
 
 const onSearch = (hashtag: string) => {
   searchCtx.searchHashtag(hashtag)
+}
+
+///
+
+// TODO: 設定
+const lineWrap = ref<boolean>(false)
+const toggleLineWrap = () => {
+  lineWrap.value = !lineWrap.value
+  editorCtx.setLineWrap(lineWrap.value)
 }
 </script>

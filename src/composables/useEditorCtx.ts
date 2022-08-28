@@ -90,6 +90,10 @@ export const useEditorCtx = () => {
       : undefined
   }
 
+  const setLineWrap = (value: boolean) => {
+    _editor.value.session.setUseWrapMode(value)
+  }
+
   return {
     bindEditor, // バインド
 
@@ -102,6 +106,7 @@ export const useEditorCtx = () => {
     onSave, // 保存する
 
     getActiveHashTag,
+    setLineWrap, // 折り返し設定
   }
 }
 

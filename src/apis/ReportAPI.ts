@@ -13,9 +13,9 @@ export class ReportAPI {
     // レポートの取得
     const reports = await Database.getDB()
       .selectFrom('reports')
-      .selectAll('reports')
+      .selectAll()
       .if(Boolean(search?.text), qb => qb.where('text', 'like', `%${search.text}%`))
-      .if(isBool(search?.isDiary), qb => qb.where('is_diary', '=', search.isDiary))
+      .if(isBool(search?.isDiary), qb => qb.where('is_diary', '=', search.isDiary ? 1 : 0))
       .execute()
 
     return reports.map(report => this.formatReport(report))
@@ -110,9 +110,9 @@ export class ReportAPI {
     }
   }
 
-  private static extractIsDiary (form: FormReport): boolean {
+  private static extractIsDiary (form: FormReport): number {
     // yyyymmdd であるならば true
-    return /^\d{8}$%/.test(form.title)
+    return /^\d{8}$/.test(form.title) ? 1 : 0
   }
 
   private static extractTags (form: FormReport): string[] {

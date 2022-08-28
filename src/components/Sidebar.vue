@@ -24,43 +24,32 @@
       </tr>
     </n-table>
 
-    <n-button @click="testAsdPage">
-      #asd
-    </n-button>
-
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
-    <div>side</div>
+    <div class="flex flex-col gap-1">
+      <template v-for="(tagReport, _) of tagReports" :key="_">
+        <n-button
+          size="medium"
+          :type="isSelected(tagReport) ? 'primary' : 'default'"
+          :tertiary="isSelected(tagReport)"
+          @click="openTagReport(tagReport.title)"
+        >
+          {{ tagReport.title }}
+        </n-button>
+      </template>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ReportAPI } from '~~/src/apis/ReportAPI'
+import { Report } from '~~/src/databases/models/Report'
+
 const searchCtx = inject(SearchCtxKey)
+
+const isSelected = (report: Report) => {
+  return searchCtx.reportTitle.value === report.title
+}
+
+///
 
 const onUpdateDate = async (val?: number) => {
   const date = val ? new Date(val) : null
@@ -68,10 +57,17 @@ const onUpdateDate = async (val?: number) => {
 }
 
 const datePickerRef = ref()
-const testAsdPage = async () => {
+const openTagReport = async (title: string) => {
   // FIXME: null を指定してもカレンダーがクリアされないので、手動クリア
   datePickerRef.value?.handlePanelUpdateValue(null)
 
-  await searchCtx.loadTagName('#asd')
+  await searchCtx.loadTagName(title)
 }
+
+///
+
+const tagReports = ref<Report[]>([])
+onMounted(async () => {
+  tagReports.value = await ReportAPI.getAll({ isDiary: false })
+})
 </script>

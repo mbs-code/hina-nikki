@@ -39,6 +39,8 @@ export const useEditorCtx = () => {
     selectedReport.value = report
     formReport.title = report?.title ?? formReport.title ?? undefined
     formReport.text = report?.text ?? ''
+
+    editor.value.focus() // フォーカス
   }
 
   /// //////////

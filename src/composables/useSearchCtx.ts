@@ -15,7 +15,7 @@ export const useSearchCtx = (openDialog: () => void) => {
     })
     reports.value = items
 
-    openDialog()
+    openDialog() // 開く
   }
 
   const searchText = async (text: string) => {
@@ -27,7 +27,7 @@ export const useSearchCtx = (openDialog: () => void) => {
     })
     reports.value = items
 
-    openDialog()
+    openDialog() // 開く
   }
 
   return {

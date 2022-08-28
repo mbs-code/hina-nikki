@@ -1,3 +1,4 @@
+import { DateUtil } from '~~/src/utils/DateUtil'
 import { RegexUtil } from '~~/src/utils/RegexUtil'
 
 export type DBReport = {
@@ -18,6 +19,8 @@ export type Report = {
   tags: string[] // SSV形式
   createdAt: Date
   updatedAt: Date
+
+  formattedTitle: string // 表示用のタイトル
 }
 
 export type FormReport = {
@@ -28,6 +31,12 @@ export type FormReport = {
 }
 
 export const formatReport = (db: DBReport): Report => {
+  let formattedTitle = db.title
+  if (db.is_diary) {
+    const date = DateUtil.parseByDiaryTitle(formattedTitle)
+    formattedTitle = DateUtil.formatDate(date)
+  }
+
   return {
     id: db.id,
     title: db.title,
@@ -36,6 +45,8 @@ export const formatReport = (db: DBReport): Report => {
     tags: db.tags ? db.tags.split(' ') : [],
     createdAt: new Date(db.created_at),
     updatedAt: new Date(db.updated_at),
+
+    formattedTitle,
   }
 }
 

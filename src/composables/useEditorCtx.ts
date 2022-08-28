@@ -65,11 +65,6 @@ export const useEditorCtx = () => {
 
   ///
 
-  const getSelectedText = () => {
-    const text = _editor.value.getSelectedText()
-    window.alert(text)
-  }
-
   const getActiveHashTag = () => {
     const pos = _editor.value.getCursorPosition()
     const activeLine = _editor.value.session.getDocument().getLine(pos.row)
@@ -106,7 +101,6 @@ export const useEditorCtx = () => {
     loadReport, // 今のクエリで検索する
     onSave, // 保存する
 
-    getSelectedText,
     getActiveHashTag,
   }
 }

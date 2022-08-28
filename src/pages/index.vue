@@ -1,19 +1,25 @@
 <template>
   <div class="h-full flex flex-col">
     <div class="p-2 flex items-center gap-2">
-      <span>{{ editorCtx.formReport.title }}</span>
+      <div class="flex items-center gap-1">
+        <n-icon size="16">
+          <Document />
+        </n-icon>
+
+        <span>{{ title }}</span>
+      </div>
 
       <n-button
         v-for="(hashtag, _) of hashtags"
         :key="_"
+        size="small"
         @click="onSearch(hashtag)"
       >
+        <template #icon>
+          <n-icon><PricetagOutline /></n-icon>
+        </template>
         {{ hashtag }}
       </n-button>
-
-      <!-- <n-button @click="editorCtx.getSelectedText()">
-        Get Selected Text
-      </n-button> -->
     </div>
 
     <TextEditor class="grow" />
@@ -21,6 +27,11 @@
 </template>
 
 <script setup lang="ts">
+import {
+  PricetagOutline,
+  Document,
+} from '@vicons/ionicons5'
+
 const loaderCtx = inject(LoaderCtxKey)
 const editorCtx = inject(EditorCtxKey)
 const searchCtx = inject(SearchCtxKey)
@@ -31,8 +42,19 @@ onMounted(async () => {
   await loaderCtx.onMoveToday()
 })
 
+const title = computed(() => {
+  const report = editorCtx.selectedReport.value
+  return report?.formattedTitle
+})
+
 const hashtags = computed(() => {
-  return editorCtx.selectedReport.value?.tags ?? []
+  const report = editorCtx.selectedReport.value
+  const tags = report?.tags ?? []
+  if (!report?.isDiary && report?.title) {
+    tags.unshift(report?.title)
+  }
+
+  return tags
 })
 
 ///

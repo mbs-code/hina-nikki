@@ -44,7 +44,7 @@ const loaderCtx = inject(LoaderCtxKey)
 
 // TODO: 設定画面を作る
 const options = {
-  fontSize: 14,
+  fontSize: 18,
   tabSize: 2,
 }
 

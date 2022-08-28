@@ -1,7 +1,7 @@
 <template>
   <n-thing
     v-if="report"
-    :title="title"
+    :title="report.formattedTitle"
     content-style="margin-top: 10px;"
   >
     <template #avatar>
@@ -47,16 +47,6 @@ import { DateUtil } from '~~/src/utils/DateUtil'
 const props = defineProps<{
   report: Report,
 }>()
-
-const title = computed(() => {
-  const report = props.report
-  if (report.isDiary) {
-    const date = DateUtil.parseByDiaryTitle(report.title)
-    return DateUtil.formatDate(date)
-  }
-
-  return report.title
-})
 
 const lastUpdatedStr = computed(() => {
   const updated = props.report.updatedAt

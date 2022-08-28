@@ -30,8 +30,8 @@
 </template>
 
 <script setup lang="ts">
-import { parse as dateParse } from 'date-fns'
 import { Report } from '~~/src/databases/models/Report'
+import { DateUtil } from '~~/src/utils/DateUtil'
 
 const props = defineProps<{
   show: boolean,
@@ -53,7 +53,7 @@ const searchCtx = inject(SearchCtxKey)
 
 const onClick = async (report: Report) => {
   if (report.isDiary) {
-    const date = dateParse(report.title, 'yyyyMMdd', new Date())
+    const date = DateUtil.parseByDiaryTitle(report.title)
     await loadCtx.loadDate(date)
   } else {
     await loadCtx.loadHashtag(report.title)

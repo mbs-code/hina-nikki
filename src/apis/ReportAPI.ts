@@ -1,6 +1,6 @@
-import { formatISO } from 'date-fns'
 import { Database } from '~~/src/databases/Database'
 import { DBReport, formatReport, FormReport, parseReport, Report } from '~~/src/databases/models/Report'
+import { DateUtil } from '~~/src/utils/DateUtil'
 
 export type SearchReport = {
   phrases?: string[]
@@ -50,7 +50,7 @@ export class ReportAPI {
   }
 
   public static async create (form: FormReport): Promise<Report> {
-    const now = formatISO(new Date())
+    const now = DateUtil.formatISO(new Date())
 
     // レポートを作成
     const { insertId } = await Database.getDB()
@@ -66,7 +66,7 @@ export class ReportAPI {
   }
 
   public static async update (reportId: number, form: FormReport): Promise<Report> {
-    const now = formatISO(new Date())
+    const now = DateUtil.formatISO(new Date())
 
     // レポートを更新
     const { numUpdatedRows } = await Database.getDB()

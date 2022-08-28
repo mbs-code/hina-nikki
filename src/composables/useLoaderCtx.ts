@@ -1,6 +1,7 @@
 import { InjectionKey } from 'nuxt/dist/app/compat/capi'
-import { format as dateFormat, addDays } from 'date-fns'
+import { addDays } from 'date-fns'
 import { EditorCtx } from '~~/src/composables/useEditorCtx'
+import { DateUtil } from '~~/src/utils/DateUtil'
 
 export const useLoaderCtx = (editorCtx: EditorCtx) => {
   const _selectedDate = ref<Date>() // カレンダー日付
@@ -12,7 +13,7 @@ export const useLoaderCtx = (editorCtx: EditorCtx) => {
 
   const reportTitle = computed(() => {
     const date = _selectedDate.value
-    if (date) { return dateFormat(date, 'yyyyMMdd') }
+    if (date) { return DateUtil.formatDiaryTitle(date) }
 
     const tagName = _selectedHashtag.value
     if (tagName) { return tagName }

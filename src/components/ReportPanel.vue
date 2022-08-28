@@ -31,15 +31,8 @@ import {
   PricetagOutline,
   TimeOutline,
 } from '@vicons/ionicons5'
-import {
-  parse as dateParse,
-  format as dateFormat,
-  formatDistanceToNow,
-// eslint-disable-next-line import/no-duplicates
-} from 'date-fns'
-// eslint-disable-next-line import/no-duplicates
-import { ja } from 'date-fns/locale'
 import { Report } from '~~/src/databases/models/Report'
+import { DateUtil } from '~~/src/utils/DateUtil'
 
 const props = defineProps<{
   report: Report,
@@ -48,8 +41,8 @@ const props = defineProps<{
 const title = computed(() => {
   const report = props.report
   if (report.isDiary) {
-    const date = dateParse(report.title, 'yyyyMMdd', new Date())
-    return dateFormat(date, 'yyyy-MM-dd')
+    const date = DateUtil.parseByDiaryTitle(report.title)
+    return DateUtil.formatDate(date)
   }
 
   return report.title
@@ -57,6 +50,6 @@ const title = computed(() => {
 
 const lastUpdatedStr = computed(() => {
   const updated = props.report.updatedAt
-  return formatDistanceToNow(updated, { addSuffix: true, locale: ja })
+  return DateUtil.formatHumanity(updated)
 })
 </script>

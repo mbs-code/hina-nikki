@@ -13,7 +13,7 @@
       </n-avatar>
     </template>
 
-    <template #description>
+    <template #header-extra>
       <div class="flex items-center gap-1">
         <n-icon size="16">
           <TimeOutline />
@@ -21,6 +21,16 @@
 
         <span>{{ lastUpdatedStr }}</span>
       </div>
+    </template>
+
+    <template #description>
+      <n-ellipsis
+        class="break-all"
+        :line-clamp="2"
+        :tooltip="false"
+      >
+        {{ report.text }}
+      </n-ellipsis>
     </template>
   </n-thing>
 </template>

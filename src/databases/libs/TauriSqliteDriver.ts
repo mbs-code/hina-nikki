@@ -83,9 +83,6 @@ class TauriSqliteConnection implements DatabaseConnection {
               if (key.endsWith('_at')) {
                 // text -> date 変換
                 fmtValue = fmtValue != null ? new Date(value) : null
-              } else if (key.endsWith('is_')) {
-                // integer -> boolean 変換
-                fmtValue = fmtValue != null ? Boolean(value) : null
               }
 
               return [key, fmtValue]

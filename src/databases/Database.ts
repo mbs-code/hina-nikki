@@ -9,13 +9,11 @@ import { BuildinMigrationProvider } from './libs/BuildinMigrationProvider'
 
 import * as CreateInitTable from './migrations/20220826_create_init_table'
 
-import { Page } from '~~/src/databases/models/Page'
-import { Tag } from '~~/src/databases/models/Tag'
+import { Report } from '~~/src/databases/models/Report'
 
 // tables
 export interface Tables {
-  pages: Page
-  tags: Tag
+  reports: Report
 }
 
 // migrations

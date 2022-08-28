@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flex flex-col gap-2">
     <n-date-picker
       ref="datePickerRef"
       :value="loaderCtx.selectedTimestamp.value"
@@ -8,6 +8,21 @@
       clearable
       @update:value="onUpdateDate"
     />
+
+    <n-input-group>
+      <n-input
+        v-model:value="searchText"
+        type="text"
+        clearable
+        placeholder="Search"
+      />
+
+      <n-button ghost @click="onSearch">
+        <template #icon>
+          <n-icon><Search /></n-icon>
+        </template>
+      </n-button>
+    </n-input-group>
 
     <n-table size="small">
       <tr>
@@ -40,13 +55,25 @@
 </template>
 
 <script setup lang="ts">
+import { Search } from '@vicons/ionicons5'
 import { ReportAPI } from '~~/src/apis/ReportAPI'
 import { Report } from '~~/src/databases/models/Report'
 
 const loaderCtx = inject(LoaderCtxKey)
+const searchCtx = inject(SearchCtxKey)
 
 const isSelected = (report: Report) => {
   return loaderCtx.reportTitle.value === report.title
+}
+
+///
+
+const searchText = ref<string>()
+
+const onSearch = async () => {
+  if (searchText.value) {
+    await searchCtx.searchText(searchText.value)
+  }
 }
 
 ///

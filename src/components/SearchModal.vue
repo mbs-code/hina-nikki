@@ -7,15 +7,21 @@
   >
     <n-scrollbar class="pr-3" style="max-height: calc(100vh - 100px)">
       <div class="flex flex-col gap-2">
-        <template v-if="searchCtx.matchReport.value">
-          <n-list hoverable clickable bordered>
-            <n-list-item @click="onClick(searchCtx.matchReport.value)">
+        <n-list hoverable clickable bordered>
+          <!-- 完全一致 -->
+          <template v-if="searchCtx.matchReport.value">
+            <n-list-item
+              :style="{
+                borderWidth: '2px',
+                borderColor: themeVars.primaryColor,
+              }"
+              @click="onClick(searchCtx.matchReport.value)"
+            >
               <ReportPanel :report="searchCtx.matchReport.value" />
             </n-list-item>
-          </n-list>
-        </template>
+          </template>
 
-        <n-list hoverable clickable bordered>
+          <!-- 検索要素 -->
           <n-list-item
             v-for="(report, _) of searchCtx.reports.value"
             :key="_"
@@ -30,6 +36,7 @@
 </template>
 
 <script setup lang="ts">
+import { useThemeVars } from 'naive-ui'
 import { Report } from '~~/src/databases/models/Report'
 import { DateUtil } from '~~/src/utils/DateUtil'
 
@@ -50,6 +57,8 @@ const _show = computed({
 
 const loadCtx = inject(LoaderCtxKey)
 const searchCtx = inject(SearchCtxKey)
+
+const themeVars = useThemeVars()
 
 const onClick = async (report: Report) => {
   if (report.isDiary) {

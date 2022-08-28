@@ -18,11 +18,24 @@ export const useSearchCtx = (openDialog: () => void) => {
     openDialog()
   }
 
+  const searchText = async (text: string) => {
+    matchReport.value = undefined
+
+    const items = await ReportAPI.getAll({
+      phrases: text.split(' '),
+      sorts: [['updated_at', 'desc']]
+    })
+    reports.value = items
+
+    openDialog()
+  }
+
   return {
     matchReport,
     reports,
 
     searchHashtag,
+    searchText,
   }
 }
 

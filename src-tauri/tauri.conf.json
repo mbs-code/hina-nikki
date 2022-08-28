@@ -12,7 +12,12 @@
   },
   "tauri": {
     "allowlist": {
-      "all": true
+      "all": true,
+      "fs": {
+        "scope": [
+          "$APP/config.yaml"
+        ]
+      }
     },
     "bundle": {
       "active": true,
@@ -29,7 +34,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "mbs-code.hina-nikki",
       "longDescription": "",
       "macOS": {
         "entitlements": null,

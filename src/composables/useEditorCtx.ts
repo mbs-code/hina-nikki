@@ -94,6 +94,10 @@ export const useEditorCtx = () => {
     _editor.value.session.setUseWrapMode(value)
   }
 
+  const setTabSize = (value: number) => {
+    _editor.value.session.setTabSize(value)
+  }
+
   return {
     bindEditor, // バインド
 
@@ -107,6 +111,7 @@ export const useEditorCtx = () => {
 
     getActiveHashTag,
     setLineWrap, // 折り返し設定
+    setTabSize, // タブサイズ
   }
 }
 

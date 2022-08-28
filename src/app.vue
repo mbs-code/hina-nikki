@@ -57,20 +57,25 @@ const editorCtx = useEditorCtx()
 const loaderCtx = useLoaderCtx(editorCtx)
 const searchCtx = useSearchCtx(openSearchModal)
 const favoriteCtx = useFavoriteCtx()
+const configStore = useConfigStore(editorCtx)
 
 provide(EditorCtxKey, editorCtx)
 provide(LoaderCtxKey, loaderCtx)
 provide(SearchCtxKey, searchCtx)
 provide(FavoriteCtxKey, favoriteCtx)
+provide(ConfigStoreKey, configStore)
 
 /// //////////
 
 onMounted(async () => {
+  // load config
+  await configStore.load()
+
   // DB migrate
   const { migrator } = Database.getInstance()
   await migrator.migrateToLatest()
 
-  // loading
+  // loading ui
   await favoriteCtx.loadFavorites()
 })
 </script>

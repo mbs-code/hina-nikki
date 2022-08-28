@@ -16,6 +16,7 @@
     @keyup.alt.d="loaderCtx.onMoveDate(1)"
     @keyup.alt.q="loaderCtx.onMoveToday()"
     @click.alt="loaderCtx.onClickHashtag()"
+    @wheel.ctrl="onWheel"
   />
 
   <div v-else class="flex items-center justify-center">
@@ -41,20 +42,24 @@ import 'ace-builds/src-noconflict/theme-one_dark.js'
 
 const editorCtx = inject(EditorCtxKey)
 const loaderCtx = inject(LoaderCtxKey)
-
-// TODO: 設定画面を作る
-const options = {
-  fontSize: 18,
-  tabSize: 2,
-}
+const configStore = inject(ConfigStoreKey)
 
 const style = computed(() => ({
-  fontSize: options.fontSize + 'px',
+  fontSize: configStore.env.editor.fontSize + 'px',
 }))
 
 const onInit = (e: Ace.Editor) => {
-  e.session.setTabSize(options.tabSize)
-
   editorCtx.bindEditor(e)
+}
+
+const onWheel = ({ deltaY }: WheelEvent) => {
+  if (deltaY > 0) {
+    configStore.env.editor.fontSize++
+  } else if (deltaY < 0) {
+    configStore.env.editor.fontSize = Math.max(
+      configStore.env.editor.fontSize - 1,
+      configStore.embed.minFontSize, // 最小値制限
+    )
+  }
 }
 </script>

@@ -27,7 +27,7 @@
         <template #trigger>
           <n-button
             size="small"
-            :type="lineWrap ? 'primary' : 'default'"
+            :type="configStore.env.editor.lineWrap ? 'primary' : 'default'"
             strong
             @click="toggleLineWrap()"
           >
@@ -54,6 +54,7 @@ import {
 const loaderCtx = inject(LoaderCtxKey)
 const editorCtx = inject(EditorCtxKey)
 const searchCtx = inject(SearchCtxKey)
+const configStore = inject(ConfigStoreKey)
 
 // startup
 onMounted(async () => {
@@ -83,10 +84,8 @@ const onSearch = (hashtag: string) => {
 
 ///
 
-// TODO: 設定
-const lineWrap = ref<boolean>(false)
 const toggleLineWrap = () => {
-  lineWrap.value = !lineWrap.value
-  editorCtx.setLineWrap(lineWrap.value)
+  configStore.env.editor.lineWrap = !configStore.env.editor.lineWrap
 }
+
 </script>

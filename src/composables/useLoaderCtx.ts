@@ -2,6 +2,7 @@ import { InjectionKey } from 'nuxt/dist/app/compat/capi'
 import { addDays } from 'date-fns'
 import { EditorCtx } from '~~/src/composables/useEditorCtx'
 import { DateUtil } from '~~/src/utils/DateUtil'
+import { Report } from '~~/src/databases/models/Report'
 
 export const useLoaderCtx = (editorCtx: EditorCtx) => {
   const _selectedDate = ref<Date>() // カレンダー日付
@@ -21,10 +22,20 @@ export const useLoaderCtx = (editorCtx: EditorCtx) => {
     return undefined
   })
 
+  const formattedReportTitle = computed(() => {
+    const date = _selectedDate.value
+    if (date) { return DateUtil.formatDate(date) }
+
+    const tagName = _selectedHashtag.value
+    if (tagName) { return tagName }
+
+    return undefined
+  })
+
   ///
 
   // 日付で読み込む
-  const loadDate = async (date?: Date) => {
+  const loadByDate = async (date?: Date) => {
     _selectedDate.value = date
     _selectedHashtag.value = undefined
 
@@ -32,11 +43,22 @@ export const useLoaderCtx = (editorCtx: EditorCtx) => {
   }
 
   // ハッシュタグで読み込む
-  const loadHashtag = async (hashtag?: string) => {
+  const loadByHashtag = async (hashtag?: string) => {
     _selectedDate.value = undefined
     _selectedHashtag.value = hashtag
 
     await editorCtx.loadReport(reportTitle.value) // 読み込み
+  }
+
+  // レポートで読み込む
+  const loadByReport = async (report: Report) => {
+    // 振り分ける
+    if (report.isDiary) {
+      const date = DateUtil.parseByDiaryTitle(report.title)
+      await loadByDate(date)
+    } else {
+      await loadByHashtag(report.title)
+    }
   }
 
   ///
@@ -48,28 +70,29 @@ export const useLoaderCtx = (editorCtx: EditorCtx) => {
       ? addDays(_selectedDate.value, day)
       : new Date()
 
-    await loadDate(date)
+    await loadByDate(date)
   }
 
   // 今日へ移動
   const onMoveToday = async () => {
-    await loadDate(new Date())
+    await loadByDate(new Date())
   }
 
   const onClickHashtag = async () => {
     const hashTag = editorCtx.getActiveHashTag()
     if (hashTag) {
-      await loadHashtag(hashTag)
+      await loadByHashtag(hashTag)
     }
   }
 
   return {
     selectedTimestamp,
-
     reportTitle,
+    formattedReportTitle,
 
-    loadDate,
-    loadHashtag,
+    loadByDate,
+    loadByHashtag,
+    loadByReport,
 
     onMoveDate,
     onMoveToday,

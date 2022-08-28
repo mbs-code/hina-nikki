@@ -6,6 +6,7 @@ export type SearchReport = {
   phrases?: string[]
   hashtags?: string[]
   isDiary?: boolean
+  limit?: number
   sorts?: [keyof DBReport, 'asc' | 'desc'][]
 }
 
@@ -19,6 +20,7 @@ export class ReportAPI {
       .if(Boolean(search?.phrases), qb => search.phrases.reduce((qb, val) => qb.where('text', 'like', `%${val}%`), qb))
       .if(Boolean(search?.hashtags), qb => search.hashtags.reduce((qb, val) => qb.where('tags', 'like', `%${val}%`), qb))
       .if(isBool(search?.isDiary), qb => qb.where('is_diary', '=', search.isDiary ? 1 : 0))
+      .if(Boolean(search?.limit), qb => qb.limit(search.limit))
       .if(Boolean(search?.sorts), qb => search.sorts.reduce((qb, sort) => qb.orderBy(sort[0], sort[1]), qb))
       .execute()
 

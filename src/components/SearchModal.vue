@@ -15,7 +15,7 @@
                 borderWidth: '2px',
                 borderColor: themeVars.primaryColor,
               }"
-              @click="onClick(searchCtx.matchReport.value)"
+              @click="onClickReport(searchCtx.matchReport.value)"
             >
               <ReportPanel :report="searchCtx.matchReport.value" />
             </n-list-item>
@@ -25,7 +25,7 @@
           <n-list-item
             v-for="(report, _) of searchCtx.reports.value"
             :key="_"
-            @click="onClick(report)"
+            @click="onClickReport(report)"
           >
             <ReportPanel :report="report" />
           </n-list-item>
@@ -45,7 +45,6 @@
 <script setup lang="ts">
 import { useThemeVars } from 'naive-ui'
 import { Report } from '~~/src/databases/models/Report'
-import { DateUtil } from '~~/src/utils/DateUtil'
 
 const props = defineProps<{
   show: boolean,
@@ -64,21 +63,14 @@ const _show = computed({
 
 const loadCtx = inject(LoaderCtxKey)
 const searchCtx = inject(SearchCtxKey)
-
 const themeVars = useThemeVars()
 
 const hasResult = computed(() =>
   Boolean(searchCtx.matchReport.value) || searchCtx.reports.value.length
 )
 
-const onClick = async (report: Report) => {
-  if (report.isDiary) {
-    const date = DateUtil.parseByDiaryTitle(report.title)
-    await loadCtx.loadDate(date)
-  } else {
-    await loadCtx.loadHashtag(report.title)
-  }
-
+const onClickReport = async (report: Report) => {
+  await loadCtx.loadByReport(report)
   _show.value = false
 }
 </script>

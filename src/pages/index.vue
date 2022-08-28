@@ -1,12 +1,12 @@
 <template>
   <div class="h-full flex flex-col">
     <div class="p-2 flex items-center gap-2">
-      <div class="flex items-center gap-1">
+      <div class="flex items-center gap-1" style="height: 28px">
         <n-icon size="16">
           <Document />
         </n-icon>
 
-        <span>{{ title }}</span>
+        <span>{{ title ?? '---' }}</span>
       </div>
 
       <n-button
@@ -43,8 +43,7 @@ onMounted(async () => {
 })
 
 const title = computed(() => {
-  const report = editorCtx.selectedReport.value
-  return report?.formattedTitle
+  return loaderCtx.formattedReportTitle.value
 })
 
 const hashtags = computed(() => {

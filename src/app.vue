@@ -40,12 +40,6 @@ Database.debug = true
 
 const key = ref<number>(Date.now())
 
-onMounted(async () => {
-  // DB migrate
-  const { migrator } = Database.getInstance()
-  await migrator.migrateToLatest()
-})
-
 const onWipe = async () => {
   await Database.dbWipe()
 }
@@ -62,10 +56,23 @@ const openSearchModal = () => {
 const editorCtx = useEditorCtx()
 const loaderCtx = useLoaderCtx(editorCtx)
 const searchCtx = useSearchCtx(openSearchModal)
+const favoriteCtx = useFavoriteCtx()
 
 provide(EditorCtxKey, editorCtx)
 provide(LoaderCtxKey, loaderCtx)
 provide(SearchCtxKey, searchCtx)
+provide(FavoriteCtxKey, favoriteCtx)
+
+/// //////////
+
+onMounted(async () => {
+  // DB migrate
+  const { migrator } = Database.getInstance()
+  await migrator.migrateToLatest()
+
+  // loading
+  await favoriteCtx.loadFavorites()
+})
 </script>
 
 <style scoped lang="scss">

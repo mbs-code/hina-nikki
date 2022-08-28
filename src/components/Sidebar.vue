@@ -6,7 +6,7 @@
       type="date"
       panel
       clearable
-      @update:value="onUpdateDate"
+      @update:value="onChangeDate"
     />
 
     <n-input-group>
@@ -25,75 +25,53 @@
       </n-button>
     </n-input-group>
 
-    <n-table size="small">
-      <tr>
-        <td>Alt + wasd</td>
-        <td>日付の移動</td>
-      </tr>
-      <tr>
-        <td>Alt + q</td>
-        <td>今日に移動</td>
-      </tr>
-      <tr>
-        <td>Ctrl + s</td>
-        <td>保存</td>
-      </tr>
-    </n-table>
-
-    <div class="flex flex-col gap-1">
-      <template v-for="(tagReport, _) of tagReports" :key="_">
-        <n-button
-          size="medium"
-          :type="isSelected(tagReport) ? 'primary' : 'default'"
-          :tertiary="isSelected(tagReport)"
-          @click="openTagReport(tagReport.title)"
-        >
-          {{ tagReport.title }}
-        </n-button>
-      </template>
-    </div>
+    <SimpleReportList
+      :selected-report="editorCtx.selectedReport.value"
+      :reports="favoriteCtx.recentReports.value"
+      @update:selected-report="onChangeReport"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { Search } from '@vicons/ionicons5'
-import { ReportAPI } from '~~/src/apis/ReportAPI'
 import { Report } from '~~/src/databases/models/Report'
 
 const loaderCtx = inject(LoaderCtxKey)
+const editorCtx = inject(EditorCtxKey)
 const searchCtx = inject(SearchCtxKey)
-
-const isSelected = (report: Report) => {
-  return loaderCtx.reportTitle.value === report.title
-}
+const favoriteCtx = inject(FavoriteCtxKey)
 
 ///
 
+// TODO: searchCtx に入れる
 const searchText = ref<string>()
-
 const onSearch = async () => {
   await searchCtx.searchText(searchText.value ?? '')
 }
 
 ///
 
-const onUpdateDate = async (val?: number) => {
-  const date = val ? new Date(val) : null
-  await loaderCtx.loadDate(date)
-}
-
 const datePickerRef = ref()
-const openTagReport = async (title: string) => {
-  // FIXME: null を指定してもカレンダーがクリアされないので、手動クリア
-  datePickerRef.value?.handlePanelUpdateValue(null)
-
-  await loaderCtx.loadHashtag(title)
+const onChangeDate = async (timestamp?: number) => {
+  // 日付が変更されたとき
+  if (timestamp) {
+    const date = new Date(timestamp)
+    await loaderCtx.loadByDate(date)
+  }
 }
 
-///
+const onChangeReport = async (report?: Report) => {
+  // レポートが選択されたとき
+  if (report) {
+    await loaderCtx.loadByReport(report)
+  }
+}
 
-const tagReports = ref<Report[]>([])
-onMounted(async () => {
-  tagReports.value = await ReportAPI.getAll({ isDiary: false })
+watch(loaderCtx.selectedTimestamp, (value: number) => {
+  // FIXME: バグ対策
+  if (!value) {
+    datePickerRef.value?.handlePanelUpdateValue(null)
+  }
 })
 </script>

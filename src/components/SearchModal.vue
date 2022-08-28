@@ -7,7 +7,7 @@
   >
     <n-scrollbar class="pr-3" style="max-height: calc(100vh - 100px)">
       <div class="flex flex-col gap-2">
-        <n-list hoverable clickable bordered>
+        <n-list v-if="hasResult" hoverable clickable bordered>
           <!-- 完全一致 -->
           <template v-if="searchCtx.matchReport.value">
             <n-list-item
@@ -30,6 +30,13 @@
             <ReportPanel :report="report" />
           </n-list-item>
         </n-list>
+
+        <!-- 一つもなかったら -->
+        <n-empty
+          v-else
+          size="huge"
+          description="検索結果が空です"
+        />
       </div>
     </n-scrollbar>
   </n-modal>
@@ -59,6 +66,10 @@ const loadCtx = inject(LoaderCtxKey)
 const searchCtx = inject(SearchCtxKey)
 
 const themeVars = useThemeVars()
+
+const hasResult = computed(() =>
+  Boolean(searchCtx.matchReport.value) || searchCtx.reports.value.length
+)
 
 const onClick = async (report: Report) => {
   if (report.isDiary) {

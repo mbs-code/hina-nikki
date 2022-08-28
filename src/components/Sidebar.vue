@@ -15,6 +15,7 @@
         type="text"
         clearable
         placeholder="Search"
+        @keydown.enter="onSearch"
       />
 
       <n-button ghost @click="onSearch">
@@ -71,9 +72,7 @@ const isSelected = (report: Report) => {
 const searchText = ref<string>()
 
 const onSearch = async () => {
-  if (searchText.value) {
-    await searchCtx.searchText(searchText.value)
-  }
+  await searchCtx.searchText(searchText.value ?? '')
 }
 
 ///

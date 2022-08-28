@@ -50,13 +50,17 @@ export const useEditorCtx = () => {
   /// イベント系
 
   const onSave = async () => {
-    if (formReport.title) {
-      const reportId = selectedReport.value?.id
-      const resReport = reportId
-        ? await ReportAPI.update(reportId, { ...formReport })
-        : await ReportAPI.create({ ...formReport })
-      _attachReport(resReport)
-    }
+    const reportId = selectedReport.value?.id
+
+    // タイトル必須
+    if (!formReport.title) { return }
+    // 新規作成時、本文必須
+    if (!reportId && !formReport.text) { return }
+
+    const resReport = reportId
+      ? await ReportAPI.update(reportId, { ...formReport })
+      : await ReportAPI.create({ ...formReport })
+    _attachReport(resReport)
   }
 
   ///

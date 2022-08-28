@@ -1,5 +1,6 @@
 <template>
   <n-menu
+    ref="menuRef"
     v-model:value="_value"
     class="report-menu"
     :options="options"
@@ -7,7 +8,11 @@
 </template>
 
 <script setup lang="ts">
-import { MenuOption } from 'naive-ui'
+import {
+  CalendarOutline,
+  PricetagOutline,
+} from '@vicons/ionicons5'
+import { MenuOption, NIcon } from 'naive-ui'
 import { Report } from '~~/src/databases/models/Report'
 
 const props = defineProps<{
@@ -34,7 +39,19 @@ const options = computed<MenuOption[]>(() => {
   return props.reports.map(report => ({
     key: String(report.id),
     label: report.formattedTitle,
+    icon: () => h(NIcon, null, { default: () => h(report.isDiary ? CalendarOutline : PricetagOutline) },
+    ),
   }))
+})
+
+///
+
+// FIXME: null を指定した際に選択を解除するバグ対策
+const menuRef = ref()
+watch(() => props.selectedReport, (report?: Report) => {
+  if (!report) {
+    menuRef.value.uncontrolledValue = null
+  }
 })
 </script>
 

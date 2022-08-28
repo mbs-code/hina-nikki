@@ -18,7 +18,7 @@ export default defineNuxtConfig({
 
   css: ['@/assets/index.scss'],
 
-  modules: ['nuxt-windicss'],
+  modules: ['nuxt-windicss', '@vueuse/nuxt'],
 
   build: {
     transpile: ['kysely'],

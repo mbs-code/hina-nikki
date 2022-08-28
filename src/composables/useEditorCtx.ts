@@ -33,7 +33,7 @@ export const useEditorCtx = () => {
     // タイトルを記入
     formReport.title = title
 
-    // あっても無くても挿入
+    // あっても無くても持ってくる
     const report = await ReportAPI.getByTitle(title)
     _attachReport(report)
   }
@@ -43,7 +43,7 @@ export const useEditorCtx = () => {
     formReport.title = report?.title ?? formReport.title ?? undefined
     formReport.text = report?.text ?? ''
 
-    _editor.value.focus() // フォーカス
+    _editor.value?.focus() // フォーカス
   }
 
   /// //////////

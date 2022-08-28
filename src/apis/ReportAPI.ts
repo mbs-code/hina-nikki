@@ -1,6 +1,6 @@
+import { formatISO } from 'date-fns'
 import { Database } from '~~/src/databases/Database'
-import { FormReport, Report } from '~~/src/databases/models/Report'
-import { RegexUtil } from '~~/src/utils/RegexUtil'
+import { formatReport, FormReport, parseReport, Report } from '~~/src/databases/models/Report'
 
 export type SearchReport = {
   text?: string // TODO: 暫定
@@ -19,7 +19,7 @@ export class ReportAPI {
       .if(isBool(search?.isDiary), qb => qb.where('is_diary', '=', search.isDiary ? 1 : 0))
       .execute()
 
-    return reports.map(report => this.formatReport(report))
+    return reports.map(report => formatReport(report))
   }
 
   public static async get (pageId: number): Promise<Report> {
@@ -30,7 +30,7 @@ export class ReportAPI {
       .where('id', '=', pageId)
       .executeTakeFirstOrThrow()
 
-    return this.formatReport(report)
+    return formatReport(report)
   }
 
   public static async getByTitle (pageTitle: string): Promise<Report | undefined> {
@@ -43,19 +43,17 @@ export class ReportAPI {
 
     if (!report) { return undefined }
 
-    return this.formatReport(report)
+    return formatReport(report)
   }
 
   public static async create (form: FormReport): Promise<Report> {
+    const now = formatISO(new Date())
+
     // レポートを作成
-    const now = new Date()
     const { insertId } = await Database.getDB()
       .insertInto('reports')
       .values({
-        title: form.title,
-        text: form.text,
-        is_diary: this.extractIsDiary(form),
-        tags: this.extractTags(form),
+        ...parseReport(form),
         created_at: now,
         updated_at: now,
       })
@@ -65,15 +63,13 @@ export class ReportAPI {
   }
 
   public static async update (reportId: number, form: FormReport): Promise<Report> {
+    const now = formatISO(new Date())
+
     // レポートを更新
-    const now = new Date()
     const { numUpdatedRows } = await Database.getDB()
       .updateTable('reports')
       .set({
-        title: form.title,
-        text: form.text,
-        is_diary: this.extractIsDiary(form),
-        tags: this.extractTags(form),
+        ...parseReport(form),
         updated_at: now,
       })
       .where('id', '=', reportId)
@@ -98,30 +94,5 @@ export class ReportAPI {
     }
 
     return true
-  }
-
-  /// ////////////////////////////////////////////////////////////
-
-  private static formatReport (report: Report): Report {
-    // タグが文字列なので、配列に変換する
-    const tags = report.tags as unknown as string
-    return {
-      ...report,
-      tags: (tags ?? '').split(' ')
-    }
-  }
-
-  private static extractIsDiary (form: FormReport): number {
-    // タイトルが日記であるならば true
-    return RegexUtil.isDiaryTitle(form.title) ? 1 : 0
-  }
-
-  private static extractTags (form: FormReport): string[] {
-    // ハッシュタグを抽出
-    const hashes = (form.text ?? '')
-      .split(RegexUtil.separateRegex)
-      .filter(text => RegexUtil.isHashtag(text))
-
-    return Array.from(new Set(hashes))
   }
 }

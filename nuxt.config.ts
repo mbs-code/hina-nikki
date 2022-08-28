@@ -23,4 +23,9 @@ export default defineNuxtConfig({
   build: {
     transpile: ['kysely'],
   },
+
+  components: [{
+    path: '~/components',
+    pathPrefix: false,
+  }],
 })

@@ -17,21 +17,21 @@ import { Report } from '~~/src/databases/models/Report'
 
 const props = defineProps<{
   reports: Report[],
-  selectedReport?: Report,
+  value?: Report,
 }>()
 
 const emit = defineEmits<{ // eslint-disable-line func-call-spacing
-  (e: 'update:selected-report', report: Report): void
+  (e: 'update:value', report: Report): void
 }>()
 
 const _value = computed({
   get: () => {
-    const id = props.selectedReport?.id
+    const id = props.value?.id
     return id ? String(id) : undefined
   },
   set: (value?: string) => {
     const report = props.reports.find(r => r.id === Number(value))
-    emit('update:selected-report', report)
+    emit('update:value', report)
   },
 })
 
@@ -48,7 +48,7 @@ const options = computed<MenuOption[]>(() => {
 
 // FIXME: null を指定した際に選択を解除するバグ対策
 const menuRef = ref()
-watch(() => props.selectedReport, (report?: Report) => {
+watch(() => props.value, (report?: Report) => {
   if (!report) {
     menuRef.value.uncontrolledValue = null
   }

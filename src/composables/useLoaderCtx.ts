@@ -8,10 +8,6 @@ export const useLoaderCtx = (editorCtx: EditorCtx) => {
   const _selectedDate = ref<Date>() // カレンダー日付
   const _selectedHashtag = ref<string>() // 選択しているタグ名
 
-  const selectedTimestamp = computed(() => {
-    return _selectedDate.value?.getTime() ?? null
-  })
-
   const reportTitle = computed(() => {
     const date = _selectedDate.value
     if (date) { return DateUtil.formatDiaryTitle(date) }
@@ -86,7 +82,7 @@ export const useLoaderCtx = (editorCtx: EditorCtx) => {
   }
 
   return {
-    selectedTimestamp,
+    selectedDate: readonly(_selectedDate),
     reportTitle,
     formattedReportTitle,
 

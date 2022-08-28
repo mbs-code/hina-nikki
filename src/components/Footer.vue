@@ -26,10 +26,12 @@ import {
 const editorCtx = inject(EditorCtxKey)
 
 const status = computed(() => {
-  const isNew = editorCtx.isNew.value
-  if (isNew) { return 'new' }
+  // 優先度: 編集中 > 新規 > 保存済
 
   const isDarty = editorCtx.isDirty.value
-  return isDarty ? 'edit' : 'nochange'
+  if (isDarty) { return 'edit' }
+
+  const isNew = editorCtx.isNew.value
+  return isNew ? 'new' : 'nochange'
 })
 </script>

@@ -4,7 +4,9 @@ import { ReportAPI } from '~~/src/apis/ReportAPI'
 import { FormReport, Report } from '~~/src/databases/models/Report'
 
 export const useEditorCtx = () => {
-  const editor = ref<Ace.Editor>()
+  const _editor = ref<Ace.Editor>()
+
+  const bindEditor = (e: Ace.Editor) => (_editor.value = e)
 
   /// //////////
   /// データ更新系
@@ -40,7 +42,7 @@ export const useEditorCtx = () => {
     formReport.title = report?.title ?? formReport.title ?? undefined
     formReport.text = report?.text ?? ''
 
-    editor.value.focus() // フォーカス
+    _editor.value.focus() // フォーカス
   }
 
   /// //////////
@@ -59,12 +61,12 @@ export const useEditorCtx = () => {
   ///
 
   const getSelectedText = () => {
-    const text = editor.value.getSelectedText()
+    const text = _editor.value.getSelectedText()
     window.alert(text)
   }
 
   return {
-    editor,
+    bindEditor, // バインド
 
     selectedReport, // 現在選択されているレポート
     formReport, // temp値

@@ -51,7 +51,8 @@ const style = computed(() => ({
 }))
 
 const onInit = (e: Ace.Editor) => {
-  editorCtx.editor.value = e
-  editorCtx.editor.value.session.setTabSize(options.tabSize)
+  e.session.setTabSize(options.tabSize)
+
+  editorCtx.bindEditor(e)
 }
 </script>

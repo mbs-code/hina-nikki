@@ -2,7 +2,7 @@ import { InjectionKey } from 'nuxt/dist/app/compat/capi'
 import { format as dateFormat, addDays } from 'date-fns'
 import { EditorCtx } from '~~/src/composables/useEditorCtx'
 
-export const useSearchCtx = (editorCtx: EditorCtx) => {
+export const useLoaderCtx = (editorCtx: EditorCtx) => {
   const _selectedDate = ref<Date>() // カレンダー日付
   const _selectedHashtag = ref<string>() // 選択しているタグ名
 
@@ -76,7 +76,7 @@ export const useSearchCtx = (editorCtx: EditorCtx) => {
   }
 }
 
-export type SearchCtx = ReturnType<typeof useSearchCtx>
+export type LoaderCtx = ReturnType<typeof useLoaderCtx>
 
-export const SearchCtxKey: InjectionKey<SearchCtx> =
-  (Symbol('SearchCtxKey'))
+export const LoaderCtxKey: InjectionKey<LoaderCtx> =
+  (Symbol('LoaderCtxKey'))

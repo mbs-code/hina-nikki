@@ -34,14 +34,14 @@
 import { darkTheme } from 'naive-ui'
 import { Database } from '~~/src/databases/Database'
 
-// Database.debug = true
+Database.debug = true
 
 const key = ref<number>(Date.now())
 
 const editorCtx = useEditorCtx()
-const searchCtx = useSearchCtx(editorCtx)
+const loaderCtx = useLoaderCtx(editorCtx)
 provide(EditorCtxKey, editorCtx)
-provide(SearchCtxKey, searchCtx)
+provide(LoaderCtxKey, loaderCtx)
 
 onMounted(async () => {
   // DB migrate

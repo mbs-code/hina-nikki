@@ -10,12 +10,12 @@
     :style="style"
     @init="onInit"
     @keydown.ctrl.s="editorCtx.onSave()"
-    @keyup.alt.w="searchCtx.onMoveDate(-7)"
-    @keyup.alt.a="searchCtx.onMoveDate(-1)"
-    @keyup.alt.s="searchCtx.onMoveDate(7)"
-    @keyup.alt.d="searchCtx.onMoveDate(1)"
-    @keyup.alt.q="searchCtx.onMoveToday()"
-    @click.alt="searchCtx.onClickHashtag()"
+    @keyup.alt.w="loaderCtx.onMoveDate(-7)"
+    @keyup.alt.a="loaderCtx.onMoveDate(-1)"
+    @keyup.alt.s="loaderCtx.onMoveDate(7)"
+    @keyup.alt.d="loaderCtx.onMoveDate(1)"
+    @keyup.alt.q="loaderCtx.onMoveToday()"
+    @click.alt="loaderCtx.onClickHashtag()"
   />
 
   <div v-else class="flex items-center justify-center">
@@ -24,7 +24,7 @@
       description="ノートを選択してください"
     >
       <template #extra>
-        <n-button @click="searchCtx.onMoveToday()">
+        <n-button @click="loaderCtx.onMoveToday()">
           今日のノート
         </n-button>
       </template>
@@ -40,7 +40,7 @@ import 'ace-builds/src-noconflict/mode-markdown'
 import 'ace-builds/src-noconflict/theme-one_dark.js'
 
 const editorCtx = inject(EditorCtxKey)
-const searchCtx = inject(SearchCtxKey)
+const loaderCtx = inject(LoaderCtxKey)
 
 // TODO: 設定画面を作る
 const options = {

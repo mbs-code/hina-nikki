@@ -2,7 +2,7 @@
   <div>
     <n-date-picker
       ref="datePickerRef"
-      :value="searchCtx.selectedTimestamp.value"
+      :value="loaderCtx.selectedTimestamp.value"
       type="date"
       panel
       clearable
@@ -43,17 +43,17 @@
 import { ReportAPI } from '~~/src/apis/ReportAPI'
 import { Report } from '~~/src/databases/models/Report'
 
-const searchCtx = inject(SearchCtxKey)
+const loaderCtx = inject(LoaderCtxKey)
 
 const isSelected = (report: Report) => {
-  return searchCtx.reportTitle.value === report.title
+  return loaderCtx.reportTitle.value === report.title
 }
 
 ///
 
 const onUpdateDate = async (val?: number) => {
   const date = val ? new Date(val) : null
-  await searchCtx.loadDate(date)
+  await loaderCtx.loadDate(date)
 }
 
 const datePickerRef = ref()
@@ -61,7 +61,7 @@ const openTagReport = async (title: string) => {
   // FIXME: null を指定してもカレンダーがクリアされないので、手動クリア
   datePickerRef.value?.handlePanelUpdateValue(null)
 
-  await searchCtx.loadHashtag(title)
+  await loaderCtx.loadHashtag(title)
 }
 
 ///

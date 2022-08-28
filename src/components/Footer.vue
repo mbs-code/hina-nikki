@@ -5,7 +5,7 @@
     <div class="grow" name="padding" />
 
     <div class="flex items-center gap-1">
-      <span>{{ editorCtx.formReport.title ?? '-' }}</span>
+      <span>{{ editorCtx.formReport.title ?? '' }}</span>
 
       <n-icon size="16">
         <Alert v-if="status === 'edit'" />

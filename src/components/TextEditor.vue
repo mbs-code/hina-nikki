@@ -9,11 +9,24 @@
     :style="style"
     @init="onInit"
     @keyup.ctrl.s="editorCtx.onSave()"
-    @keyup.alt.shift.w="editorCtx.onMoveDate(-7)"
-    @keyup.alt.shift.a="editorCtx.onMoveDate(-1)"
-    @keyup.alt.shift.s="editorCtx.onMoveDate(7)"
-    @keyup.alt.shift.d="editorCtx.onMoveDate(1)"
+    @keyup.ctrl.shift.up="searchCtx.onMoveDate(-7)"
+    @keyup.ctrl.shift.left="searchCtx.onMoveDate(-1)"
+    @keyup.ctrl.shift.down="searchCtx.onMoveDate(7)"
+    @keyup.ctrl.shift.right="searchCtx.onMoveDate(1)"
   />
+
+  <div v-else class="flex items-center justify-center">
+    <n-empty
+      size="huge"
+      description="ノートを選択してください"
+    >
+      <template #extra>
+        <n-button @click="searchCtx.onMoveToday()">
+          今日のノート
+        </n-button>
+      </template>
+    </n-empty>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -24,6 +37,7 @@ import 'ace-builds/src-noconflict/mode-markdown'
 import 'ace-builds/src-noconflict/theme-one_dark.js'
 
 const editorCtx = inject(EditorCtxKey)
+const searchCtx = inject(SearchCtxKey)
 
 // TODO: 設定画面を作る
 const options = {

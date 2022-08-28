@@ -1,5 +1,5 @@
 import { Database } from '~~/src/databases/Database'
-import { FormReport, ReportWithTag } from '~~/src/databases/models/Report'
+import { FormReport, Report, ReportWithTag } from '~~/src/databases/models/Report'
 
 export class ReportAPI {
   public static async getAll (): Promise<ReportWithTag[]> {
@@ -93,7 +93,8 @@ export class ReportAPI {
       })
       .executeTakeFirst()
 
-    // TODO: タグを抽出して更新
+    // タグを抽出して更新
+    await this.syncTags(Number(insertId), form)
 
     return await this.get(Number(insertId))
   }
@@ -115,7 +116,8 @@ export class ReportAPI {
       throw new Error('no result')
     }
 
-    // TODO: タグを抽出して更新
+    // タグを抽出して更新
+    await this.syncTags(Number(reportId), form)
 
     return await this.get(Number(reportId))
   }
@@ -138,5 +140,48 @@ export class ReportAPI {
     }
 
     return true
+  }
+
+  ///
+
+  private static async syncTags (reportId: number, form: FormReport) {
+    // ハッシュタグを抽出
+    const hashes = (form.text ?? '')
+      .split(/ |　|\r\n|\n/) // eslint-disable-line no-irregular-whitespace
+      .filter(text => text.match(/^#\S+$/))
+
+    const dbTags = await Database.getDB()
+      .selectFrom('tags')
+      .selectAll()
+      .where('report_id', '=', reportId)
+      .execute()
+
+    // hash を回して、DBになければ新規作成
+    for (const hash of hashes) {
+      const existDB = dbTags.find(tag => tag.name === hash)
+      if (!existDB) {
+        // タグを作成
+        await Database.getDB()
+          .insertInto('tags')
+          .values({
+            name: hash,
+            report_id: reportId,
+            created_at: new Date(),
+          })
+          .executeTakeFirst()
+      }
+    }
+
+    // 逆に tag を回して、ハッシュに無ければ削除
+    for (const dbTag of dbTags) {
+      const existHash = hashes.find(hash => hash === dbTag.name)
+      if (!existHash) {
+        // タグを削除
+        await Database.getDB()
+          .deleteFrom('tags')
+          .where('id', '=', dbTag.id)
+          .executeTakeFirst()
+      }
+    }
   }
 }

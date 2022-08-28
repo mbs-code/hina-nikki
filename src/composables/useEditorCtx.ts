@@ -1,12 +1,10 @@
 import { Ace } from 'ace-builds'
 import { InjectionKey } from 'nuxt/dist/app/compat/capi'
-import { format as dateFormat, addDays } from 'date-fns'
 import { ReportAPI } from '~~/src/apis/ReportAPI'
 import { FormReport, Report } from '~~/src/databases/models/Report'
 
 export const useEditorCtx = () => {
   const editor = ref<Ace.Editor>()
-  const selectedDate = ref<Date>() // カレンダー日付
 
   /// //////////
   /// データ更新系
@@ -24,49 +22,36 @@ export const useEditorCtx = () => {
     : selectedReport.value?.text !== formReport.text
   )
 
-  const loadReport = async () => {
+  const loadReport = async (title?: string) => {
     // 今ページを開いていたら一度保存する
     // TODO: アラートか設定行き
     if (isDirty.value) { await onSave() }
 
-    // タイトルを生成
-    const title = selectedDate.value
-      ? dateFormat(selectedDate.value, 'yyyyMMdd')
-      : ''
+    // タイトルを記入
     formReport.title = title
 
+    // あっても無くても挿入
     const report = await ReportAPI.getByTitle(title)
     _attachReport(report)
   }
 
   const _attachReport = (report?: Report) => {
     selectedReport.value = report
-    formReport.title = report?.title ?? formReport.title ?? ''
+    formReport.title = report?.title ?? formReport.title ?? undefined
     formReport.text = report?.text ?? ''
   }
-
-  // startup
-  onMounted(async () => {
-    selectedDate.value = new Date()
-    await loadReport()
-  })
 
   /// //////////
   /// イベント系
 
   const onSave = async () => {
-    const reportId = selectedReport.value?.id
-    const resReport = reportId
-      ? await ReportAPI.update(reportId, { ...formReport })
-      : await ReportAPI.create({ ...formReport })
-    _attachReport(resReport)
-  }
-
-  const onMoveDate = async (day: number) => {
-    const date = selectedDate.value ?? new Date()
-    const prev = addDays(date, day)
-    selectedDate.value = prev
-    await loadReport()
+    if (formReport.title) {
+      const reportId = selectedReport.value?.id
+      const resReport = reportId
+        ? await ReportAPI.update(reportId, { ...formReport })
+        : await ReportAPI.create({ ...formReport })
+      _attachReport(resReport)
+    }
   }
 
   ///
@@ -78,7 +63,6 @@ export const useEditorCtx = () => {
 
   return {
     editor,
-    selectedDate,
 
     selectedReport, // 現在選択されているレポート
     formReport, // temp値
@@ -87,11 +71,12 @@ export const useEditorCtx = () => {
 
     loadReport, // 今のクエリで検索する
     onSave, // 保存する
-    onMoveDate, // 日付を移動する
 
     getSelectedText,
   }
 }
 
-export const EditorCtxKey: InjectionKey<ReturnType<typeof useEditorCtx>> =
+export type EditorCtx = ReturnType<typeof useEditorCtx>
+
+export const EditorCtxKey: InjectionKey<EditorCtx> =
   (Symbol('EditorCtxKey'))

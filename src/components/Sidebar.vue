@@ -1,11 +1,28 @@
 <template>
   <div>
     <n-date-picker
-      v-model:value="timestamp"
+      ref="datePickerRef"
+      :value="searchCtx.selectedTimestamp.value"
       type="date"
       panel
-      @update:value="onChangeDate"
+      clearable
+      @update:value="onUpdateDate"
     />
+
+    <n-table size="small">
+      <tr>
+        <td>Ctrl + Shift + Arrow</td>
+        <td>日付の移動</td>
+      </tr>
+      <tr>
+        <td>Ctrl + s</td>
+        <td>保存</td>
+      </tr>
+    </n-table>
+
+    <n-button @click="testAsdPage">
+      #asd
+    </n-button>
 
     <div>side</div>
     <div>side</div>
@@ -39,14 +56,18 @@
 </template>
 
 <script setup lang="ts">
-const editorCtx = inject(EditorCtxKey)
+const searchCtx = inject(SearchCtxKey)
 
-const timestamp = computed({
-  get: () => editorCtx.selectedDate.value?.getTime(),
-  set: (value?: number) => (editorCtx.selectedDate.value = value ? new Date(value) : undefined),
-})
+const onUpdateDate = async (val?: number) => {
+  const date = val ? new Date(val) : null
+  await searchCtx.loadDate(date)
+}
 
-const onChangeDate = async () => {
-  await editorCtx.loadReport()
+const datePickerRef = ref()
+const testAsdPage = async () => {
+  // FIXME: null を指定してもカレンダーがクリアされないので、手動クリア
+  datePickerRef.value?.handlePanelUpdateValue(null)
+
+  await searchCtx.loadTagName('#asd')
 }
 </script>

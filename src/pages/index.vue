@@ -13,5 +13,12 @@
 </template>
 
 <script setup lang="ts">
+const searchCtx = inject(SearchCtxKey)
 const editorCtx = inject(EditorCtxKey)
+
+// startup
+onMounted(async () => {
+  // 今日を表示する
+  await searchCtx.onMoveToday()
+})
 </script>

@@ -8,11 +8,12 @@
     theme="one_dark"
     :style="style"
     @init="onInit"
-    @keyup.ctrl.s="editorCtx.onSave()"
-    @keyup.ctrl.shift.up="searchCtx.onMoveDate(-7)"
-    @keyup.ctrl.shift.left="searchCtx.onMoveDate(-1)"
-    @keyup.ctrl.shift.down="searchCtx.onMoveDate(7)"
-    @keyup.ctrl.shift.right="searchCtx.onMoveDate(1)"
+    @keydown.ctrl.s="editorCtx.onSave()"
+    @keyup.alt.w="searchCtx.onMoveDate(-7)"
+    @keyup.alt.a="searchCtx.onMoveDate(-1)"
+    @keyup.alt.s="searchCtx.onMoveDate(7)"
+    @keyup.alt.d="searchCtx.onMoveDate(1)"
+    @keyup.alt.q="searchCtx.onMoveToday()"
   />
 
   <div v-else class="flex items-center justify-center">

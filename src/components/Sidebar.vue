@@ -11,8 +11,12 @@
 
     <n-table size="small">
       <tr>
-        <td>Ctrl + Shift + Arrow</td>
+        <td>Alt + wasd</td>
         <td>日付の移動</td>
+      </tr>
+      <tr>
+        <td>Alt + q</td>
+        <td>今日に移動</td>
       </tr>
       <tr>
         <td>Ctrl + s</td>

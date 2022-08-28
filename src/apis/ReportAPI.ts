@@ -1,12 +1,21 @@
 import { Database } from '~~/src/databases/Database'
 import { FormReport, Report } from '~~/src/databases/models/Report'
 
+export type SearchReport = {
+  text?: string // TODO: 暫定
+  isDiary?: boolean
+}
+
+const isBool = (val: unknown) => typeof val === 'boolean'
+
 export class ReportAPI {
-  public static async getAll (): Promise<Report[]> {
+  public static async getAll (search?: SearchReport): Promise<Report[]> {
     // レポートの取得
     const reports = await Database.getDB()
       .selectFrom('reports')
-      .selectAll()
+      .selectAll('reports')
+      .if(Boolean(search?.text), qb => qb.where('text', 'like', `%${search.text}%`))
+      .if(isBool(search?.isDiary), qb => qb.where('is_diary', '=', search.isDiary))
       .execute()
 
     return reports.map(report => this.formatReport(report))
@@ -44,6 +53,7 @@ export class ReportAPI {
       .values({
         title: form.title,
         text: form.text,
+        is_diary: this.extractIsDiary(form),
         tags: this.extractTags(form),
         created_at: now,
         updated_at: now,
@@ -61,6 +71,7 @@ export class ReportAPI {
       .set({
         title: form.title,
         text: form.text,
+        is_diary: this.extractIsDiary(form),
         tags: this.extractTags(form),
         updated_at: now,
       })
@@ -99,11 +110,16 @@ export class ReportAPI {
     }
   }
 
-  private static extractTags (form: FormReport) {
+  private static extractIsDiary (form: FormReport): boolean {
+    // yyyymmdd であるならば true
+    return /^\d{8}$%/.test(form.title)
+  }
+
+  private static extractTags (form: FormReport): string[] {
     // ハッシュタグを抽出
     const hashes = (form.text ?? '')
       .split(/ |　|\r\n|\n/) // eslint-disable-line no-irregular-whitespace
-      .filter(text => text.match(/^#\S+$/))
+      .filter(text => /^#\S+$/.test(text))
 
     return Array.from(new Set(hashes))
   }

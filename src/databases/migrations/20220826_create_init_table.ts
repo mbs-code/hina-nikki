@@ -6,6 +6,7 @@ export async function up (db: Kysely<unknown>): Promise<void> {
     .addColumn('id', 'integer', col => col.primaryKey())
     .addColumn('title', 'text', col => col.notNull())
     .addColumn('text', 'text', col => col.notNull())
+    .addColumn('is_diary', 'boolean', col => col.notNull().defaultTo(false))
     .addColumn('tags', 'text')
     .addColumn('created_at', 'datetime', col => col.notNull())
     .addColumn('updated_at', 'datetime', col => col.notNull())

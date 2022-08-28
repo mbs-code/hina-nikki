@@ -27,6 +27,8 @@
         <Footer />
       </n-layout-footer>
     </n-layout>
+
+    <SearchModal v-model:show="showSearchModal" />
   </n-config-provider>
 </template>
 
@@ -38,11 +40,6 @@ Database.debug = true
 
 const key = ref<number>(Date.now())
 
-const editorCtx = useEditorCtx()
-const loaderCtx = useLoaderCtx(editorCtx)
-provide(EditorCtxKey, editorCtx)
-provide(LoaderCtxKey, loaderCtx)
-
 onMounted(async () => {
   // DB migrate
   const { migrator } = Database.getInstance()
@@ -52,6 +49,23 @@ onMounted(async () => {
 const onWipe = async () => {
   await Database.dbWipe()
 }
+
+///
+
+const showSearchModal = ref<boolean>(false)
+const openSearchModal = () => {
+  showSearchModal.value = true
+}
+
+/// //////////
+
+const editorCtx = useEditorCtx()
+const loaderCtx = useLoaderCtx(editorCtx)
+const searchCtx = useSearchCtx(openSearchModal)
+
+provide(EditorCtxKey, editorCtx)
+provide(LoaderCtxKey, loaderCtx)
+provide(SearchCtxKey, searchCtx)
 </script>
 
 <style scoped lang="scss">

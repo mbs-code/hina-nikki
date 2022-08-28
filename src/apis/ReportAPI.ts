@@ -1,22 +1,25 @@
 import { formatISO } from 'date-fns'
 import { Database } from '~~/src/databases/Database'
-import { formatReport, FormReport, parseReport, Report } from '~~/src/databases/models/Report'
+import { DBReport, formatReport, FormReport, parseReport, Report } from '~~/src/databases/models/Report'
 
 export type SearchReport = {
-  text?: string // TODO: 暫定
+  phrases?: string[]
+  hashtags?: string[]
   isDiary?: boolean
+  sorts?: [keyof DBReport, 'asc' | 'desc'][]
 }
 
 const isBool = (val: unknown) => typeof val === 'boolean'
-
 export class ReportAPI {
   public static async getAll (search?: SearchReport): Promise<Report[]> {
     // レポートの取得
     const reports = await Database.getDB()
       .selectFrom('reports')
       .selectAll()
-      .if(Boolean(search?.text), qb => qb.where('text', 'like', `%${search.text}%`))
+      .if(Boolean(search?.phrases), qb => search.phrases.reduce((qb, val) => qb.where('tags', 'like', `%${val}%`), qb))
+      .if(Boolean(search?.hashtags), qb => search.hashtags.reduce((qb, val) => qb.where('tags', 'like', `%${val}%`), qb))
       .if(isBool(search?.isDiary), qb => qb.where('is_diary', '=', search.isDiary ? 1 : 0))
+      .if(Boolean(search?.sorts), qb => search.sorts.reduce((qb, sort) => qb.orderBy(sort[0], sort[1]), qb))
       .execute()
 
     return reports.map(report => formatReport(report))

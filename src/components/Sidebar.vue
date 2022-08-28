@@ -61,7 +61,7 @@ const openTagReport = async (title: string) => {
   // FIXME: null を指定してもカレンダーがクリアされないので、手動クリア
   datePickerRef.value?.handlePanelUpdateValue(null)
 
-  await searchCtx.loadTagName(title)
+  await searchCtx.loadHashtag(title)
 }
 
 ///

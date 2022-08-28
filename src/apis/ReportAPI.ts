@@ -1,5 +1,6 @@
 import { Database } from '~~/src/databases/Database'
 import { FormReport, Report } from '~~/src/databases/models/Report'
+import { RegexUtil } from '~~/src/utils/RegexUtil'
 
 export type SearchReport = {
   text?: string // TODO: 暫定
@@ -111,15 +112,15 @@ export class ReportAPI {
   }
 
   private static extractIsDiary (form: FormReport): number {
-    // yyyymmdd であるならば true
-    return /^\d{8}$/.test(form.title) ? 1 : 0
+    // タイトルが日記であるならば true
+    return RegexUtil.isDiaryTitle(form.title) ? 1 : 0
   }
 
   private static extractTags (form: FormReport): string[] {
     // ハッシュタグを抽出
     const hashes = (form.text ?? '')
-      .split(/ |　|\r\n|\n/) // eslint-disable-line no-irregular-whitespace
-      .filter(text => /^#\S+$/.test(text))
+      .split(RegexUtil.separateRegex)
+      .filter(text => RegexUtil.isHashtag(text))
 
     return Array.from(new Set(hashes))
   }

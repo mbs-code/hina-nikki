@@ -4,7 +4,7 @@ import { EditorCtx } from '~~/src/composables/useEditorCtx'
 
 export const useSearchCtx = (editorCtx: EditorCtx) => {
   const _selectedDate = ref<Date>() // カレンダー日付
-  const _selectedTagName = ref<string>() // 選択しているタグ名
+  const _selectedHashtag = ref<string>() // 選択しているタグ名
 
   const selectedTimestamp = computed(() => {
     return _selectedDate.value?.getTime() ?? null
@@ -14,7 +14,7 @@ export const useSearchCtx = (editorCtx: EditorCtx) => {
     const date = _selectedDate.value
     if (date) { return dateFormat(date, 'yyyyMMdd') }
 
-    const tagName = _selectedTagName.value
+    const tagName = _selectedHashtag.value
     if (tagName) { return tagName }
 
     return undefined
@@ -25,15 +25,15 @@ export const useSearchCtx = (editorCtx: EditorCtx) => {
   // 日付で読み込む
   const loadDate = async (date?: Date) => {
     _selectedDate.value = date
-    _selectedTagName.value = undefined
+    _selectedHashtag.value = undefined
 
     await editorCtx.loadReport(reportTitle.value) // 読み込み
   }
 
-  // タグ名で読み込む
-  const loadTagName = async (name?: string) => {
+  // ハッシュタグで読み込む
+  const loadHashtag = async (hashtag?: string) => {
     _selectedDate.value = undefined
-    _selectedTagName.value = name
+    _selectedHashtag.value = hashtag
 
     await editorCtx.loadReport(reportTitle.value) // 読み込み
   }
@@ -55,16 +55,24 @@ export const useSearchCtx = (editorCtx: EditorCtx) => {
     await loadDate(new Date())
   }
 
+  const onClickHashtag = async () => {
+    const hashTag = editorCtx.getActiveHashTag()
+    if (hashTag) {
+      await loadHashtag(hashTag)
+    }
+  }
+
   return {
     selectedTimestamp,
 
     reportTitle,
 
     loadDate,
-    loadTagName,
+    loadHashtag,
 
     onMoveDate,
     onMoveToday,
+    onClickHashtag,
   }
 }
 

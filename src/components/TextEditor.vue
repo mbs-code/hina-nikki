@@ -6,6 +6,7 @@
     class="editor"
     lang="markdown"
     theme="one_dark"
+    placeholder="空のノートです ..."
     :style="style"
     @init="onInit"
     @keydown.ctrl.s="editorCtx.onSave()"
@@ -14,6 +15,7 @@
     @keyup.alt.s="searchCtx.onMoveDate(7)"
     @keyup.alt.d="searchCtx.onMoveDate(1)"
     @keyup.alt.q="searchCtx.onMoveToday()"
+    @click.alt="searchCtx.onClickHashtag()"
   />
 
   <div v-else class="flex items-center justify-center">

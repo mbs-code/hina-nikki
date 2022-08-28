@@ -34,7 +34,7 @@
 import { darkTheme } from 'naive-ui'
 import { Database } from '~~/src/databases/Database'
 
-Database.debug = true
+// Database.debug = true
 
 const key = ref<number>(Date.now())
 

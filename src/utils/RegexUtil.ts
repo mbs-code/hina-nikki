@@ -1,7 +1,9 @@
 export class RegexUtil {
   public static yyyymmddRegex = /^\d{8}$/
-  public static hashtagRegex = /^#\S+$/
-  public static separateRegex = / |　|\r\n|\n/ // eslint-disable-line no-irregular-whitespace
+  public static hashtagRegex = /^#[^#\s\v].+$/ // 垂直タブだけ除外されるらしい
+
+  // eslint-disable-next-line no-irregular-whitespace
+  public static separateRegex = / |　|\r\n|\n/
 
   public static isDiaryTitle (val?: string): boolean {
     return val ? this.yyyymmddRegex.test(val) : false

@@ -17,11 +17,16 @@ const emit = defineEmits<{ // eslint-disable-line func-call-spacing
   (e: 'update:value', value?: Date): void
 }>()
 
+// FIXME: 内部更新時に外まで伝搬させないフラグ
+const isInnerUpdate = ref<boolean>(false)
+
 const _value = computed({
   get: () => props.value?.getTime() ?? undefined,
   set: (value?: number) => {
-    const date = value ? new Date(value) : undefined
-    emit('update:value', date)
+    if (!isInnerUpdate.value) {
+      const date = value ? new Date(value) : undefined
+      emit('update:value', date)
+    }
   },
 })
 
@@ -40,7 +45,9 @@ useResizeObserver(document.body, (entries) => {
 const datePickerRef = ref()
 watch(() => props.value, (value?: Date) => {
   if (!value) {
+    isInnerUpdate.value = true
     datePickerRef.value?.handlePanelUpdateValue(null, true)
+    isInnerUpdate.value = false
   }
 })
 </script>

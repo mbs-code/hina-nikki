@@ -4,23 +4,44 @@
     title="ノート検索"
     preset="dialog"
     :block-scroll="false"
+    style="width: 600px"
   >
+    <div>{{ searchCtx.params }}</div>
+
     <n-scrollbar class="pr-3" style="max-height: calc(100vh - 100px)">
       <div class="flex flex-col gap-2">
-        <n-list v-if="hasResult" hoverable clickable bordered>
-          <!-- 完全一致 -->
-          <template v-if="searchCtx.matchReport.value">
-            <n-list-item
-              :style="{
-                borderWidth: '2px',
-                borderColor: themeVars.primaryColor,
-              }"
-              @click="onClickReport(searchCtx.matchReport.value)"
-            >
-              <ReportPanel :report="searchCtx.matchReport.value" />
-            </n-list-item>
-          </template>
+        <template v-if="searchCtx.matchReport.value || searchCtx.params.match">
+          <div>完全一致</div>
+          <n-list hoverable clickable bordered>
+            <!-- 完全一致 -->
+            <template v-if="searchCtx.matchReport.value">
+              <n-list-item
+                class="border-2"
+                :style="{ borderColor: themeVars.primaryColor }"
+                @click="onClickReport(searchCtx.matchReport.value)"
+              >
+                <ReportPanel :report="searchCtx.matchReport.value" />
+              </n-list-item>
+            </template>
 
+            <!-- 完全一致が無い場合は、作成アシスト -->
+            <template v-else-if="searchCtx.params.match">
+              <n-list-item
+                class="border-2"
+                :style="{ borderColor: themeVars.infoColor }"
+                @click="onClickCreate(searchCtx.params.match)"
+              >
+                <CreationReportPanel
+                  :title="searchCtx.params.match"
+                  :icon-color="themeVars.infoColor"
+                />
+              </n-list-item>
+            </template>
+          </n-list>
+        </template>
+
+        <div>検索結果</div>
+        <n-list hoverable clickable bordered>
           <!-- 検索要素 -->
           <n-list-item
             v-for="(report, _) of searchCtx.reports.value"
@@ -29,14 +50,15 @@
           >
             <ReportPanel :report="report" />
           </n-list-item>
-        </n-list>
 
-        <!-- 一つもなかったら -->
-        <n-empty
-          v-else
-          size="huge"
-          description="検索結果が空です"
-        />
+          <!-- 一つもなかったら -->
+          <n-empty
+            v-if="!searchCtx.reports.value?.length"
+            class="m-2"
+            size="huge"
+            description="検索結果が空です"
+          />
+        </n-list>
       </div>
     </n-scrollbar>
   </n-modal>
@@ -65,12 +87,16 @@ const loadCtx = inject(LoaderCtxKey)
 const searchCtx = inject(SearchCtxKey)
 const themeVars = useThemeVars()
 
-const hasResult = computed(() =>
-  Boolean(searchCtx.matchReport.value) || searchCtx.reports.value.length
-)
+/// ////////////////////
+// ノート読み込み
 
 const onClickReport = async (report: Report) => {
   await loadCtx.loadByReport(report)
+  _show.value = false
+}
+
+const onClickCreate = async (hashtag: string) => {
+  await loadCtx.loadByHashtag(hashtag)
   _show.value = false
 }
 </script>

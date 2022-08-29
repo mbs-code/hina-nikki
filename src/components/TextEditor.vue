@@ -63,3 +63,15 @@ const onWheel = ({ deltaY }: WheelEvent) => {
   }
 }
 </script>
+
+<!-- <style scoped lang="scss">
+.editor {
+  ::v-deep(.ace_string.ace_strong) {
+    color: red;
+  }
+
+  ::v-deep(.ace_markup.ace_list) {
+    color: orange;
+  }
+}
+</style> -->

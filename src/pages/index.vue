@@ -13,7 +13,7 @@
         v-for="(hashtag, _) of hashtags"
         :key="_"
         size="small"
-        @click="onSearch(hashtag)"
+        @click="onSearchHashtag(hashtag)"
       >
         <template #icon>
           <n-icon><PricetagOutline /></n-icon>
@@ -58,7 +58,7 @@ const configStore = inject(ConfigStoreKey)
 
 // startup
 onMounted(async () => {
-  // 今日を表示する
+  // 今日を表示する // TODO: ここ？
   await loaderCtx.onMoveToday()
 })
 
@@ -78,8 +78,11 @@ const hashtags = computed(() => {
 
 ///
 
-const onSearch = (hashtag: string) => {
-  searchCtx.searchHashtag(hashtag)
+const onSearchHashtag = async (hashtag: string) => {
+  await searchCtx.onSearch({
+    match: hashtag,
+    hashtags: [hashtag],
+  })
 }
 
 ///
@@ -87,5 +90,4 @@ const onSearch = (hashtag: string) => {
 const toggleLineWrap = () => {
   configStore.env.editor.lineWrap = !configStore.env.editor.lineWrap
 }
-
 </script>

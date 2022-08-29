@@ -17,11 +17,21 @@ export class ReportAPI {
     const reports = await Database.getDB()
       .selectFrom('reports')
       .selectAll()
-      .if(Boolean(search?.phrases), qb => search.phrases.reduce((qb, val) => qb.where('text', 'like', `%${val}%`), qb))
-      .if(Boolean(search?.hashtags), qb => search.hashtags.reduce((qb, val) => qb.where('tags', 'like', `%${val}%`), qb))
+      .if(Boolean(search?.phrases), qb => search.phrases.reduce(
+        (qb2, val) => qb2.where(
+          qb3 => qb3
+            .where('text', 'like', `%${val}%`)
+            .orWhere('title', 'like', `%${val}%`)
+        ), qb)
+      )
+      .if(Boolean(search?.hashtags), qb => search.hashtags.reduce(
+        (qb2, val) => qb2.where('tags', 'like', `%${val}%`), qb)
+      )
       .if(isBool(search?.isDiary), qb => qb.where('is_diary', '=', search.isDiary ? 1 : 0))
       .if(Boolean(search?.limit), qb => qb.limit(search.limit))
-      .if(Boolean(search?.sorts), qb => search.sorts.reduce((qb, sort) => qb.orderBy(sort[0], sort[1]), qb))
+      .if(Boolean(search?.sorts), qb => search.sorts.reduce(
+        (qb2, sort) => qb2.orderBy(sort[0], sort[1]), qb)
+      )
       .execute()
 
     return reports.map(report => formatReport(report))

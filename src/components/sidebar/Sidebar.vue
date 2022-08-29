@@ -2,14 +2,14 @@
   <div class="h-full flex flex-col gap-2">
     <n-input-group>
       <n-input
-        v-model:value="searchText"
+        v-model:value="searchCtx.params.phrase"
         type="text"
         clearable
         placeholder="Search"
-        @keydown.enter="onSearch"
+        @keydown.enter="onSearchText"
       />
 
-      <n-button ghost @click="onSearch">
+      <n-button ghost @click="onSearchText">
         <template #icon>
           <n-icon><Search /></n-icon>
         </template>
@@ -42,15 +42,18 @@ const editorCtx = inject(EditorCtxKey)
 const searchCtx = inject(SearchCtxKey)
 const favoriteCtx = inject(FavoriteCtxKey)
 
-///
+/// ////////////////////
+// ノート検索
 
-// TODO: searchCtx に入れる
-const searchText = ref<string>()
-const onSearch = async () => {
-  await searchCtx.searchText(searchText.value ?? '')
+const onSearchText = async () => {
+  const text = searchCtx.params.phrase
+  await searchCtx.onSearch({
+    phrase: text,
+  })
 }
 
-///
+/// ////////////////////
+// ノート読み込み
 
 const onChangeDate = async (date?: Date) => {
   // 日付が変更されたとき
@@ -63,5 +66,4 @@ const onChangeReport = async (report?: Report) => {
     await loaderCtx.loadByReport(report)
   }
 }
-
 </script>

@@ -37,7 +37,7 @@ import { darkTheme } from 'naive-ui'
 import { Database } from '~~/src/databases/Database'
 
 // Database.trace = true
-// Database.debug = true
+Database.debug = true
 
 const key = ref<number>(Date.now())
 
@@ -61,7 +61,7 @@ const onUiInit = async () => {
 
 const editorCtx = useEditorCtx({ onSaved: onUiInit })
 const loaderCtx = useLoaderCtx(editorCtx)
-const searchCtx = useSearchCtx({ onSearch: openSearchModal })
+const searchCtx = useSearchCtx({ onSearched: openSearchModal })
 const favoriteCtx = useFavoriteCtx()
 const configStore = useConfigStore(editorCtx)
 

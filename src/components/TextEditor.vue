@@ -53,9 +53,9 @@ const onInit = (e: Ace.Editor) => {
 }
 
 const onWheel = ({ deltaY }: WheelEvent) => {
-  if (deltaY > 0) {
+  if (deltaY < 0) {
     configStore.env.editor.fontSize++
-  } else if (deltaY < 0) {
+  } else if (deltaY > 0) {
     configStore.env.editor.fontSize = Math.max(
       configStore.env.editor.fontSize - 1,
       configStore.embed.minFontSize, // 最小値制限

@@ -36,7 +36,8 @@
 import { darkTheme } from 'naive-ui'
 import { Database } from '~~/src/databases/Database'
 
-Database.debug = true
+// Database.trace = true
+// Database.debug = true
 
 const key = ref<number>(Date.now())
 
@@ -51,11 +52,16 @@ const openSearchModal = () => {
   showSearchModal.value = true
 }
 
+const onUiInit = async () => {
+  // お気に入りを読み込む
+  await favoriteCtx.loadFavorites()
+}
+
 /// //////////
 
-const editorCtx = useEditorCtx()
+const editorCtx = useEditorCtx({ onSaved: onUiInit })
 const loaderCtx = useLoaderCtx(editorCtx)
-const searchCtx = useSearchCtx(openSearchModal)
+const searchCtx = useSearchCtx({ onSearch: openSearchModal })
 const favoriteCtx = useFavoriteCtx()
 const configStore = useConfigStore(editorCtx)
 
@@ -72,11 +78,12 @@ onMounted(async () => {
   await configStore.load()
 
   // DB migrate
+  // TODO: 実行時にダイアログ
   const { migrator } = Database.getInstance()
   await migrator.migrateToLatest()
 
   // loading ui
-  await favoriteCtx.loadFavorites()
+  await onUiInit()
 })
 </script>
 

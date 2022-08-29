@@ -4,7 +4,9 @@ import { ReportAPI } from '~~/src/apis/ReportAPI'
 import { FormReport, Report } from '~~/src/databases/models/Report'
 import { RegexUtil } from '~~/src/utils/RegexUtil'
 
-export const useEditorCtx = () => {
+export const useEditorCtx = (
+  { onSaved }: { onSaved: () => void },
+) => {
   const _editor = ref<Ace.Editor>()
 
   const bindEditor = (e: Ace.Editor) => (_editor.value = e)
@@ -61,6 +63,8 @@ export const useEditorCtx = () => {
       ? await ReportAPI.update(reportId, { ...formReport })
       : await ReportAPI.create({ ...formReport })
     _attachReport(resReport)
+
+    onSaved() // 保存後のイベント
   }
 
   ///

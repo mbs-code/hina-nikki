@@ -2,7 +2,9 @@ import { InjectionKey } from 'nuxt/dist/app/compat/capi'
 import { ReportAPI } from '~~/src/apis/ReportAPI'
 import { Report } from '~~/src/databases/models/Report'
 
-export const useSearchCtx = (openDialog: () => void) => {
+export const useSearchCtx = (
+  { onSearch }: { onSearch: () => void },
+) => {
   const matchReport = ref<Report>()
   const reports = ref<Report[]>([])
 
@@ -15,7 +17,7 @@ export const useSearchCtx = (openDialog: () => void) => {
     })
     reports.value = items
 
-    openDialog() // 開く
+    onSearch() // 検索開始イベント
   }
 
   const searchText = async (text: string) => {
@@ -27,7 +29,7 @@ export const useSearchCtx = (openDialog: () => void) => {
     })
     reports.value = items
 
-    openDialog() // 開く
+    onSearch() // 検索開始イベント
   }
 
   return {

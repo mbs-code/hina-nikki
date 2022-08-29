@@ -25,6 +25,7 @@ export const migrations: Record<string, Migration> = {
 export class Database {
   static path = 'sqlite:./test.db'
   static debug = false
+  static trace = false
 
   static #instance: Kysely<Tables>
   static #migrator: Migrator
@@ -34,7 +35,8 @@ export class Database {
       const db = new Kysely<Tables>({
         dialect: new TauriSqliteDialect({
           path: this.path,
-          debug: this.debug
+          debug: this.debug,
+          trace: this.trace,
         })
       })
 

@@ -67,7 +67,10 @@ class TauriSqliteConnection implements DatabaseConnection {
 
   async executeQuery<O> (compiledQuery: CompiledQuery): Promise<QueryResult<O>> {
     const { sql, parameters } = compiledQuery
-    if (this.#config.debug) {
+    if (this.#config.trace) {
+      // eslint-disable-next-line no-console
+      console.trace(sql, parameters)
+    } else if (this.#config.debug) {
       // eslint-disable-next-line no-console
       console.debug(sql, parameters)
     }

@@ -61,9 +61,9 @@ export const useLoaderCtx = (
 
   // タイトル文字列で読み込む
   const loadByTitle = async (title?: string) => {
-    // 今ページを開いていたら一度保存する
+    // 今ページが汚い状態なら一度保存する
     // TODO: アラートか設定行き
-    if (_loadedTitle.value) { await save() }
+    if (isDirty.value) { await save() }
 
     // データを持ってくる（nullable）
     const report = await ReportAPI.getByTitle(title)

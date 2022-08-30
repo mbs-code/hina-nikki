@@ -25,7 +25,7 @@
       </n-layout-footer>
     </n-layout>
 
-    <SearchModal v-model:show="showSearchModal" />
+    <ExploreModal v-model:show="showExploreModal" />
     <ConfigDrawer v-model:show="showConfigDrawer" />
   </n-config-provider>
 </template>
@@ -45,9 +45,9 @@ const key = ref<number>(Date.now())
 
 ///
 
-const showSearchModal = ref<boolean>(false)
+const showExploreModal = ref<boolean>(false)
 const openSearchModal = () => {
-  showSearchModal.value = true
+  showExploreModal.value = true
 }
 
 const showConfigDrawer = ref<boolean>(false)

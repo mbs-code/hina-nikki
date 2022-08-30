@@ -29,7 +29,7 @@
     </div>
 
     <div class="flex items-center gap-1">
-      <div class="flex-grow" />
+      <div class="flex-grow" name="padding" />
 
       <!-- TODO: コンポーネント化 -->
       <n-tooltip trigger="hover" placement="top">

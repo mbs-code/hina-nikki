@@ -2,7 +2,7 @@
   <div class="flex gap-2">
     <div>footer</div>
 
-    <div class="grow" name="padding" />
+    <div class="flex-grow" name="padding" />
 
     <div class="flex items-center gap-1">
       <span>{{ title }}</span>

@@ -2,10 +2,7 @@
   <n-config-provider :theme="darkTheme">
     <n-layout style="height: 100vh">
       <n-layout-header class="app-header" bordered>
-        最上部ヘッダ
-        <button @click="onWipe">
-          wipe
-        </button>
+        <Header :key="key" @click:config="openConfigDrawer" />
       </n-layout-header>
 
       <n-layout class="app-body" position="absolute" has-sider>
@@ -29,6 +26,7 @@
     </n-layout>
 
     <SearchModal v-model:show="showSearchModal" />
+    <ConfigDrawer v-model:show="showConfigDrawer" />
   </n-config-provider>
 </template>
 
@@ -41,15 +39,20 @@ Database.debug = true
 
 const key = ref<number>(Date.now())
 
-const onWipe = async () => {
-  await Database.dbWipe()
-}
+// const onWipe = async () => {
+//   await Database.dbWipe()
+// }
 
 ///
 
 const showSearchModal = ref<boolean>(false)
 const openSearchModal = () => {
   showSearchModal.value = true
+}
+
+const showConfigDrawer = ref<boolean>(false)
+const openConfigDrawer = () => {
+  showConfigDrawer.value = true
 }
 
 const loadUiData = async () => {
@@ -89,18 +92,17 @@ onMounted(async () => {
 
 <style scoped lang="scss">
 .app-header {
-  height: 32px;
-  padding: 4px;
+  height: 30px;
+  padding: 0px 10px;
 }
 
 .app-body {
-  top: 32px;
-  bottom: 32px;
+  top: 30px;
+  bottom: 30px;
 }
 
 .app-footer {
-  height: 32px;
-  padding: 4px;
+  height: 30px;
+  padding: 0px 10px;
 }
-
 </style>

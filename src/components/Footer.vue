@@ -1,15 +1,13 @@
 <template>
-  <div class="flex gap-2">
-    <div>footer</div>
+  <div class="h-full flex items-center gap-2">
+    <div>Footer</div>
 
     <div class="flex-grow" name="padding" />
 
     <div class="flex items-center gap-1">
       <span>{{ title }}</span>
 
-      <n-icon size="16">
-        <component :is="statusIcon" />
-      </n-icon>
+      <n-icon size="16" :component="statusIcon" />
     </div>
   </div>
 </template>

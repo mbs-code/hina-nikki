@@ -9,7 +9,6 @@
         <n-layout class="app-body" position="absolute" has-sider>
           <n-layout-sider
             width="306"
-            content-style="padding: 0.5rem;"
             :native-scrollbar="false"
             bordered
           >

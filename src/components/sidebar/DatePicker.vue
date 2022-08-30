@@ -4,7 +4,7 @@
     v-model:value="_value"
     type="date"
     :panel="configStore.env.useCalendar"
-    clearable
+    :actions="null"
   />
 </template>
 

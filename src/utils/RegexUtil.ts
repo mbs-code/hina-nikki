@@ -1,16 +1,15 @@
 export class RegexUtil {
-  public static yyyymmddRegex = /^\d{8}$/
-  public static hashtagRegex = /^#[^#\s\v].+$/ // 垂直タブだけ除外されるらしい
-
+  public static diaryRegex = /^\d{4}-\d{2}-\d{2}$/ //  ISO 8601 date: yyyy-mm-dd
+  public static hashRegex = /^#[^#\s\v].+$/ // 垂直タブだけ除外されるらしい
   // eslint-disable-next-line no-irregular-whitespace
-  public static separateRegex = / |　|\r\n|\n/
+  public static separateRegex = /\s|\v|\r\n|\n/ // スペースと改行に反応
 
   public static isDiaryTitle (val?: string): boolean {
-    return val ? this.yyyymmddRegex.test(val) : false
+    return val ? this.diaryRegex.test(val) : false
   }
 
-  public static isHashtag (val?: string): boolean {
-    return val ? this.hashtagRegex.test(val) : false
+  public static isHashTitle (val?: string): boolean {
+    return val ? this.hashRegex.test(val) : false
   }
 
   public static isSeparate (val?: string): boolean {

@@ -17,20 +17,21 @@
     @keyup.alt.q="loaderCtx.loadByToday()"
     @wheel.ctrl.passive="onWheel"
   />
-  <!-- @click.alt="loaderCtx.onClickHashtag()" -->
 
-  <div v-else class="flex items-center justify-center">
-    <n-empty
-      size="huge"
-      description="ノートを選択してください"
-    >
-      <template #extra>
-        <n-button @click="loaderCtx.loadByToday()">
-          今日のノート
-        </n-button>
-      </template>
-    </n-empty>
-  </div>
+  <n-card v-else class="w-full h-full">
+    <div class="h-full flex items-center justify-center">
+      <n-empty
+        size="huge"
+        description="ノートを選択してください"
+      >
+        <template #extra>
+          <n-button @click="loaderCtx.loadByToday()">
+            今日のノート
+          </n-button>
+        </template>
+      </n-empty>
+    </div>
+  </n-card>
 </template>
 
 <script setup lang="ts">

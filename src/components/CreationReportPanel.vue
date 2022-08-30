@@ -5,9 +5,7 @@
   >
     <template #avatar>
       <n-avatar :style="{ backgroundColor: iconColor }">
-        <n-icon>
-          <AddCircleOutline />
-        </n-icon>
+        <n-icon :component="AddCircleOutline" />
       </n-avatar>
     </template>
 

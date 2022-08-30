@@ -7,7 +7,7 @@
     <div class="flex items-center gap-1">
       <span>{{ title }}</span>
 
-      <n-icon size="16" :component="statusIcon" />
+      <n-icon :component="statusIcon" />
     </div>
   </div>
 </template>

@@ -22,7 +22,7 @@
         @click="onSearchHashtag(hashtag)"
       >
         <template #icon>
-          <n-icon><PricetagOutline /></n-icon>
+          <n-icon :component="PricetagOutline" />
         </template>
         {{ hashtag }}
       </n-button>

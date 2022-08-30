@@ -19,7 +19,7 @@
 
         <n-button ghost @click="onSearchText">
           <template #icon>
-            <n-icon><Search /></n-icon>
+            <n-icon :component="Search" />
           </template>
         </n-button>
       </n-input-group>

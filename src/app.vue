@@ -1,5 +1,5 @@
 <template>
-  <n-config-provider :theme="darkTheme">
+  <n-config-provider :theme="theme">
     <n-layout style="height: 100vh">
       <n-layout-header class="app-header" bordered>
         <Header :key="key" @click:config="openConfigDrawer" />
@@ -31,13 +31,17 @@
 </template>
 
 <script setup lang="ts">
-import { darkTheme } from 'naive-ui'
+import { darkTheme, lightTheme } from 'naive-ui'
 import { Database } from '~~/src/databases/Database'
 
 // Database.trace = true
 Database.debug = true
 
 const key = ref<number>(Date.now())
+
+const theme = computed(() =>
+  configStore.env.isDark ? darkTheme : lightTheme
+)
 
 // const onWipe = async () => {
 //   await Database.dbWipe()
@@ -76,7 +80,7 @@ provide(ConfigStoreKey, configStore)
 
 /// //////////
 
-onMounted(async () => {
+onBeforeMount(async () => {
   // load config
   await configStore.load()
 

@@ -7,6 +7,7 @@ export type Config = {
   isDark: boolean
   editor: {
     lineWrap: boolean
+    printMargin: boolean
     fontSize: number
     tabSize: number
   }
@@ -23,13 +24,10 @@ export const useConfigStore = (editorCtx: EditorCtx) => {
     isDark: false,
     editor: {
       lineWrap: false,
+      printMargin: false,
       fontSize: 14,
       tabSize: 2,
     },
-  })
-
-  watch(() => env.editor.lineWrap, (value: boolean) => {
-    editorCtx.setLineWrap(value)
   })
 
   // TODO: 設定 オートセーブ、debounceをする

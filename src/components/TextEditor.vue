@@ -48,13 +48,32 @@ const loaderCtx = inject(LoaderCtxKey)
 const explorerCtx = inject(ExplorerCtxKey)
 const configStore = inject(ConfigStoreKey)
 
+/// ////////////////////
+/// 値更新
+
 const style = computed(() => ({
   fontSize: configStore.env.editor.fontSize + 'px',
 }))
 
 const onInit = (e: Ace.Editor) => {
   editorCtx.bindEditor(e)
+  editorCtx.setLineWrap(configStore.env.editor.lineWrap)
+  editorCtx.setPrintMargin(configStore.env.editor.printMargin)
+  editorCtx.setTabSize(configStore.env.editor.tabSize)
 }
+
+watch(() => configStore.env.editor.lineWrap, (value) => {
+  editorCtx.setLineWrap(value)
+})
+watch(() => configStore.env.editor.printMargin, (value) => {
+  editorCtx.setPrintMargin(value)
+})
+watch(() => configStore.env.editor.tabSize, (value) => {
+  editorCtx.setTabSize(value)
+})
+
+/// ////////////////////
+/// イベント
 
 const onEditorWheel = ({ deltaY }: WheelEvent) => {
   if (deltaY < 0) {
@@ -76,8 +95,6 @@ const onClickPhrase = async () => {
     await explorerCtx.onSearch({ phrase })
   }
 }
-
-// TODO: config のデータバインドは watch でやる、初回実行あり
 </script>
 
 <!-- <style scoped lang="scss">

@@ -5,8 +5,23 @@ import { RegexUtil } from '~~/src/utils/RegexUtil'
 export const useEditorCtx = () => {
   const _editor = ref<Ace.Editor>()
 
+  /// //////////
+  /// 設定型
+
   const bindEditor = (e: Ace.Editor) => {
     _editor.value = e
+  }
+
+  const setLineWrap = (value: boolean) => {
+    _editor.value?.session?.setUseWrapMode(value)
+  }
+
+  const setPrintMargin = (value: boolean) => {
+    _editor.value?.setShowPrintMargin(value)
+  }
+
+  const setTabSize = (value: number) => {
+    _editor.value?.session?.setTabSize(value)
   }
 
   /// //////////
@@ -15,17 +30,6 @@ export const useEditorCtx = () => {
   const onFocus = () => {
     _editor.value?.focus() // フォーカス
   }
-
-  ///
-
-  // const onClickHashtag = async () => {
-  //   const hashTag = editorCtx.getActiveHashTag()
-  //   if (hashTag) {
-  //     await loadByHashtag(hashTag)
-  //   }
-  // }
-
-  ///
 
   // 現在のカーソルの場所のフレーズを取り出す（スペースまで）
   const getCursorPhrase = () => {
@@ -50,25 +54,15 @@ export const useEditorCtx = () => {
     return activeLine.substring(st + 1, ed)
   }
 
-  // TODO: config からの session 管理
-  const setLineWrap = (value: boolean) => {
-    _editor.value?.session?.setUseWrapMode(value)
-  }
-
-  const setTabSize = (value: number) => {
-    _editor.value?.session?.setTabSize(value)
-  }
-
   return {
-    bindEditor, // バインド
+    bindEditor,
 
-    onFocus, // フォーカスを当てる
+    setLineWrap,
+    setPrintMargin,
+    setTabSize,
 
-    getCursorPhrase, // カーソルの位置のフレーズを取り出す
-
-    // getActiveHashTag,
-    setLineWrap, // 折り返し設定
-    setTabSize, // タブサイズ
+    onFocus,
+    getCursorPhrase,
   }
 }
 

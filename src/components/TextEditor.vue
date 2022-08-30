@@ -15,7 +15,8 @@
     @keyup.alt.s="loaderCtx.loadByDateAndMove(7)"
     @keyup.alt.d="loaderCtx.loadByDateAndMove(1)"
     @keyup.alt.q="loaderCtx.loadByToday()"
-    @wheel.ctrl.passive="onWheel"
+    @wheel.ctrl.passive="onEditorWheel"
+    @click.alt="onClickPhrase"
   />
 
   <n-card v-else class="w-full h-full">
@@ -40,9 +41,11 @@ import { VAceEditor } from 'vue3-ace-editor'
 
 import 'ace-builds/src-noconflict/mode-markdown'
 import 'ace-builds/src-noconflict/theme-one_dark.js'
+import { RegexUtil } from '~~/src/utils/RegexUtil'
 
 const editorCtx = inject(EditorCtxKey)
 const loaderCtx = inject(LoaderCtxKey)
+const explorerCtx = inject(ExplorerCtxKey)
 const configStore = inject(ConfigStoreKey)
 
 const style = computed(() => ({
@@ -53,7 +56,7 @@ const onInit = (e: Ace.Editor) => {
   editorCtx.bindEditor(e)
 }
 
-const onWheel = ({ deltaY }: WheelEvent) => {
+const onEditorWheel = ({ deltaY }: WheelEvent) => {
   if (deltaY < 0) {
     configStore.env.editor.fontSize++
   } else if (deltaY > 0) {
@@ -63,6 +66,18 @@ const onWheel = ({ deltaY }: WheelEvent) => {
     )
   }
 }
+
+const onClickPhrase = async () => {
+  // 選択フレーズを取り出す
+  const phrase = editorCtx.getCursorPhrase()
+
+  // もしハッシュタグなら検索をかける
+  if (RegexUtil.isHashtagTitle(phrase)) {
+    await explorerCtx.onSearch({ phrase })
+  }
+}
+
+// TODO: config のデータバインドは watch でやる、初回実行あり
 </script>
 
 <!-- <style scoped lang="scss">

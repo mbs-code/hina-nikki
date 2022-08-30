@@ -2,7 +2,7 @@
   <div class="h-full flex flex-col gap-2">
     <n-input-group>
       <n-input
-        v-model:value="searchCtx.params.phrase"
+        v-model:value="explorerCtx.params.phrase"
         type="text"
         clearable
         placeholder="Search"
@@ -38,15 +38,15 @@ import { Search } from '@vicons/ionicons5'
 import { Report } from '~~/src/databases/models/Report'
 
 const loaderCtx = inject(LoaderCtxKey)
-const searchCtx = inject(SearchCtxKey)
+const explorerCtx = inject(ExplorerCtxKey)
 const favoriteCtx = inject(FavoriteCtxKey)
 
 /// ////////////////////
 // ノート検索
 
 const onSearchText = async () => {
-  const text = searchCtx.params.phrase
-  await searchCtx.onSearch({
+  const text = explorerCtx.params.phrase
+  await explorerCtx.onSearch({
     phrase: text,
   })
 }

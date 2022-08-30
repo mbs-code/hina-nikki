@@ -61,13 +61,13 @@ const loadUiData = async () => {
 
 const editorCtx = useEditorCtx()
 const loaderCtx = useLoaderCtx({ editorCtx, onSaved: loadUiData })
-const searchCtx = useSearchCtx({ onSearched: openSearchModal })
+const explorerCtx = useExplorerCtx({ onSearched: openSearchModal })
 const favoriteCtx = useFavoriteCtx()
 const configStore = useConfigStore(editorCtx)
 
 provide(EditorCtxKey, editorCtx)
 provide(LoaderCtxKey, loaderCtx)
-provide(SearchCtxKey, searchCtx)
+provide(ExplorerCtxKey, explorerCtx)
 provide(FavoriteCtxKey, favoriteCtx)
 provide(ConfigStoreKey, configStore)
 

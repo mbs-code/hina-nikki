@@ -6,33 +6,33 @@
     :block-scroll="false"
     style="width: 600px"
   >
-    <div>{{ searchCtx.params }}</div>
+    <div>{{ explorerCtx.params }}</div>
 
     <n-scrollbar class="pr-3" style="max-height: calc(100vh - 100px)">
       <div class="flex flex-col gap-2">
-        <template v-if="searchCtx.matchReport.value || searchCtx.params.match">
+        <template v-if="explorerCtx.matchReport.value || explorerCtx.params.match">
           <div>完全一致</div>
           <n-list hoverable clickable bordered>
             <!-- 完全一致 -->
-            <template v-if="searchCtx.matchReport.value">
+            <template v-if="explorerCtx.matchReport.value">
               <n-list-item
                 class="border-2"
                 :style="{ borderColor: themeVars.primaryColor }"
-                @click="onClickReport(searchCtx.matchReport.value)"
+                @click="onClickReport(explorerCtx.matchReport.value)"
               >
-                <ReportPanel :report="searchCtx.matchReport.value" />
+                <ReportPanel :report="explorerCtx.matchReport.value" />
               </n-list-item>
             </template>
 
             <!-- 完全一致が無い場合は、作成アシスト -->
-            <template v-else-if="searchCtx.params.match">
+            <template v-else-if="explorerCtx.params.match">
               <n-list-item
                 class="border-2"
                 :style="{ borderColor: themeVars.infoColor }"
-                @click="onClickCreate(searchCtx.params.match)"
+                @click="onClickCreate(explorerCtx.params.match)"
               >
                 <CreationReportPanel
-                  :title="searchCtx.params.match"
+                  :title="explorerCtx.params.match"
                   :icon-color="themeVars.infoColor"
                 />
               </n-list-item>
@@ -44,7 +44,7 @@
         <n-list hoverable clickable bordered>
           <!-- 検索要素 -->
           <n-list-item
-            v-for="(report, _) of searchCtx.reports.value"
+            v-for="(report, _) of explorerCtx.reports.value"
             :key="_"
             @click="onClickReport(report)"
           >
@@ -53,7 +53,7 @@
 
           <!-- 一つもなかったら -->
           <n-empty
-            v-if="!searchCtx.reports.value?.length"
+            v-if="!explorerCtx.reports.value?.length"
             class="m-2"
             size="huge"
             description="検索結果が空です"
@@ -84,7 +84,7 @@ const _show = computed({
 ///
 
 const loadCtx = inject(LoaderCtxKey)
-const searchCtx = inject(SearchCtxKey)
+const explorerCtx = inject(ExplorerCtxKey)
 const themeVars = useThemeVars()
 
 /// ////////////////////

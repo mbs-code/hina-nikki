@@ -12,7 +12,7 @@ export class RegexUtil {
     return val ? this.hashRegex.test(val) : false
   }
 
-  public static isSeparate (val?: string): boolean {
+  public static hasSeparate (val?: string): boolean {
     return val ? this.separateRegex.test(val) : false
   }
 }

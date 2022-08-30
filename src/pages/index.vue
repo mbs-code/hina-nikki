@@ -23,6 +23,7 @@
     </div>
 
     <div class="flex items-center gap-1">
+      <!-- TODO: コンポーネント化 -->
       <n-tooltip trigger="hover" placement="top">
         <template #trigger>
           <n-button
@@ -54,7 +55,7 @@ import {
 } from '@vicons/ionicons5'
 
 const loaderCtx = inject(LoaderCtxKey)
-const searchCtx = inject(SearchCtxKey)
+const explorerCtx = inject(ExplorerCtxKey)
 const configStore = inject(ConfigStoreKey)
 
 // startup
@@ -66,16 +67,15 @@ onMounted(async () => {
 const title = computed(() => loaderCtx.formReport?.title ?? '---')
 const hashtags = computed(() => loaderCtx.selectedReport.value?.tags ?? [])
 
-///
+/// ////////////////////
+// Toolbar アクション
 
 const onSearchHashtag = async (hashtag: string) => {
-  await searchCtx.onSearch({
+  await explorerCtx.onSearch({
     match: hashtag,
     hashtags: [hashtag],
   })
 }
-
-///
 
 const toggleLineWrap = () => {
   configStore.env.editor.lineWrap = !configStore.env.editor.lineWrap

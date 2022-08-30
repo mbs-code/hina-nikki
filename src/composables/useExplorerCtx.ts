@@ -3,23 +3,23 @@ import { ReportAPI } from '~~/src/apis/ReportAPI'
 import { Report } from '~~/src/databases/models/Report'
 import { RegexUtil } from '~~/src/utils/RegexUtil'
 
-export type SearchParams = {
+export type ExploreParams = {
   phrase?: string, // 本文検索（textboxバインド）
   hashtags?: string[], // ハッシュタグ検索
   match?: string, // 完全一致
 }
 
-export const useSearchCtx = (
+export const useExplorerCtx = (
   { onSearched }: { onSearched: () => void },
 ) => {
-  const params = reactive<SearchParams>({})
+  const params = reactive<ExploreParams>({})
 
   const matchReport = ref<Report>()
   const reports = ref<Report[]>([])
 
-  const onSearch = async (p?: SearchParams) => {
-    // 完全一致について、 match が空のとき、match がハッシュタグ要素なら代入する
-    if (!p?.match && RegexUtil.isHashtagTitle(p?.phrase)) {
+  const onSearch = async (p?: ExploreParams) => {
+    // 完全一致について、 match が空のとき、phrase がハッシュタグ要素なら代入する
+    if (!p?.match && RegexUtil.hasSeparate(p?.phrase)) {
       p.match = p.phrase
     }
 
@@ -35,7 +35,7 @@ export const useSearchCtx = (
 
     // 検索する
     reports.value = await ReportAPI.getAll({
-      phrases: params.phrase ? params.phrase.split(' ') : undefined, // TODO: 正規表現で置き換える
+      phrases: params.phrase ? params.phrase.split(RegexUtil.separateRegex) : undefined,
       hashtags: params.hashtags,
       sorts: [['updated_at', 'desc']]
     })
@@ -52,7 +52,7 @@ export const useSearchCtx = (
   }
 }
 
-export type SearchCtx = ReturnType<typeof useSearchCtx>
+export type ExplorerCtx = ReturnType<typeof useExplorerCtx>
 
-export const SearchCtxKey: InjectionKey<SearchCtx> =
-  (Symbol('SearchCtxKey'))
+export const ExplorerCtxKey: InjectionKey<ExplorerCtx> =
+  (Symbol('ExplorerCtxKey'))

@@ -1,6 +1,6 @@
 <template>
   <div class="h-full flex flex-col">
-    <div class="p-2 flex items-center gap-2">
+    <div class="p-2 flex flex-wrap items-center gap-2">
       <!-- タイトル -->
       <n-button
         quaternary
@@ -28,27 +28,6 @@
       </n-button>
     </div>
 
-    <div class="flex items-center gap-1">
-      <div class="flex-grow" name="padding" />
-
-      <!-- TODO: コンポーネント化 -->
-      <n-tooltip trigger="hover" placement="top">
-        <template #trigger>
-          <n-button
-            size="small"
-            :type="configStore.env.editor.lineWrap ? 'primary' : 'default'"
-            strong
-            @click="toggleLineWrap()"
-          >
-            <template #icon>
-              <n-icon><ReturnDownBackSharp /></n-icon>
-            </template>
-          </n-button>
-        </template>
-        折り返し設定
-      </n-tooltip>
-    </div>
-
     <div class="flex-grow">
       <TextEditor />
     </div>
@@ -59,12 +38,10 @@
 import {
   PricetagOutline,
   Document,
-  ReturnDownBackSharp,
 } from '@vicons/ionicons5'
 
 const loaderCtx = inject(LoaderCtxKey)
 const explorerCtx = inject(ExplorerCtxKey)
-const configStore = inject(ConfigStoreKey)
 
 // startup
 onMounted(async () => {
@@ -92,9 +69,5 @@ const onSearchHashtag = async (hashtag: string) => {
     match: hashtag,
     hashtags: [hashtag],
   })
-}
-
-const toggleLineWrap = () => {
-  configStore.env.editor.lineWrap = !configStore.env.editor.lineWrap
 }
 </script>

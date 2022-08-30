@@ -9,11 +9,11 @@ import { BuildinMigrationProvider } from './libs/BuildinMigrationProvider'
 
 import * as CreateInitTable from './migrations/20220826_create_init_table'
 
-import { Report } from '~~/src/databases/models/Report'
+import { DBReport } from '~~/src/databases/models/Report'
 
 // tables
 export interface Tables {
-  reports: Report
+  reports: DBReport
 }
 
 // migrations
@@ -25,6 +25,7 @@ export const migrations: Record<string, Migration> = {
 export class Database {
   static path = 'sqlite:./test.db'
   static debug = false
+  static trace = false
 
   static #instance: Kysely<Tables>
   static #migrator: Migrator
@@ -34,7 +35,8 @@ export class Database {
       const db = new Kysely<Tables>({
         dialect: new TauriSqliteDialect({
           path: this.path,
-          debug: this.debug
+          debug: this.debug,
+          trace: this.trace,
         })
       })
 

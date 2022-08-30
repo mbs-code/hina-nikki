@@ -26,6 +26,7 @@ export const useLoaderCtx = (
 
   const isNew = computed(() => !selectedReport.value)
 
+  // new なら本文があるか、それ以外は一致しているか
   const isDirty = computed(() => isNew.value
     ? Boolean(formReport.text)
     : selectedReport.value?.text !== formReport.text

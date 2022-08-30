@@ -1,14 +1,20 @@
 <template>
   <div class="h-full flex flex-col">
     <div class="p-2 flex items-center gap-2">
-      <div class="flex items-center gap-1" style="height: 28px">
-        <n-icon size="16">
-          <Document />
-        </n-icon>
-
+      <!-- タイトル -->
+      <n-button
+        quaternary
+        size="small"
+        :type="statucColor"
+      >
+        <!-- TODO: レポートダイアログを作成 -->
+        <template #icon>
+          <n-icon :component="Document" />
+        </template>
         <span>{{ title }}</span>
-      </div>
+      </n-button>
 
+      <!-- ハッシュタグ -->
       <n-button
         v-for="(hashtag, _) of hashtags"
         :key="_"
@@ -23,6 +29,8 @@
     </div>
 
     <div class="flex items-center gap-1">
+      <div class="flex-grow" />
+
       <!-- TODO: コンポーネント化 -->
       <n-tooltip trigger="hover" placement="top">
         <template #trigger>
@@ -41,7 +49,7 @@
       </n-tooltip>
     </div>
 
-    <div class="grow">
+    <div class="flex-grow">
       <TextEditor />
     </div>
   </div>
@@ -66,6 +74,15 @@ onMounted(async () => {
 
 const title = computed(() => loaderCtx.formReport?.title ?? '---')
 const hashtags = computed(() => loaderCtx.selectedReport.value?.tags ?? [])
+
+const statucColor = computed(() => {
+  // 優先度: 編集中 > 新規 > 保存済
+  const isDarty = loaderCtx.isDirty.value
+  if (isDarty) { return 'warning' }
+
+  const isNew = loaderCtx.isNew.value
+  return isNew ? 'error' : undefined
+})
 
 /// ////////////////////
 // Toolbar アクション

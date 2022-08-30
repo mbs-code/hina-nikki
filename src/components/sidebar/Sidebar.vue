@@ -21,7 +21,7 @@
       @update:value="onChangeDate"
     />
 
-    <div class="grow">
+    <div class="flex-grow">
       <n-card title="最近の更新" size="small">
         <SimpleReportList
           :value="loaderCtx.selectedReport.value"

@@ -6,7 +6,7 @@
           <Document />
         </n-icon>
 
-        <span>{{ title ?? '---' }}</span>
+        <span>{{ title }}</span>
       </div>
 
       <n-button
@@ -40,7 +40,9 @@
       </n-tooltip>
     </div>
 
-    <TextEditor class="grow" />
+    <div class="grow">
+      <TextEditor />
+    </div>
   </div>
 </template>
 
@@ -52,29 +54,17 @@ import {
 } from '@vicons/ionicons5'
 
 const loaderCtx = inject(LoaderCtxKey)
-const editorCtx = inject(EditorCtxKey)
 const searchCtx = inject(SearchCtxKey)
 const configStore = inject(ConfigStoreKey)
 
 // startup
 onMounted(async () => {
   // 今日を表示する // TODO: ここ？
-  await loaderCtx.onMoveToday()
+  await loaderCtx.loadByToday()
 })
 
-const title = computed(() => {
-  return loaderCtx.formattedReportTitle.value
-})
-
-const hashtags = computed(() => {
-  const report = editorCtx.selectedReport.value
-  const tags = report?.tags ?? []
-  if (!report?.isDiary && report?.title) {
-    tags.unshift(report?.title)
-  }
-
-  return tags
-})
+const title = computed(() => loaderCtx.formReport?.title ?? '---')
+const hashtags = computed(() => loaderCtx.selectedReport.value?.tags ?? [])
 
 ///
 

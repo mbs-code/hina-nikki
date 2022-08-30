@@ -64,6 +64,11 @@ export const parseReport = (form: FormReport) => {
   const hashtags = (form.text ?? '')
     .split(RegexUtil.separateRegex)
     .filter(text => RegexUtil.isHashtagTitle(text))
+  // もしタイトルがハッシュタグなら、先頭に追加
+  if (RegexUtil.isHashtagTitle(form.title)) {
+    hashtags.unshift(form.title)
+  }
+  // 重複を削除してSSVへ
   const ssvTag = Array.from(new Set(hashtags)).join(' ')
 
   return {

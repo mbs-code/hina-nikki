@@ -96,7 +96,7 @@ const onClickReport = async (report: Report) => {
 }
 
 const onClickCreate = async (hashtag: string) => {
-  await loadCtx.loadByHashtag(hashtag)
+  await loadCtx.loadByTitle(hashtag)
   _show.value = false
 }
 </script>

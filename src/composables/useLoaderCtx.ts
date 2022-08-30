@@ -2,97 +2,123 @@ import { InjectionKey } from 'nuxt/dist/app/compat/capi'
 import { addDays } from 'date-fns'
 import { EditorCtx } from '~~/src/composables/useEditorCtx'
 import { DateUtil } from '~~/src/utils/DateUtil'
-import { Report } from '~~/src/databases/models/Report'
+import { FormReport, Report } from '~~/src/databases/models/Report'
+import { ReportAPI } from '~~/src/apis/ReportAPI'
+import { RegexUtil } from '~~/src/utils/RegexUtil'
 
-export const useLoaderCtx = (editorCtx: EditorCtx) => {
-  const _selectedDate = ref<Date>() // カレンダー日付
-  const _selectedHashtag = ref<string>() // 選択しているタグ名
+export const useLoaderCtx = (
+  { editorCtx, onSaved }: { editorCtx: EditorCtx, onSaved: () => void }
+) => {
+  const _loadedTitle = ref<string>() // 読み込んだ際のタイトル
 
-  const reportTitle = computed(() => {
-    const date = _selectedDate.value
-    if (date) { return DateUtil.formatDiaryTitle(date) }
-
-    const tagName = _selectedHashtag.value
-    if (tagName) { return tagName }
-
-    return undefined
+  const selectedReport = ref<Report>() // 読み込んだノート
+  const formReport = reactive<FormReport>({ // 現在のキャッシュ
+    title: '',
+    text: '', // editor bind
   })
 
-  const formattedReportTitle = computed(() => {
-    const date = _selectedDate.value
-    if (date) { return DateUtil.formatDate(date) }
-
-    const tagName = _selectedHashtag.value
-    if (tagName) { return tagName }
-
-    return undefined
+  // date picker 用
+  const loadedTitleDate = computed(() => {
+    const title = _loadedTitle.value
+    const isDiary = RegexUtil.isDiaryTitle(title)
+    return isDiary ? new Date(title) : undefined
   })
 
-  ///
+  const isNew = computed(() => !selectedReport.value)
+
+  const isDirty = computed(() => isNew.value
+    ? Boolean(formReport.text)
+    : selectedReport.value?.text !== formReport.text
+  )
+
+  /// /////////////
+  /// 汎用関数
+
+  const save = async () => {
+    const reportId = selectedReport.value?.id
+
+    // DB記録
+    const report = reportId
+      ? await ReportAPI.update(reportId, { ...formReport })
+      : await ReportAPI.create({ ...formReport })
+    selectedReport.value = report
+
+    // 値のバインド
+    init(report)
+    onSaved()
+  }
+
+  const init = (report?: Report) => {
+    formReport.title = report?.title ?? _loadedTitle.value
+    formReport.text = report?.text ?? ''
+
+    // フォーカス処理
+    editorCtx.onFocus()
+  }
+
+  /// /////////////
+  /// load util
+
+  // タイトル文字列で読み込む
+  const loadByTitle = async (title?: string) => {
+    // 今ページを開いていたら一度保存する
+    // TODO: アラートか設定行き
+    if (_loadedTitle.value) { await save() }
+
+    // データを持ってくる（nullable）
+    const report = await ReportAPI.getByTitle(title)
+    _loadedTitle.value = title
+    selectedReport.value = report
+
+    // 値のバインド
+    init(report)
+  }
 
   // 日付で読み込む
   const loadByDate = async (date?: Date) => {
-    _selectedDate.value = date
-    _selectedHashtag.value = undefined
-
-    await editorCtx.loadReport(reportTitle.value) // 読み込み
-  }
-
-  // ハッシュタグで読み込む
-  const loadByHashtag = async (hashtag?: string) => {
-    _selectedDate.value = undefined
-    _selectedHashtag.value = hashtag
-
-    await editorCtx.loadReport(reportTitle.value) // 読み込み
+    const title = DateUtil.formatDiaryTitle(date)
+    await loadByTitle(title)
   }
 
   // レポートで読み込む
-  const loadByReport = async (report: Report) => {
-    // 振り分ける
-    if (report.isDiary) {
-      const date = DateUtil.parseByDiaryTitle(report.title)
-      await loadByDate(date)
-    } else {
-      await loadByHashtag(report.title)
-    }
+  const loadByReport = async (report?: Report) => {
+    // TODO: 面倒なのでタイトルで共通化する
+    const title = report?.title
+    await loadByTitle(title)
   }
 
-  ///
+  // 今日の日記を読み込む
+  const loadByToday = async () => {
+    await loadByDate(new Date())
+  }
 
-  // 日付の移動
-  const onMoveDate = async (day: number) => {
+  // 日付を移動して読み込む
+  const loadByDateAndMove = async (day: number) => {
     // 日付選択中なら加算、無ければ今日
-    const date = _selectedDate.value
-      ? addDays(_selectedDate.value, day)
+    const loaded = loadedTitleDate.value
+    const date = loaded
+      ? addDays(loaded, day)
       : new Date()
 
     await loadByDate(date)
   }
 
-  // 今日へ移動
-  const onMoveToday = async () => {
-    await loadByDate(new Date())
-  }
-
-  const onClickHashtag = async () => {
-    const hashTag = editorCtx.getActiveHashTag()
-    if (hashTag) {
-      await loadByHashtag(hashTag)
-    }
-  }
-
   return {
-    selectedDate: readonly(_selectedDate),
-    reportTitle,
-    formattedReportTitle,
+    loadedTitleDate,
+    selectedReport,
 
+    formReport,
+    isNew,
+    isDirty,
+
+    save,
+    init,
+
+    loadByTitle,
     loadByDate,
-    loadByHashtag,
     loadByReport,
-
-    onMoveDate,
-    onMoveToday,
-    onClickHashtag,
+    loadByToday,
+    loadByDateAndMove,
   }
 }
 

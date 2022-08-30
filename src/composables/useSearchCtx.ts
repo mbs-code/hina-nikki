@@ -19,7 +19,7 @@ export const useSearchCtx = (
 
   const onSearch = async (p?: SearchParams) => {
     // 完全一致について、 match が空のとき、match がハッシュタグ要素なら代入する
-    if (!p?.match && RegexUtil.isHashtag(p?.phrase)) {
+    if (!p?.match && RegexUtil.isHashtagTitle(p?.phrase)) {
       p.match = p.phrase
     }
 

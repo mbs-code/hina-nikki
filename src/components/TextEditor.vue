@@ -1,23 +1,23 @@
 <template>
   <!-- NOTE: タイトル要素が無いバグ時は非表示にする -->
   <v-ace-editor
-    v-if="editorCtx.formReport.title"
-    v-model:value="editorCtx.formReport.text"
-    class="editor"
+    v-if="loaderCtx.formReport.title"
+    v-model:value="loaderCtx.formReport.text"
+    class="h-full"
     lang="markdown"
     theme="one_dark"
     placeholder="空のノートです ..."
     :style="style"
     @init="onInit"
-    @keydown.ctrl.s="editorCtx.onSave()"
-    @keyup.alt.w="loaderCtx.onMoveDate(-7)"
-    @keyup.alt.a="loaderCtx.onMoveDate(-1)"
-    @keyup.alt.s="loaderCtx.onMoveDate(7)"
-    @keyup.alt.d="loaderCtx.onMoveDate(1)"
-    @keyup.alt.q="loaderCtx.onMoveToday()"
-    @click.alt="loaderCtx.onClickHashtag()"
-    @wheel.ctrl="onWheel"
+    @keydown.ctrl.s="loaderCtx.save()"
+    @keyup.alt.w="loaderCtx.loadByDateAndMove(-7)"
+    @keyup.alt.a="loaderCtx.loadByDateAndMove(-1)"
+    @keyup.alt.s="loaderCtx.loadByDateAndMove(7)"
+    @keyup.alt.d="loaderCtx.loadByDateAndMove(1)"
+    @keyup.alt.q="loaderCtx.loadByToday()"
+    @wheel.ctrl.passive="onWheel"
   />
+  <!-- @click.alt="loaderCtx.onClickHashtag()" -->
 
   <div v-else class="flex items-center justify-center">
     <n-empty
@@ -25,7 +25,7 @@
       description="ノートを選択してください"
     >
       <template #extra>
-        <n-button @click="loaderCtx.onMoveToday()">
+        <n-button @click="loaderCtx.loadByToday()">
           今日のノート
         </n-button>
       </template>

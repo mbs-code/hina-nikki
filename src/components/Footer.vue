@@ -5,12 +5,10 @@
     <div class="grow" name="padding" />
 
     <div class="flex items-center gap-1">
-      <span>{{ editorCtx.formReport.title ?? '' }}</span>
+      <span>{{ title }}</span>
 
       <n-icon size="16">
-        <Alert v-if="status === 'edit'" />
-        <CheckmarkSharp v-if="status === 'nochange'" />
-        <Remove v-if="status === 'new'" />
+        <component :is="statusIcon" />
       </n-icon>
     </div>
   </div>
@@ -23,15 +21,15 @@ import {
   Remove,
 } from '@vicons/ionicons5'
 
-const editorCtx = inject(EditorCtxKey)
+const loaderCtx = inject(LoaderCtxKey)
 
-const status = computed(() => {
+const title = computed(() => loaderCtx.formReport?.title ?? '---')
+const statusIcon = computed(() => {
   // 優先度: 編集中 > 新規 > 保存済
+  const isDarty = loaderCtx.isDirty.value
+  if (isDarty) { return Alert }
 
-  const isDarty = editorCtx.isDirty.value
-  if (isDarty) { return 'edit' }
-
-  const isNew = editorCtx.isNew.value
-  return isNew ? 'new' : 'nochange'
+  const isNew = loaderCtx.isNew.value
+  return isNew ? Remove : CheckmarkSharp
 })
 </script>

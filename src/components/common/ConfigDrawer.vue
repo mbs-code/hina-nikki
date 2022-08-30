@@ -1,7 +1,7 @@
 <template>
   <n-drawer
     v-model:show="_show"
-    :width="502"
+    :width="400"
     placement="right"
   >
     <n-drawer-content title="設定">
@@ -9,14 +9,22 @@
         size="small"
         label-placement="left"
         label-align="left"
-        label-width="120px"
+        label-width="140px"
         :show-feedback="false"
         @submit.prevent
       >
         <div class="flex flex-col gap-2">
-          <n-form-item label="ダークテーマ">
-            <n-switch v-model:value="configStore.env.isDark" />
-          </n-form-item>
+          <n-card title="デザイン" size="small">
+            <div class="flex flex-col gap-2">
+              <n-form-item label="ダークテーマ">
+                <n-switch v-model:value="configStore.env.isDark" />
+              </n-form-item>
+
+              <n-form-item label="カレンダーを使用する">
+                <n-switch v-model:value="configStore.env.useCalendar" />
+              </n-form-item>
+            </div>
+          </n-card>
 
           <n-card title="エディタ設定" size="small">
             <div class="flex flex-col gap-2">
@@ -45,14 +53,25 @@
             </div>
           </n-card>
 
-          <n-form-item label="デバッグモード">
-            <div class="flex items-center gap-4">
-              <n-switch v-model:value="configStore.env.isDark" />
-              <n-button type="error" @click="onDBWipe">
-                DBの初期化
-              </n-button>
+          <n-card size="small" :bordered="false">
+            <div class="flex flex-col gap-2">
+              <!-- <n-form-item label="移動時に自動保存する">
+                <n-switch v-model:value="configStore.env.saveWhenLeave" />
+              </n-form-item> -->
+
+              <n-form-item label="隠された機能">
+                <n-switch v-model:value="isDebug" />
+              </n-form-item>
+
+              <n-form-item>
+                <div class="flex items-center gap-4">
+                  <n-button v-if="isDebug" type="error" @click="onDBWipe">
+                    DBの初期化
+                  </n-button>
+                </div>
+              </n-form-item>
             </div>
-          </n-form-item>
+          </n-card>
         </div>
       </n-form>
     </n-drawer-content>
@@ -82,6 +101,8 @@ const configStore = inject(ConfigStoreKey)
 /// DB周り
 
 // const Database = inject(DatabaseKey)
+
+const isDebug = ref<boolean>()
 
 const dialog = useDialog()
 const onDBWipe = () => {

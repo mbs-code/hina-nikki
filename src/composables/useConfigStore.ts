@@ -4,6 +4,9 @@ import { load as yamlLoad, dump as yamlDump } from 'js-yaml'
 
 export type Config = {
   isDark: boolean
+  useCalendar: boolean
+
+  saveWhenLeave: boolean
   editor: {
     lineWrap: boolean
     printMargin: boolean
@@ -20,7 +23,9 @@ export const useConfigStore = () => {
   })
 
   const env = reactive<Config>({
-    isDark: false,
+    isDark: true,
+    useCalendar: true,
+    saveWhenLeave: true,
     editor: {
       lineWrap: false,
       printMargin: false,
@@ -29,7 +34,7 @@ export const useConfigStore = () => {
     },
   })
 
-  // TODO: 設定 オートセーブ、debounceをする
+  // auto save
   watch(env, () => { save() })
 
   ///
@@ -43,7 +48,11 @@ export const useConfigStore = () => {
       const obj = yamlLoad(text) as any
 
       env.isDark = obj?.isDark ? Boolean(obj.isDark) : env.isDark
+      env.useCalendar = obj?.useCalendar ? Boolean(obj.useCalendar) : env.useCalendar
+      env.saveWhenLeave = obj?.saveWhenLeave ? Boolean(obj.saveWhenLeave) : env.saveWhenLeave
+
       env.editor.lineWrap = obj?.editor?.lineWrap ? Boolean(obj.editor.lineWrap) : env.editor.lineWrap
+      env.editor.printMargin = obj?.editor?.printMargin ? Boolean(obj.editor.printMargin) : env.editor.printMargin
       env.editor.fontSize = obj?.editor?.fontSize ? Number(obj.editor.fontSize) : env.editor.fontSize
       env.editor.tabSize = obj?.editor?.tabSize ? Number(obj.editor.tabSize) : env.editor.tabSize
     } catch (err) {

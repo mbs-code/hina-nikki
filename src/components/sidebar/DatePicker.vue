@@ -3,7 +3,7 @@
     ref="datePickerRef"
     v-model:value="_value"
     type="date"
-    :panel="showInline"
+    :panel="configStore.env.useCalendar"
     clearable
   />
 </template>
@@ -30,14 +30,7 @@ const _value = computed({
   },
 })
 
-///
-
-const showInline = ref<boolean>(false)
-useResizeObserver(document.body, (entries) => {
-  const entry = entries[0]
-  const { height } = entry.contentRect
-  showInline.value = height > 600 // TODO: 設定
-})
+const configStore = inject(ConfigStoreKey)
 
 ///
 

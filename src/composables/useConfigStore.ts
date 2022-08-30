@@ -1,7 +1,6 @@
 import { InjectionKey } from 'nuxt/dist/app/compat/capi'
 import { readTextFile, writeTextFile, BaseDirectory } from '@tauri-apps/api/fs'
 import { load as yamlLoad, dump as yamlDump } from 'js-yaml'
-import { EditorCtx } from '~~/src/composables/useEditorCtx'
 
 export type Config = {
   isDark: boolean
@@ -13,7 +12,7 @@ export type Config = {
   }
 }
 
-export const useConfigStore = (editorCtx: EditorCtx) => {
+export const useConfigStore = () => {
   const isLoading = ref<boolean>(false)
 
   const embed = reactive({
@@ -35,11 +34,6 @@ export const useConfigStore = (editorCtx: EditorCtx) => {
 
   ///
 
-  const _attachConfig = () => {
-    editorCtx.setLineWrap(env.editor.lineWrap)
-    editorCtx.setTabSize(env.editor.tabSize)
-  }
-
   const load = async () => {
     try {
       isLoading.value = true
@@ -52,8 +46,6 @@ export const useConfigStore = (editorCtx: EditorCtx) => {
       env.editor.lineWrap = obj?.editor?.lineWrap ? Boolean(obj.editor.lineWrap) : env.editor.lineWrap
       env.editor.fontSize = obj?.editor?.fontSize ? Number(obj.editor.fontSize) : env.editor.fontSize
       env.editor.tabSize = obj?.editor?.tabSize ? Number(obj.editor.tabSize) : env.editor.tabSize
-
-      _attachConfig()
     } catch (err) {
       /** */
     } finally {

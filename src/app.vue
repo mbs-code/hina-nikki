@@ -1,51 +1,45 @@
 <template>
   <n-config-provider :theme="theme">
-    <n-layout style="height: 100vh">
-      <n-layout-header class="app-header" bordered>
-        <Header :key="key" @click:config="openConfigDrawer" />
-      </n-layout-header>
+    <n-dialog-provider>
+      <n-layout style="height: 100vh">
+        <n-layout-header class="app-header" bordered>
+          <Header :key="key" @click:config="openConfigDrawer" />
+        </n-layout-header>
 
-      <n-layout class="app-body" position="absolute" has-sider>
-        <n-layout-sider
-          width="306"
-          content-style="padding: 0.5rem;"
-          :native-scrollbar="false"
-          bordered
-        >
-          <Sidebar :key="key" />
-        </n-layout-sider>
+        <n-layout class="app-body" position="absolute" has-sider>
+          <n-layout-sider
+            width="306"
+            content-style="padding: 0.5rem;"
+            :native-scrollbar="false"
+            bordered
+          >
+            <Sidebar :key="key" />
+          </n-layout-sider>
 
-        <n-layout content-style="height: 100%" :native-scrollbar="false">
-          <NuxtPage :key="key" />
+          <n-layout content-style="height: 100%" :native-scrollbar="false">
+            <NuxtPage :key="key" />
+          </n-layout>
         </n-layout>
+
+        <n-layout-footer class="app-footer" position="absolute" bordered>
+          <Footer />
+        </n-layout-footer>
       </n-layout>
 
-      <n-layout-footer class="app-footer" position="absolute" bordered>
-        <Footer />
-      </n-layout-footer>
-    </n-layout>
-
-    <ExploreModal v-model:show="showExploreModal" />
-    <ConfigDrawer v-model:show="showConfigDrawer" />
+      <ExploreModal v-model:show="showExploreModal" />
+      <ConfigDrawer v-model:show="showConfigDrawer" />
+    </n-dialog-provider>
   </n-config-provider>
 </template>
 
 <script setup lang="ts">
 import { darkTheme, lightTheme } from 'naive-ui'
-import { Database } from '~~/src/databases/Database'
-
-// Database.trace = true
-Database.debug = true
 
 const key = ref<number>(Date.now())
 
 const theme = computed(() =>
   configStore.env.isDark ? darkTheme : lightTheme
 )
-
-// const onWipe = async () => {
-//   await Database.dbWipe()
-// }
 
 ///
 
@@ -70,7 +64,7 @@ const editorCtx = useEditorCtx()
 const loaderCtx = useLoaderCtx({ editorCtx, onSaved: loadUiData })
 const explorerCtx = useExplorerCtx({ onSearched: openSearchModal })
 const favoriteCtx = useFavoriteCtx()
-const configStore = useConfigStore(editorCtx)
+const configStore = useConfigStore()
 
 provide(EditorCtxKey, editorCtx)
 provide(LoaderCtxKey, loaderCtx)
@@ -83,11 +77,6 @@ provide(ConfigStoreKey, configStore)
 onBeforeMount(async () => {
   // load config
   await configStore.load()
-
-  // DB migrate
-  // TODO: 実行時にダイアログ
-  const { migrator } = Database.getInstance()
-  await migrator.migrateToLatest()
 
   // loading ui
   await loadUiData()

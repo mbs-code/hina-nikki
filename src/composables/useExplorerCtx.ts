@@ -19,7 +19,7 @@ export const useExplorerCtx = (
 
   const onSearch = async (p?: ExploreParams) => {
     // 完全一致について、 match が空のとき、phrase がハッシュタグ要素なら代入する
-    if (!p?.match && RegexUtil.hasSeparate(p?.phrase)) {
+    if (!p?.match && !RegexUtil.hasSeparate(p?.phrase)) {
       p.match = p.phrase
     }
 

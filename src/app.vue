@@ -52,22 +52,22 @@ const openSearchModal = () => {
   showSearchModal.value = true
 }
 
-const onUiInit = async () => {
+const loadUiData = async () => {
   // お気に入りを読み込む
   await favoriteCtx.loadFavorites()
 }
 
 /// //////////
 
-const editorCtx = useEditorCtx({ onSaved: onUiInit })
-const loaderCtx = useLoaderCtx(editorCtx)
-const searchCtx = useSearchCtx({ onSearched: openSearchModal })
+const editorCtx = useEditorCtx()
+const loaderCtx = useLoaderCtx({ editorCtx, onSaved: loadUiData })
+const explorerCtx = useExplorerCtx({ onSearched: openSearchModal })
 const favoriteCtx = useFavoriteCtx()
 const configStore = useConfigStore(editorCtx)
 
 provide(EditorCtxKey, editorCtx)
 provide(LoaderCtxKey, loaderCtx)
-provide(SearchCtxKey, searchCtx)
+provide(ExplorerCtxKey, explorerCtx)
 provide(FavoriteCtxKey, favoriteCtx)
 provide(ConfigStoreKey, configStore)
 
@@ -83,7 +83,7 @@ onMounted(async () => {
   await migrator.migrateToLatest()
 
   // loading ui
-  await onUiInit()
+  await loadUiData()
 })
 </script>
 

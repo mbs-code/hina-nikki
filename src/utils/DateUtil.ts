@@ -10,10 +10,19 @@ import { ja } from 'date-fns/locale'
 export class DateUtil {
   public static parseByDiaryTitle (title?: string): Date | undefined {
     if (title) {
-      return dateParse(title, 'yyyyMMdd', new Date())
+      return dateParse(title, 'yyyy-MM-dd', new Date())
     }
     return undefined
   }
+
+  public static formatDiaryTitle (date?: Date): string | undefined {
+    if (date) {
+      return formatISO(date, { representation: 'date' }) // yyyy-mm-dd
+    }
+    return undefined
+  }
+
+  ///
 
   public static formatISO (date?: Date): string | undefined {
     if (date) {
@@ -25,13 +34,6 @@ export class DateUtil {
   public static formatDate (date?: Date): string | undefined {
     if (date) {
       return dateFormat(date, 'yyyy-MM-dd')
-    }
-    return undefined
-  }
-
-  public static formatDiaryTitle (date?: Date) {
-    if (date) {
-      return dateFormat(date, 'yyyyMMdd')
     }
     return undefined
   }

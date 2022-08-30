@@ -2,7 +2,7 @@
   <div class="h-full flex flex-col gap-2">
     <n-input-group>
       <n-input
-        v-model:value="searchCtx.params.phrase"
+        v-model:value="explorerCtx.params.phrase"
         type="text"
         clearable
         placeholder="Search"
@@ -17,14 +17,14 @@
     </n-input-group>
 
     <DatePicker
-      :value="loaderCtx.selectedDate.value"
+      :value="loaderCtx.loadedTitleDate.value"
       @update:value="onChangeDate"
     />
 
-    <div class="grow">
+    <div class="flex-grow">
       <n-card title="最近の更新" size="small">
         <SimpleReportList
-          :value="editorCtx.selectedReport.value"
+          :value="loaderCtx.selectedReport.value"
           :reports="favoriteCtx.recentReports.value"
           @update:value="onChangeReport"
         />
@@ -38,16 +38,15 @@ import { Search } from '@vicons/ionicons5'
 import { Report } from '~~/src/databases/models/Report'
 
 const loaderCtx = inject(LoaderCtxKey)
-const editorCtx = inject(EditorCtxKey)
-const searchCtx = inject(SearchCtxKey)
+const explorerCtx = inject(ExplorerCtxKey)
 const favoriteCtx = inject(FavoriteCtxKey)
 
 /// ////////////////////
 // ノート検索
 
 const onSearchText = async () => {
-  const text = searchCtx.params.phrase
-  await searchCtx.onSearch({
+  const text = explorerCtx.params.phrase
+  await explorerCtx.onSearch({
     phrase: text,
   })
 }
@@ -55,15 +54,13 @@ const onSearchText = async () => {
 /// ////////////////////
 // ノート読み込み
 
+// 日付が変更されたとき
 const onChangeDate = async (date?: Date) => {
-  // 日付が変更されたとき
   await loaderCtx.loadByDate(date)
 }
 
+// レポートが選択されたとき
 const onChangeReport = async (report?: Report) => {
-  // レポートが選択されたとき
-  if (report) {
-    await loaderCtx.loadByReport(report)
-  }
+  await loaderCtx.loadByReport(report)
 }
 </script>

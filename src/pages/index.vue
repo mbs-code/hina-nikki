@@ -1,14 +1,20 @@
 <template>
   <div class="h-full flex flex-col">
     <div class="p-2 flex items-center gap-2">
-      <div class="flex items-center gap-1" style="height: 28px">
-        <n-icon size="16">
-          <Document />
-        </n-icon>
+      <!-- タイトル -->
+      <n-button
+        quaternary
+        size="small"
+        :type="statucColor"
+      >
+        <!-- TODO: レポートダイアログを作成 -->
+        <template #icon>
+          <n-icon :component="Document" />
+        </template>
+        <span>{{ title }}</span>
+      </n-button>
 
-        <span>{{ title ?? '---' }}</span>
-      </div>
-
+      <!-- ハッシュタグ -->
       <n-button
         v-for="(hashtag, _) of hashtags"
         :key="_"
@@ -23,6 +29,9 @@
     </div>
 
     <div class="flex items-center gap-1">
+      <div class="flex-grow" name="padding" />
+
+      <!-- TODO: コンポーネント化 -->
       <n-tooltip trigger="hover" placement="top">
         <template #trigger>
           <n-button
@@ -40,7 +49,9 @@
       </n-tooltip>
     </div>
 
-    <TextEditor class="grow" />
+    <div class="flex-grow">
+      <TextEditor />
+    </div>
   </div>
 </template>
 
@@ -52,40 +63,36 @@ import {
 } from '@vicons/ionicons5'
 
 const loaderCtx = inject(LoaderCtxKey)
-const editorCtx = inject(EditorCtxKey)
-const searchCtx = inject(SearchCtxKey)
+const explorerCtx = inject(ExplorerCtxKey)
 const configStore = inject(ConfigStoreKey)
 
 // startup
 onMounted(async () => {
   // 今日を表示する // TODO: ここ？
-  await loaderCtx.onMoveToday()
+  await loaderCtx.loadByToday()
 })
 
-const title = computed(() => {
-  return loaderCtx.formattedReportTitle.value
+const title = computed(() => loaderCtx.formReport?.title ?? '---')
+const hashtags = computed(() => loaderCtx.selectedReport.value?.tags ?? [])
+
+const statucColor = computed(() => {
+  // 優先度: 編集中 > 新規 > 保存済
+  const isDarty = loaderCtx.isDirty.value
+  if (isDarty) { return 'warning' }
+
+  const isNew = loaderCtx.isNew.value
+  return isNew ? 'error' : undefined
 })
 
-const hashtags = computed(() => {
-  const report = editorCtx.selectedReport.value
-  const tags = report?.tags ?? []
-  if (!report?.isDiary && report?.title) {
-    tags.unshift(report?.title)
-  }
-
-  return tags
-})
-
-///
+/// ////////////////////
+// Toolbar アクション
 
 const onSearchHashtag = async (hashtag: string) => {
-  await searchCtx.onSearch({
+  await explorerCtx.onSearch({
     match: hashtag,
     hashtags: [hashtag],
   })
 }
-
-///
 
 const toggleLineWrap = () => {
   configStore.env.editor.lineWrap = !configStore.env.editor.lineWrap

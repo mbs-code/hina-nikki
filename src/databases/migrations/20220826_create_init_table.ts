@@ -7,7 +7,7 @@ export async function up (db: Kysely<unknown>): Promise<void> {
     .addColumn('title', 'text', col => col.notNull().unique())
     .addColumn('text', 'text', col => col.notNull())
     .addColumn('is_diary', 'integer', col => col.notNull().defaultTo(0))
-    .addColumn('is_hash', 'integer', col => col.notNull().defaultTo(0))
+    .addColumn('is_hashtag', 'integer', col => col.notNull().defaultTo(0))
     .addColumn('tags', 'text')
     .addColumn('created_at', 'datetime', col => col.notNull())
     .addColumn('updated_at', 'datetime', col => col.notNull())

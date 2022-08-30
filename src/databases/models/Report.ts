@@ -6,7 +6,7 @@ export type DBReport = {
   title: string // unique
   text: string
   is_diary: number // 0, 1
-  is_hash: number // 0, 1
+  is_hashtag: number // 0, 1
   tags: string // SSV形式
   created_at: string // iso8601 UTC
   updated_at: string // iso8601 UTC
@@ -17,7 +17,7 @@ export type Report = {
   title: string // unique
   text: string
   isDiary: boolean
-  is_hash: boolean
+  is_hashtag: boolean
   tags: string[] // SSV形式
   createdAt: Date
   updatedAt: Date
@@ -42,7 +42,7 @@ export const formatReport = (db: DBReport): Report => {
     title: db.title,
     text: db.text,
     isDiary: Boolean(db.is_diary),
-    is_hash: Boolean(db.is_hash),
+    is_hashtag: Boolean(db.is_hashtag),
     tags: db.tags ? db.tags.split(' ') : [],
     createdAt: new Date(db.created_at),
     updatedAt: new Date(db.updated_at),
@@ -58,19 +58,19 @@ export const parseReport = (form: FormReport) => {
 
   // タイトルの形式を判定
   const isDiary = RegexUtil.isDiaryTitle(form.title) ? 1 : 0
-  const isHash = RegexUtil.isHashTitle(form.title) ? 1 : 0
+  const isHashtag = RegexUtil.isHashtagTitle(form.title) ? 1 : 0
 
   // 本文からハッシュタグを抽出
   const hashtags = (form.text ?? '')
     .split(RegexUtil.separateRegex)
-    .filter(text => RegexUtil.isHashTitle(text))
+    .filter(text => RegexUtil.isHashtagTitle(text))
   const ssvTag = Array.from(new Set(hashtags)).join(' ')
 
   return {
     title,
     text: form.text,
     is_diary: isDiary,
-    is_hash: isHash,
+    is_hashtag: isHashtag,
     tags: ssvTag ?? null,
   }
 }

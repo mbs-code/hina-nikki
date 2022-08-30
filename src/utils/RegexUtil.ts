@@ -8,7 +8,7 @@ export class RegexUtil {
     return val ? this.diaryRegex.test(val) : false
   }
 
-  public static isHashTitle (val?: string): boolean {
+  public static isHashtagTitle (val?: string): boolean {
     return val ? this.hashRegex.test(val) : false
   }
 

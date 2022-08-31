@@ -125,9 +125,9 @@ export class ReportAPI {
 
   protected static async _attachTags (parse: ReturnType<typeof parseReport>) {
     // タグ名リストから完全一致するタグを探す
-    const tagNames = (parse.tags ?? '').split(' ')
+    const tagNames = parse.tags ? parse.tags.split(' ') : []
     const dbTags = await TagAPI.getAll({
-      names: (parse.tags).split(' ')
+      names: tagNames,
     })
 
     // DB に存在していなければ新規作成

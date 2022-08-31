@@ -1,6 +1,6 @@
 <template>
   <n-card
-    v-if="loaderCtx.selectedReport.value.id"
+    v-if="loaderCtx.selectedReport.value?.id"
     title="タイトルを編集する"
     size="small"
   >

@@ -1,0 +1,74 @@
+<template>
+  <div class="my-1">
+    <n-table :single-line="false" stripe size="small">
+      <tbody>
+        <tr>
+          <th style="width: 170px">
+            内部ID
+          </th>
+          <td>{{ report?.id ?? '-' }}</td>
+        </tr>
+        <tr>
+          <th>タイトル</th>
+          <td>{{ report?.title ?? '-' }}</td>
+        </tr>
+        <tr>
+          <!-- TODO: タグクリックできるように -->
+          <th>タグ</th>
+          <td>{{ tags ?? '-' }}</td>
+        </tr>
+        <tr>
+          <th>行数 / 文字数</th>
+          <td>{{ lines?.toLocaleString() ?? '-' }} 行 / {{ length?.toLocaleString() ?? '-' }} 文字</td>
+        </tr>
+        <tr>
+          <th>初回作成日</th>
+          <td>{{ createdAt ?? '-' }}</td>
+        </tr>
+        <tr>
+          <th>更新日</th>
+          <td>{{ updatedAt ?? '-' }}</td>
+        </tr>
+      </tbody>
+    </n-table>
+    <div :style="{ color: themeVars.iconColor }">
+      ※ 保存データを表示しています。
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useThemeVars } from 'naive-ui'
+import { DateUtil } from '~~/src/utils/DateUtil'
+
+///
+
+const loaderCtx = inject(LoaderCtxKey)
+const themeVars = useThemeVars()
+
+const report = computed(() => loaderCtx.selectedReport.value)
+
+const tags = computed(() => {
+  if (!report.value?.tags?.length) { return undefined }
+  return report.value.tags.join(' ')
+})
+
+const length = computed(() => {
+  if (!report.value?.text?.length) { return undefined }
+  return report.value.text.length
+})
+
+const lines = computed(() => {
+  if (!report.value?.text?.length) { return undefined }
+
+  const res = (report.value?.text ?? '').match(/\r\n|\n/g)
+  return (res ? res.length : 0) + 1
+})
+
+const createdAt = computed(() =>
+  DateUtil.formatDisplay(report.value?.createdAt)
+)
+const updatedAt = computed(() =>
+  DateUtil.formatDisplay(report.value?.updatedAt)
+)
+</script>

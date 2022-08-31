@@ -94,6 +94,7 @@ const tagOptions = computed(() => {
 const onTagSelect = (val: string) => {
   // タグを選択したら、カーソル位置に挿入する
   editorCtx.insertHashtag(val)
+  editorCtx.onFocus()
 }
 
 const onSearchHashtag = async (hashtag: string) => {

@@ -1,7 +1,7 @@
 <template>
   <n-thing
     v-if="report"
-    :title="report.formattedTitle"
+    :title="report.title"
     content-style="margin-top: 10px;"
   >
     <template #avatar>

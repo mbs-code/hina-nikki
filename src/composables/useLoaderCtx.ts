@@ -6,6 +6,8 @@ import { FormReport, Report } from '~~/src/databases/models/Report'
 import { ReportAPI } from '~~/src/apis/ReportAPI'
 import { RegexUtil } from '~~/src/utils/RegexUtil'
 
+export type ReportStatus = 'dirty' | 'new' | 'none'
+
 export const useLoaderCtx = (
   { editorCtx, onSaved }: { editorCtx: EditorCtx, onSaved: () => void }
 ) => {
@@ -31,6 +33,13 @@ export const useLoaderCtx = (
     ? Boolean(formReport.text)
     : selectedReport.value?.text !== formReport.text
   )
+
+  const getStatus = computed<ReportStatus>(() => {
+    // 優先度: 編集中 > 新規 > 保存済
+    if (isDirty.value) { return 'dirty' }
+
+    return isNew.value ? 'new' : 'none'
+  })
 
   /// /////////////
   /// 汎用関数
@@ -117,6 +126,7 @@ export const useLoaderCtx = (
     formReport,
     isNew,
     isDirty,
+    getStatus,
 
     save,
     init,

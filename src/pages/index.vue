@@ -74,12 +74,11 @@ const title = computed(() => loaderCtx.formReport?.title ?? '---')
 const hashtags = computed(() => loaderCtx.selectedReport.value?.tags ?? [])
 
 const statucColor = computed(() => {
-  // 優先度: 編集中 > 新規 > 保存済
-  const isDarty = loaderCtx.isDirty.value
-  if (isDarty) { return 'warning' }
-
-  const isNew = loaderCtx.isNew.value
-  return isNew ? 'error' : undefined
+  switch (loaderCtx.getStatus.value) {
+    case 'dirty': return 'warning'
+    case 'new': return 'error'
+    case 'none': return undefined
+  }
 })
 
 const tagOptions = computed(() => {

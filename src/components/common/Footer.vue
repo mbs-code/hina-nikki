@@ -22,12 +22,12 @@ import {
 const loaderCtx = inject(LoaderCtxKey)
 
 const title = computed(() => loaderCtx.formReport?.title ?? '---')
-const statusIcon = computed(() => {
-  // 優先度: 編集中 > 新規 > 保存済
-  const isDarty = loaderCtx.isDirty.value
-  if (isDarty) { return Alert }
 
-  const isNew = loaderCtx.isNew.value
-  return isNew ? Remove : CheckmarkSharp
+const statusIcon = computed(() => {
+  switch (loaderCtx.getStatus.value) {
+    case 'dirty': return Alert
+    case 'new': return Remove
+    case 'none': return CheckmarkSharp
+  }
 })
 </script>

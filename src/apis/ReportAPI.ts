@@ -1,16 +1,18 @@
+import { TagAPI } from '~~/src/apis/TagAPI'
 import { Database } from '~~/src/databases/Database'
 import { DBReport, formatReport, FormReport, parseReport, Report } from '~~/src/databases/models/Report'
 import { DateUtil } from '~~/src/utils/DateUtil'
 
 export type SearchReport = {
-  phrases?: string[]
-  hashtags?: string[]
-  isDiary?: boolean
+  phrases?: string[] // textとtitleのlike検索
+  hashtags?: string[] // ハッシュタグのlike検索
+  isDiary?: boolean // 日記だけ取得
   limit?: number
   sorts?: [keyof DBReport, 'asc' | 'desc'][]
 }
 
 const isBool = (val: unknown) => typeof val === 'boolean'
+
 export class ReportAPI {
   public static async getAll (search?: SearchReport): Promise<Report[]> {
     // レポートの取得
@@ -37,12 +39,12 @@ export class ReportAPI {
     return reports.map(report => formatReport(report))
   }
 
-  public static async get (pageId: number): Promise<Report> {
+  public static async get (reportId: number): Promise<Report> {
     // レポートの取得
     const report = await Database.getDB()
       .selectFrom('reports')
       .selectAll()
-      .where('id', '=', pageId)
+      .where('id', '=', reportId)
       .executeTakeFirstOrThrow()
 
     return formatReport(report)
@@ -65,14 +67,18 @@ export class ReportAPI {
     const now = DateUtil.formatISO(new Date())
 
     // レポートを作成
+    const parse = parseReport(form)
     const { insertId } = await Database.getDB()
       .insertInto('reports')
       .values({
-        ...parseReport(form),
+        ...parse,
         created_at: now,
         updated_at: now,
       })
       .executeTakeFirst()
+
+    // 関連タグを生成する
+    await this._attachTags(parse)
 
     return await this.get(Number(insertId))
   }
@@ -81,10 +87,11 @@ export class ReportAPI {
     const now = DateUtil.formatISO(new Date())
 
     // レポートを更新
+    const parse = parseReport(form)
     const { numUpdatedRows } = await Database.getDB()
       .updateTable('reports')
       .set({
-        ...parseReport(form),
+        ...parse,
         updated_at: now,
       })
       .where('id', '=', reportId)
@@ -93,6 +100,9 @@ export class ReportAPI {
     if (Number(numUpdatedRows) === 0) {
       throw new Error('no result')
     }
+
+    // 関連タグを生成する
+    await this._attachTags(parse)
 
     return await this.get(Number(reportId))
   }
@@ -109,5 +119,25 @@ export class ReportAPI {
     }
 
     return true
+  }
+
+  ///
+
+  protected static async _attachTags (parse: ReturnType<typeof parseReport>) {
+    // タグ名リストから完全一致するタグを探す
+    const tagNames = (parse.tags ?? '').split(' ')
+    const dbTags = await TagAPI.getAll({
+      names: (parse.tags).split(' ')
+    })
+
+    // DB に存在していなければ新規作成
+    for (const name of tagNames) {
+      const exist = dbTags.find(tag => tag.name === name)
+      if (!exist) {
+        await TagAPI.create({ name })
+      }
+    }
+
+    // NOTE: 削除は特にしていない
   }
 }

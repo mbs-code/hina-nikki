@@ -8,17 +8,21 @@ import { TauriSqliteDialect } from './libs/TauriSqliteDialect'
 import { BuildinMigrationProvider } from './libs/BuildinMigrationProvider'
 
 import * as CreateInitTable from './migrations/20220826_create_init_table'
+import * as AppednTagTable from './migrations/20220831_append_tag_table'
 
 import { DBReport } from '~~/src/databases/models/Report'
+import { DBTag } from '~~/src/databases/models/Tag'
 
 // tables
 export interface Tables {
   reports: DBReport
+  tags: DBTag
 }
 
 // migrations
 export const migrations: Record<string, Migration> = {
-  '20220826_create_init_table': CreateInitTable
+  '20220826_create_init_table': CreateInitTable,
+  '20220831_append_tag_table': AppednTagTable,
 }
 
 // singleton connection

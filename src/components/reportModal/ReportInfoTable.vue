@@ -29,6 +29,10 @@
           <th>更新日</th>
           <td>{{ updatedAt ?? '-' }}</td>
         </tr>
+        <tr>
+          <th>状態</th>
+          <td>{{ statusMessage }}</td>
+        </tr>
       </tbody>
     </n-table>
     <div :style="{ color: themeVars.iconColor }">
@@ -71,4 +75,12 @@ const createdAt = computed(() =>
 const updatedAt = computed(() =>
   DateUtil.formatDisplay(report.value?.updatedAt)
 )
+
+const statusMessage = computed(() => {
+  switch (loaderCtx.getStatus.value) {
+    case 'dirty': return '編集中'
+    case 'new': return '新規'
+    case 'none': return '保存済み'
+  }
+})
 </script>

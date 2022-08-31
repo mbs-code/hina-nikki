@@ -53,8 +53,8 @@ const openConfigDrawer = () => {
 }
 
 const loadUiData = async () => {
-  // お気に入りを読み込む
-  await favoriteCtx.loadFavorites()
+  // UI データを読み込み直す
+  await displayCtx.load()
 }
 
 /// //////////
@@ -62,13 +62,13 @@ const loadUiData = async () => {
 const editorCtx = useEditorCtx()
 const loaderCtx = useLoaderCtx({ editorCtx, onSaved: loadUiData })
 const explorerCtx = useExplorerCtx({ onSearched: openSearchModal })
-const favoriteCtx = useFavoriteCtx()
+const displayCtx = useDisplayCtx()
 const configStore = useConfigStore()
 
 provide(EditorCtxKey, editorCtx)
 provide(LoaderCtxKey, loaderCtx)
 provide(ExplorerCtxKey, explorerCtx)
-provide(FavoriteCtxKey, favoriteCtx)
+provide(DisplayCtxKey, displayCtx)
 provide(ConfigStoreKey, configStore)
 
 /// //////////

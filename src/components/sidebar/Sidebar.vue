@@ -80,7 +80,7 @@
         <n-card title="最近の更新" size="small">
           <SimpleReportList
             :value="loaderCtx.selectedReport.value"
-            :reports="favoriteCtx.recentReports.value"
+            :reports="displayCtx.recentReports.value"
             @update:value="onChangeReport"
           />
         </n-card>
@@ -102,7 +102,7 @@ import { Report } from '~~/src/databases/models/Report'
 
 const loaderCtx = inject(LoaderCtxKey)
 const explorerCtx = inject(ExplorerCtxKey)
-const favoriteCtx = inject(FavoriteCtxKey)
+const displayCtx = inject(DisplayCtxKey)
 const themeVars = useThemeVars()
 
 /// ////////////////////
@@ -131,7 +131,7 @@ const onChangeReport = async (report?: Report) => {
 // 自身の次のレポートを読み込む
 const onLatestReport = async () => {
   const selected = loaderCtx.selectedReport.value
-  const reports = favoriteCtx.recentReports.value
+  const reports = displayCtx.recentReports.value
 
   if (selected) {
     const index = reports.findIndex(r => r.id === selected.id)

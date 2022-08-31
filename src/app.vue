@@ -8,6 +8,7 @@
 
         <n-layout class="app-body" position="absolute" has-sider>
           <n-layout-sider
+            v-if="configStore.env.useSidebar"
             width="306"
             :native-scrollbar="false"
             bordered

@@ -4,6 +4,7 @@ import { load as yamlLoad, dump as yamlDump } from 'js-yaml'
 
 export type Config = {
   isDark: boolean
+  useSidebar: boolean
   useCalendar: boolean
 
   saveWhenLeave: boolean
@@ -24,6 +25,7 @@ export const useConfigStore = () => {
 
   const env = reactive<Config>({
     isDark: true,
+    useSidebar: true,
     useCalendar: true,
     saveWhenLeave: true,
     editor: {
@@ -48,6 +50,7 @@ export const useConfigStore = () => {
       const obj = yamlLoad(text) as any
 
       env.isDark = obj?.isDark ? Boolean(obj.isDark) : env.isDark
+      env.useSidebar = obj?.useSidebar ? Boolean(obj.useSidebar) : env.useSidebar
       env.useCalendar = obj?.useCalendar ? Boolean(obj.useCalendar) : env.useCalendar
       env.saveWhenLeave = obj?.saveWhenLeave ? Boolean(obj.saveWhenLeave) : env.saveWhenLeave
 

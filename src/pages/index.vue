@@ -1,10 +1,10 @@
 <template>
   <div class="h-full flex flex-col">
-    <div class="p-2 flex flex-wrap items-center gap-2">
+    <div class="flex items-center gap-2">
       <!-- タイトル -->
       <n-button
+        size="large"
         quaternary
-        size="small"
         :type="statucColor"
       >
         <!-- TODO: レポートダイアログを作成 -->
@@ -15,17 +15,34 @@
       </n-button>
 
       <!-- ハッシュタグ -->
-      <n-button
-        v-for="(hashtag, _) of hashtags"
-        :key="_"
-        size="small"
-        @click="onSearchHashtag(hashtag)"
+      <div class="flex flex-grow flex-wrap gap-2 p-1">
+        <n-button
+          v-for="(hashtag, _) of hashtags"
+          :key="_"
+          size="small"
+          @click="onSearchHashtag(hashtag)"
+        >
+          <template #icon>
+            <n-icon :component="PricetagOutline" />
+          </template>
+          {{ hashtag }}
+        </n-button>
+      </div>
+
+      <!-- タグ選択セレクト -->
+      <n-popselect
+        :options="tagOptions"
+        size="medium"
+        scrollable
+        @update:value="onTagSelect"
       >
-        <template #icon>
-          <n-icon :component="PricetagOutline" />
-        </template>
-        {{ hashtag }}
-      </n-button>
+        <n-button size="large">
+          <template #icon>
+            <n-icon :component="Pricetags" />
+          </template>
+          <n-icon :component="ChevronDown" />
+        </n-button>
+      </n-popselect>
     </div>
 
     <div class="flex-grow">
@@ -36,12 +53,16 @@
 
 <script setup lang="ts">
 import {
-  PricetagOutline,
   Document,
+  ChevronDown,
+  PricetagOutline,
+  Pricetags,
 } from '@vicons/ionicons5'
 
+const editorCtx = inject(EditorCtxKey)
 const loaderCtx = inject(LoaderCtxKey)
 const explorerCtx = inject(ExplorerCtxKey)
+const displayCtx = inject(DisplayCtxKey)
 
 // startup
 onMounted(async () => {
@@ -60,6 +81,21 @@ const statucColor = computed(() => {
   const isNew = loaderCtx.isNew.value
   return isNew ? 'error' : undefined
 })
+
+/// ////////////////////
+// タグ アクション
+
+const tagOptions = computed(() => {
+  return displayCtx.tags.value.map(tag => ({
+    label: tag.name,
+    value: tag.name,
+  }))
+})
+
+const onTagSelect = (val: string) => {
+  // タグを選択したら、カーソル位置に挿入する
+  editorCtx.insertHashtag(val)
+}
 
 /// ////////////////////
 // Toolbar アクション

@@ -3,7 +3,7 @@
     <!-- ヘッダツール -->
     <!-- TODO: コンポーネント化とツールチップ、ショートカットキー -->
     <div
-      class="py-0.5 pl-1 pr-3 flex flex-wrap items-center gap-1"
+      class="pl-1 pr-3 flex flex-wrap items-center gap-1"
       :style="{ background: themeVars.modalColor }"
     >
       <n-button

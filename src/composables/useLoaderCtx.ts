@@ -57,6 +57,10 @@ export const useLoaderCtx = (
     editorCtx.onFocus()
   }
 
+  const resetTitle = () => {
+    formReport.title = selectedReport.value?.title ?? _loadedTitle.value
+  }
+
   /// /////////////
   /// load util
 
@@ -116,6 +120,7 @@ export const useLoaderCtx = (
 
     save,
     init,
+    resetTitle,
 
     loadByTitle,
     loadByDate,

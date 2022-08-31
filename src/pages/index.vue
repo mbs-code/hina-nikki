@@ -6,6 +6,7 @@
         size="large"
         quaternary
         :type="statucColor"
+        @click="openMetaDialog"
       >
         <!-- TODO: レポートダイアログを作成 -->
         <template #icon>
@@ -45,6 +46,8 @@
     <div class="flex-grow">
       <TextEditor />
     </div>
+
+    <ReportMetaModal v-model:show="showMetaDialog" />
   </div>
 </template>
 
@@ -79,9 +82,6 @@ const statucColor = computed(() => {
   return isNew ? 'error' : undefined
 })
 
-/// ////////////////////
-// タグ アクション
-
 const tagOptions = computed(() => {
   return displayCtx.tags.value.map(tag => ({
     label: tag.name,
@@ -89,18 +89,26 @@ const tagOptions = computed(() => {
   }))
 })
 
+/// ////////////////////
+// Toolbar アクション
+
 const onTagSelect = (val: string) => {
   // タグを選択したら、カーソル位置に挿入する
   editorCtx.insertHashtag(val)
 }
-
-/// ////////////////////
-// Toolbar アクション
 
 const onSearchHashtag = async (hashtag: string) => {
   await explorerCtx.onSearch({
     match: hashtag,
     hashtags: [hashtag],
   })
+}
+
+/// ////////////////////
+// ダイアログ
+
+const showMetaDialog = ref<boolean>(false)
+const openMetaDialog = () => {
+  showMetaDialog.value = true
 }
 </script>

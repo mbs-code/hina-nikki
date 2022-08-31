@@ -33,9 +33,10 @@ export const useEditorCtx = () => {
     const pos = _editor.value.getCursorPosition()
     const activeLine = _editor.value.session.getDocument().getLine(pos.row)
 
-    const t = activeLine.at(pos.column - 1)
+    const ptr = pos.column - 1
+    const t = activeLine.at(ptr)
 
-    const text = (t && t !== ' ') ? ` ${value} ` : `${value} `
+    const text = (ptr >= 0 && t && t !== ' ') ? ` ${value} ` : `${value} `
     insertText(text)
   }
 

@@ -15,34 +15,31 @@
       </n-button>
 
       <!-- ハッシュタグ -->
-      <div class="flex flex-grow flex-wrap gap-2 p-1">
-        <n-button
-          v-for="(hashtag, _) of hashtags"
-          :key="_"
-          size="small"
-          @click="onSearchHashtag(hashtag)"
-        >
-          <template #icon>
-            <n-icon :component="PricetagOutline" />
-          </template>
-          {{ hashtag }}
-        </n-button>
-      </div>
+      <n-scrollbar x-scrollable>
+        <div class="flex flex-grow shrink gap-2 mt-1.5">
+          <n-button
+            v-for="(hashtag, _) of hashtags"
+            :key="_"
+            size="small"
+            @click="onSearchHashtag(hashtag)"
+          >
+            <template #icon>
+              <n-icon :component="PricetagOutline" />
+            </template>
+            {{ hashtag }}
+          </n-button>
+        </div>
+      </n-scrollbar>
 
       <!-- タグ選択セレクト -->
-      <n-popselect
-        :options="tagOptions"
-        size="medium"
-        scrollable
-        @update:value="onTagSelect"
-      >
+      <n-dropdown trigger="hover" :options="tagOptions" @select="onTagSelect">
         <n-button size="large">
           <template #icon>
             <n-icon :component="Pricetags" />
           </template>
           <n-icon :component="ChevronDown" />
         </n-button>
-      </n-popselect>
+      </n-dropdown>
     </div>
 
     <div class="flex-grow">
@@ -88,7 +85,7 @@ const statucColor = computed(() => {
 const tagOptions = computed(() => {
   return displayCtx.tags.value.map(tag => ({
     label: tag.name,
-    value: tag.name,
+    key: tag.name,
   }))
 })
 

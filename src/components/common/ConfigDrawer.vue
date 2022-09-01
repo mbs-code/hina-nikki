@@ -20,6 +20,10 @@
                 <n-switch v-model:value="configStore.env.isDark" />
               </n-form-item>
 
+              <n-form-item label="サイドバーを表示する">
+                <n-switch v-model:value="configStore.env.useSidebar" />
+              </n-form-item>
+
               <n-form-item label="カレンダーを使用する">
                 <n-switch v-model:value="configStore.env.useCalendar" />
               </n-form-item>
@@ -32,22 +36,12 @@
                 <n-switch v-model:value="configStore.env.editor.lineWrap" />
               </n-form-item>
 
-              <n-form-item label="印刷ガイドの表示">
-                <n-switch v-model:value="configStore.env.editor.printMargin" />
-              </n-form-item>
-
-              <n-form-item label="フォントサイズ">
+              <n-form-item label="ズーム率">
                 <n-input-number
-                  v-model:value="configStore.env.editor.fontSize"
-                  :min="configStore.embed.minFontSize"
-                  :max="48"
-                />
-              </n-form-item>
-
-              <n-form-item label="Tabサイズ" path="sliderValue">
-                <n-input-number
-                  v-model:value="configStore.env.editor.tabSize"
-                  :min="1"
+                  v-model:value="configStore.env.editor.zoom"
+                  :min="configStore.embed.minZoomSize"
+                  :max="configStore.embed.maxZoomSize"
+                  step="0.1"
                 />
               </n-form-item>
             </div>

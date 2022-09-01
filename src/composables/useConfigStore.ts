@@ -10,9 +10,7 @@ export type Config = {
   saveWhenLeave: boolean
   editor: {
     lineWrap: boolean
-    printMargin: boolean
-    fontSize: number
-    tabSize: number
+    zoom: number
   }
 }
 
@@ -20,7 +18,8 @@ export const useConfigStore = () => {
   const isLoading = ref<boolean>(false)
 
   const embed = reactive({
-    minFontSize: 8,
+    minZoomSize: 0.5,
+    maxZoomSize: 3,
   })
 
   const env = reactive<Config>({
@@ -30,16 +29,24 @@ export const useConfigStore = () => {
     saveWhenLeave: true,
     editor: {
       lineWrap: false,
-      printMargin: false,
-      fontSize: 14,
-      tabSize: 2,
+      zoom: 1,
     },
   })
 
   // auto save
-  watch(env, () => { save() })
+  watch(env, () => { save() }, { deep: true })
 
   ///
+
+  const _attachBool = (value: any, defaultValue: any) => {
+    if (value === null) { return defaultValue }
+    return !!value
+  }
+
+  const _attachNumber = (value: any, defaultValue: any) => {
+    if (value === null) { return defaultValue }
+    return Number(value)
+  }
 
   const load = async () => {
     try {
@@ -49,15 +56,13 @@ export const useConfigStore = () => {
       const text = await readTextFile('config.yaml', { dir: BaseDirectory.App })
       const obj = yamlLoad(text) as any
 
-      env.isDark = obj?.isDark ? Boolean(obj.isDark) : env.isDark
-      env.useSidebar = obj?.useSidebar ? Boolean(obj.useSidebar) : env.useSidebar
-      env.useCalendar = obj?.useCalendar ? Boolean(obj.useCalendar) : env.useCalendar
-      env.saveWhenLeave = obj?.saveWhenLeave ? Boolean(obj.saveWhenLeave) : env.saveWhenLeave
+      env.isDark = _attachBool(obj?.isDark, env.isDark)
+      env.useSidebar = _attachBool(obj?.useSidebar, env.useSidebar)
+      env.useCalendar = _attachBool(obj?.useCalendar, env.useCalendar)
+      env.saveWhenLeave = _attachBool(obj?.saveWhenLeave, env.saveWhenLeave)
 
-      env.editor.lineWrap = obj?.editor?.lineWrap ? Boolean(obj.editor.lineWrap) : env.editor.lineWrap
-      env.editor.printMargin = obj?.editor?.printMargin ? Boolean(obj.editor.printMargin) : env.editor.printMargin
-      env.editor.fontSize = obj?.editor?.fontSize ? Number(obj.editor.fontSize) : env.editor.fontSize
-      env.editor.tabSize = obj?.editor?.tabSize ? Number(obj.editor.tabSize) : env.editor.tabSize
+      env.editor.lineWrap = _attachBool(obj?.editor?.lineWrap, env.editor.lineWrap)
+      env.editor.zoom = _attachNumber(obj?.editor?.zoom, env.editor.zoom)
     } catch (err) {
       /** */
     } finally {

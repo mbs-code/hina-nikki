@@ -129,6 +129,7 @@ const onChangeReport = async (report?: Report) => {
 }
 
 // 自身の次のレポートを読み込む
+// TODO: まとめる
 const onLatestReport = async () => {
   const selected = loaderCtx.selectedReport.value
   const reports = displayCtx.recentReports.value

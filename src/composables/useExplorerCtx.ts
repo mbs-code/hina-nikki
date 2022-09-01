@@ -49,6 +49,7 @@ export const useExplorerCtx = (
 
     params,
     onSearch,
+    onSearched,
   }
 }
 

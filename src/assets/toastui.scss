@@ -1,0 +1,10 @@
+@use '@toast-ui/editor/dist/toastui-editor.css';
+@use '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
+
+// フォントファミリーを削除
+.toastui-editor-defaultUI,
+.ProseMirror,
+.toastui-editor-contents,
+.toastui-editor-tooltip {
+  font-family: inherit;
+}

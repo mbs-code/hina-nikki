@@ -11,6 +11,7 @@
     "lint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore"
   },
   "dependencies": {
+    "@toast-ui/editor": "^3.2.0",
     "ace-builds": "^1.9.6",
     "date-fns": "^2.29.2",
     "js-yaml": "^4.1.0",

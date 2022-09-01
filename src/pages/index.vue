@@ -44,7 +44,8 @@
     </div>
 
     <div class="flex-grow">
-      <TextEditor />
+      <!-- <TextEditor /> -->
+      <TuiEditor />
     </div>
 
     <ReportMetaModal v-model:show="showMetaDialog" />

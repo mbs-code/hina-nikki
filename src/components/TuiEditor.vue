@@ -53,6 +53,7 @@ const editorRef = ref<HTMLDivElement>()
 let editor: Editor
 
 const loaderCtx = inject(LoaderCtxKey)
+const configStore = inject(ConfigStoreKey)
 
 const text = computed({
   get: () => loaderCtx.formReport.text ?? '',
@@ -91,17 +92,27 @@ onUnmounted(() => {
 /// ////////////////////
 /// ズーム関係
 
-const zoom = ref<number>(1.0)
+const zoom = computed({
+  get: () => configStore.env.editor.zoom,
+  set: (val: number) => {
+    // 最小値制限
+    if (val < configStore.embed.minZoomSize) {
+      val = configStore.embed.minZoomSize
+    }
+    // 最大値制限
+    if (configStore.embed.maxZoomSize < val) {
+      val = configStore.embed.maxZoomSize
+    }
+    // 第一位で代入
+    configStore.env.editor.zoom = Math.round(val * 10) / 10
+  }
+})
 
 const onZoom = ({ deltaY }: WheelEvent) => {
   if (deltaY < 0) {
     zoom.value += 0.1
   } else if (deltaY > 0) {
     zoom.value -= 0.1
-    // configStore.env.editor.fontSize = Math.max(
-    //   configStore.env.editor.fontSize - 1,
-    //   configStore.embed.minFontSize, // 最小値制限
-    // )
   }
 }
 

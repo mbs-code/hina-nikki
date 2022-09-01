@@ -36,11 +36,12 @@
                 <n-switch v-model:value="configStore.env.editor.printMargin" />
               </n-form-item>
 
-              <n-form-item label="フォントサイズ">
+              <n-form-item label="ズーム率">
                 <n-input-number
-                  v-model:value="configStore.env.editor.fontSize"
-                  :min="configStore.embed.minFontSize"
-                  :max="48"
+                  v-model:value="configStore.env.editor.zoom"
+                  :min="configStore.embed.minZoomSize"
+                  :max="configStore.embed.maxZoomSize"
+                  step="0.1"
                 />
               </n-form-item>
 

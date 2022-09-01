@@ -11,7 +11,7 @@ export type Config = {
   editor: {
     lineWrap: boolean
     printMargin: boolean
-    fontSize: number
+    zoom: number
     tabSize: number
   }
 }
@@ -20,7 +20,8 @@ export const useConfigStore = () => {
   const isLoading = ref<boolean>(false)
 
   const embed = reactive({
-    minFontSize: 8,
+    minZoomSize: 0.5,
+    maxZoomSize: 3,
   })
 
   const env = reactive<Config>({
@@ -31,7 +32,7 @@ export const useConfigStore = () => {
     editor: {
       lineWrap: false,
       printMargin: false,
-      fontSize: 14,
+      zoom: 1,
       tabSize: 2,
     },
   })
@@ -56,7 +57,7 @@ export const useConfigStore = () => {
 
       env.editor.lineWrap = obj?.editor?.lineWrap ? Boolean(obj.editor.lineWrap) : env.editor.lineWrap
       env.editor.printMargin = obj?.editor?.printMargin ? Boolean(obj.editor.printMargin) : env.editor.printMargin
-      env.editor.fontSize = obj?.editor?.fontSize ? Number(obj.editor.fontSize) : env.editor.fontSize
+      env.editor.zoom = obj?.editor?.zoom ? Number(obj.editor.zoom) : env.editor.zoom
       env.editor.tabSize = obj?.editor?.tabSize ? Number(obj.editor.tabSize) : env.editor.tabSize
     } catch (err) {
       /** */

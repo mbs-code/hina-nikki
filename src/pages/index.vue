@@ -60,7 +60,7 @@ import {
   Pricetags,
 } from '@vicons/ionicons5'
 
-const editorCtx = inject(EditorCtxKey)
+// const editorCtx = inject(EditorCtxKey)
 const loaderCtx = inject(LoaderCtxKey)
 const explorerCtx = inject(ExplorerCtxKey)
 const displayCtx = inject(DisplayCtxKey)
@@ -92,10 +92,11 @@ const tagOptions = computed(() => {
 /// ////////////////////
 // Toolbar アクション
 
-const onTagSelect = (val: string) => {
+const onTagSelect = (_val: string) => {
   // タグを選択したら、カーソル位置に挿入する
-  editorCtx.insertHashtag(val)
-  editorCtx.onFocus()
+  // TODO: タグ選択機能
+  // editorCtx.insertHashtag(val)
+  // editorCtx.onFocus()
 }
 
 const onSearchHashtag = async (hashtag: string) => {

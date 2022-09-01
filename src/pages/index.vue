@@ -44,7 +44,6 @@
     </div>
 
     <div class="flex-grow">
-      <!-- <TextEditor /> -->
       <TuiEditor />
     </div>
 

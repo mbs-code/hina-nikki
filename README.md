@@ -26,6 +26,7 @@ Tauri + Nuxt3 + TS + SCSS + WindiCSS + SQLite
 - design
   - [windicss/windicss](https://github.com/windicss/windicss) : Tailwind 互換 CSS ライブラリ
   - [tusen\-ai/naive\-ui](https://github.com/tusen-ai/naive-ui) : Vue UI ライブラリ
+  - [07akioni/xicons: ionicons5)](https://github.com/07akioni/xicons) : アイコンライブラリ
 
 
 ## howto

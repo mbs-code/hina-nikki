@@ -8,3 +8,25 @@
 .toastui-editor-tooltip {
   font-family: inherit;
 }
+
+// スクロールバーを naive に寄せる
+.ProseMirror,
+.toastui-editor-md-preview {
+  &::-webkit-scrollbar {
+    background-color: transparent;
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgb(72, 72, 78);
+    border-radius: 5px;
+  }
+
+  &::-webkit-scrollbar-button {
+    display:none;
+  }
+}

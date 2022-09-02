@@ -66,15 +66,17 @@ const displayCtx = inject(DisplayCtxKey)
 
 // startup
 onMounted(async () => {
-  // 今日を表示する // TODO: ここ？
-  await loaderCtx.loadByToday()
+  // 何も表示していなければ、今日を表示する
+  if (!loaderCtx.selectedReport.value) {
+    await loaderCtx.loadByToday()
+  }
 })
 
 const title = computed(() => loaderCtx.formReport?.title ?? '---')
 const hashtags = computed(() => loaderCtx.selectedReport.value?.tags ?? [])
 
 const statucColor = computed(() => {
-  switch (loaderCtx.getStatus.value) {
+  switch (loaderCtx?.getStatus.value) {
     case 'dirty': return 'warning'
     case 'new': return 'error'
     case 'none': return undefined
@@ -82,7 +84,7 @@ const statucColor = computed(() => {
 })
 
 const tagOptions = computed(() => {
-  return displayCtx.tags.value.map(tag => ({
+  return displayCtx?.tags.value.map(tag => ({
     label: tag.name,
     key: tag.name,
   }))
@@ -99,7 +101,7 @@ const onTagSelect = (_val: string) => {
 }
 
 const onSearchHashtag = async (hashtag: string) => {
-  await explorerCtx.onSearch({
+  await explorerCtx?.onSearch({
     match: hashtag,
     hashtags: [hashtag],
   })

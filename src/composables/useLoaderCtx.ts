@@ -8,11 +8,16 @@ import { RegexUtil } from '~~/src/utils/RegexUtil'
 
 export type ReportStatus = 'dirty' | 'new' | 'none'
 
-export const useLoaderCtx = (
-  { editorCtx, onSaved }: { editorCtx: EditorCtx, onSaved: () => void }
-) => {
-  const _loadedTitle = ref<string>() // 読み込んだ際のタイトル
+export const useLoaderCtx = (editorCtx: EditorCtx) => {
+  const _onSaved = ref<() => void>() // セーブ時のイベント
 
+  const bindOnSaved = (func: () => void) => {
+    _onSaved.value = func
+  }
+
+  ///
+
+  const _loadedTitle = ref<string>() // 読み込んだ際のタイトル
   const selectedReport = ref<Report>() // 読み込んだノート
   const formReport = reactive<FormReport>({ // 現在のキャッシュ
     title: '',
@@ -55,7 +60,7 @@ export const useLoaderCtx = (
 
     // 値のバインド
     init(report)
-    onSaved()
+    _onSaved.value && _onSaved.value()
   }
 
   const init = (report?: Report) => {
@@ -120,6 +125,8 @@ export const useLoaderCtx = (
   }
 
   return {
+    bindOnSaved,
+
     loadedTitleDate,
     selectedReport,
 

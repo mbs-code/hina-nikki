@@ -31,6 +31,7 @@
 </template>
 
 <script setup lang="ts">
+
 const showExploreModal = ref<boolean>(false)
 const openSearchModal = () => {
   showExploreModal.value = true
@@ -41,28 +42,23 @@ const openConfigDrawer = () => {
   showConfigDrawer.value = true
 }
 
+/// //////////
+
+const configStore = inject(ConfigStoreKey)
+const loaderCtx = inject(LoaderCtxKey)
+const explorerCtx = inject(ExplorerCtxKey)
+const displayCtx = inject(DisplayCtxKey)
+
 const loadUiData = async () => {
   // UI データを読み込み直す
   await displayCtx.load()
 }
 
-/// //////////
+onMounted(async () => {
+  // イベント関数のバインド
+  loaderCtx.bindOnSaved(loadUiData)
+  explorerCtx.bindOnSearch(openSearchModal)
 
-const configStore = inject(ConfigStoreKey)
-
-const editorCtx = useEditorCtx()
-const loaderCtx = useLoaderCtx({ editorCtx, onSaved: loadUiData })
-const explorerCtx = useExplorerCtx({ onSearched: openSearchModal })
-const displayCtx = useDisplayCtx()
-
-provide(EditorCtxKey, editorCtx)
-provide(LoaderCtxKey, loaderCtx)
-provide(ExplorerCtxKey, explorerCtx)
-provide(DisplayCtxKey, displayCtx)
-
-/// //////////
-
-onBeforeMount(async () => {
   // loading ui
   await loadUiData()
 })

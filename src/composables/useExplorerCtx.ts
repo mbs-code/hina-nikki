@@ -9,9 +9,19 @@ export type ExploreParams = {
   match?: string, // 完全一致
 }
 
-export const useExplorerCtx = (
-  { onSearched }: { onSearched: () => void },
-) => {
+export const useExplorerCtx = () => {
+  const _onSearched = ref<() => void>()
+
+  const bindOnSearch = (func: () => void) => {
+    _onSearched.value = func
+  }
+
+  const onSearched = () => {
+    _onSearched.value && _onSearched.value()
+  }
+
+  ///
+
   const params = reactive<ExploreParams>({})
 
   const matchReport = ref<Report>()
@@ -39,11 +49,12 @@ export const useExplorerCtx = (
       hashtags: params.hashtags,
       sorts: [['updated_at', 'desc']]
     })
-
     onSearched()
   }
 
   return {
+    bindOnSearch,
+
     matchReport,
     reports,
 

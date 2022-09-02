@@ -15,7 +15,7 @@ export type Config = {
 }
 
 export const useConfigStore = () => {
-  const isLoading = ref<boolean>(false)
+  const loading = ref<boolean>(false)
 
   const embed = reactive({
     minZoomSize: 0.5,
@@ -23,7 +23,7 @@ export const useConfigStore = () => {
   })
 
   const env = reactive<Config>({
-    isDark: true,
+    isDark: false,
     useSidebar: true,
     useCalendar: true,
     saveWhenLeave: true,
@@ -34,7 +34,7 @@ export const useConfigStore = () => {
   })
 
   // auto save
-  watch(env, () => { save() }, { deep: true })
+  watch(env, () => { loading.value && save() }, { deep: true })
 
   ///
 
@@ -50,7 +50,7 @@ export const useConfigStore = () => {
 
   const load = async () => {
     try {
-      isLoading.value = true
+      loading.value = true
 
       // win: user\AppData\Roaming\com.tauri.dev\config.yaml
       const text = await readTextFile('config.yaml', { dir: BaseDirectory.App })
@@ -66,12 +66,12 @@ export const useConfigStore = () => {
     } catch (err) {
       /** */
     } finally {
-      isLoading.value = false
+      loading.value = false
     }
   }
 
   const save = async () => {
-    if (isLoading.value) { return }
+    if (loading.value) { return }
 
     try {
       // win: user\AppData\Roaming\com.tauri.dev\config.yaml

@@ -10,6 +10,7 @@
 
 <script setup lang="ts">
 import { darkTheme, lightTheme } from 'naive-ui'
+import { Database } from '~~/src/databases/Database'
 
 const key = ref<number>(Date.now())
 
@@ -20,15 +21,23 @@ const theme = computed(() =>
 ///
 
 const configStore = useConfigStore()
+const editorCtx = useEditorCtx()
+const loaderCtx = useLoaderCtx(editorCtx)
+const explorerCtx = useExplorerCtx()
+const displayCtx = useDisplayCtx()
+
 provide(ConfigStoreKey, configStore)
+provide(EditorCtxKey, editorCtx)
+provide(LoaderCtxKey, loaderCtx)
+provide(ExplorerCtxKey, explorerCtx)
+provide(DisplayCtxKey, displayCtx)
 
-/// //////////
-
-onBeforeMount(async () => {
+onMounted(async () => {
   // load config
   await configStore.load()
 
-  // loading ui
-  // await loadUiData()
+  // migrate db
+  const { migrator } = Database.getInstance()
+  await migrator.migrateToLatest()
 })
 </script>

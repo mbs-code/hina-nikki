@@ -75,6 +75,9 @@
 <script setup lang="ts">
 import { useDialog } from 'naive-ui'
 import { Database } from '~~/src/databases/Database'
+import { useConfigStore } from '~~/src/stores/useConfigStore'
+
+const configStore = useConfigStore()
 
 const props = defineProps<{
   show: boolean,
@@ -88,8 +91,6 @@ const _show = computed({
   get: () => props.show,
   set: (val: boolean) => emit('update:show', val),
 })
-
-const configStore = inject(ConfigStoreKey)
 
 /// ////////////////////
 /// DB周り

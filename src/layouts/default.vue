@@ -24,42 +24,22 @@
         <Footer />
       </n-layout-footer>
 
-      <ExploreModal v-model:show="showExploreModal" />
+      <ExploreModal v-model:show="explorerStore.showSearchModal" />
       <ConfigDrawer v-model:show="showConfigDrawer" />
     </n-layout>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useExplorerStore } from '~~/src/stores/useExplorerStore'
 
-const showExploreModal = ref<boolean>(false)
-const openSearchModal = () => {
-  showExploreModal.value = true
-}
+const configStore = useConfigStore()
+const explorerStore = useExplorerStore()
+
+/// //////////
 
 const showConfigDrawer = ref<boolean>(false)
 const openConfigDrawer = () => {
   showConfigDrawer.value = true
 }
-
-/// //////////
-
-const configStore = inject(ConfigStoreKey)
-const loaderCtx = inject(LoaderCtxKey)
-const explorerCtx = inject(ExplorerCtxKey)
-const displayCtx = inject(DisplayCtxKey)
-
-const loadUiData = async () => {
-  // UI データを読み込み直す
-  await displayCtx.load()
-}
-
-onMounted(async () => {
-  // イベント関数のバインド
-  loaderCtx.bindOnSaved(loadUiData)
-  explorerCtx.bindOnSearch(openSearchModal)
-
-  // loading ui
-  await loadUiData()
-})
 </script>

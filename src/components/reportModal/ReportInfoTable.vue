@@ -45,12 +45,13 @@
 import { useThemeVars } from 'naive-ui'
 import { DateUtil } from '~~/src/utils/DateUtil'
 
-///
+const loaderStore = useLoaderStore()
 
-const loaderCtx = inject(LoaderCtxKey)
+/// ////////////////////
+
 const themeVars = useThemeVars()
 
-const report = computed(() => loaderCtx.selectedReport.value)
+const report = computed(() => loaderStore.selectedReport)
 
 const tags = computed(() => {
   if (!report.value?.tags?.length) { return undefined }
@@ -77,7 +78,8 @@ const updatedAt = computed(() =>
 )
 
 const statusMessage = computed(() => {
-  switch (loaderCtx.getStatus.value) {
+  switch (loaderStore.status) {
+    case 'empty' : return '未ロード'
     case 'dirty': return '編集中'
     case 'new': return '新規'
     case 'none': return '保存済み'

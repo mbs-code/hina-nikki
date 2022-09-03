@@ -4,7 +4,7 @@
     "beforeBuildCommand": "yarn generate",
     "devPath": "http://localhost:3000",
     "distDir": "../dist",
-    "withGlobalTauri": true
+    "withGlobalTauri": false
   },
   "package": {
     "productName": "hina-nikki",

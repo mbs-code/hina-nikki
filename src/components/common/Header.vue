@@ -62,6 +62,18 @@
 
     <div class="flex-grow" name="padding" />
 
+    <n-button quaternary size="small" @click="movePage('reports')">
+      <template #icon>
+        <n-icon :component="DocumentTextOutline" />
+      </template>
+    </n-button>
+
+    <n-button quaternary size="small" @click="movePage('tags')">
+      <template #icon>
+        <n-icon :component="PricetagsOutline" />
+      </template>
+    </n-button>
+
     <n-button quaternary size="small" @click="emit('click:config')">
       <template #icon>
         <n-icon :component="Cog" />
@@ -80,6 +92,8 @@ import {
   TodayOutline,
   ArrowUndoOutline,
   Search,
+  DocumentTextOutline,
+  PricetagsOutline,
 } from '@vicons/ionicons5'
 
 const emit = defineEmits<{ // eslint-disable-line func-call-spacing
@@ -93,6 +107,18 @@ const displayCtx = inject(DisplayCtxKey)
 
 const toggleSidebar = () => {
   configStore.env.useSidebar = !configStore.env.useSidebar
+}
+
+const appRouter = useAppRouter()
+const movePage = async (name: string) => {
+  switch (name) {
+    case 'tags':
+      await appRouter.tags()
+      break
+    case 'reports':
+      await appRouter.reports()
+      break
+  }
 }
 
 // 自身の次のレポートを読み込む

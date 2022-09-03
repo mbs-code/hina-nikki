@@ -49,6 +49,25 @@ export const useLoaderCtx = (editorCtx: EditorCtx) => {
   /// /////////////
   /// 汎用関数
 
+  const appRouter = useAppRouter()
+
+  const _load = async (title: string) => {
+    // 今ページが汚い状態なら一度保存する
+    // TODO: アラートか設定行き
+    if (isDirty.value) { await save() }
+
+    // データを持ってくる（nullable）
+    const report = await ReportAPI.getByTitle(title)
+    _loadedTitle.value = title
+    selectedReport.value = report
+
+    // 値のバインド
+    init(report)
+
+    // エディタページであることを確認
+    await appRouter.editor()
+  }
+
   const save = async () => {
     const reportId = selectedReport.value?.id
 
@@ -75,24 +94,22 @@ export const useLoaderCtx = (editorCtx: EditorCtx) => {
     formReport.title = selectedReport.value?.title ?? _loadedTitle.value
   }
 
+  const close = async (withSave = true) => {
+    // 今ページが汚い状態なら一度保存する
+    // TODO: アラートか設定行き
+    if (withSave && isDirty.value) { await save() }
+
+    _loadedTitle.value = undefined
+    selectedReport.value = undefined
+    init()
+  }
+
   /// /////////////
   /// load util
 
-  // TODO: 自動保存
-
   // タイトル文字列で読み込む
   const loadByTitle = async (title?: string) => {
-    // 今ページが汚い状態なら一度保存する
-    // TODO: アラートか設定行き
-    if (isDirty.value) { await save() }
-
-    // データを持ってくる（nullable）
-    const report = await ReportAPI.getByTitle(title)
-    _loadedTitle.value = title
-    selectedReport.value = report
-
-    // 値のバインド
-    init(report)
+    await _load(title)
   }
 
   // 日付で読み込む
@@ -136,8 +153,9 @@ export const useLoaderCtx = (editorCtx: EditorCtx) => {
     getStatus,
 
     save,
+    close,
     init,
-    resetTitle,
+    resetTitle, // タイトルのみ初期化
 
     loadByTitle,
     loadByDate,

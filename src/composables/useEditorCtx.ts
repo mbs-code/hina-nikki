@@ -46,7 +46,14 @@ export const useEditorCtx = () => {
   /// イベント系
 
   const onFocus = () => {
-    _editor.focus() // フォーカス
+    // エディタの読み込み待機
+    const id = setInterval(() => {
+      if (_editor) {
+        _editor.focus() // フォーカス
+        clearInterval(id)
+      }
+    }, 100)
+    setTimeout(() => clearInterval(id), 2000)
   }
 
   // // 現在のカーソルの場所のフレーズを取り出す（スペースまで）

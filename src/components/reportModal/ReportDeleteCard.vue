@@ -42,7 +42,7 @@ const onDelete = () => {
       const id = loaderCtx.selectedReport.value?.id
       if (id) {
         await ReportAPI.remove(id)
-        await loaderCtx.loadByTitle()
+        await loaderCtx.close(false)
 
         emit('deleted')
       }

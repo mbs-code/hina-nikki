@@ -4,7 +4,7 @@ import { useConfigStore } from '~~/src/stores/useConfigStore'
 export default defineNuxtPlugin(async (_nuxtApp) => {
   // load config
   const configStore = useConfigStore()
-  await configStore.load()
+  await configStore.onLoad()
 
   // migrate db
   const { migrator } = Database.getInstance()

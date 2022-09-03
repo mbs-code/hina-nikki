@@ -37,12 +37,12 @@ export const useConfigStore = defineStore('config', () => {
   })
 
   // auto save
-  watch(env, () => { _loading.value && save() }, { deep: true })
+  watch(env, () => { _loading.value && onSave() }, { deep: true })
 
   /// ////////////////////
   // action
 
-  const load = async () => {
+  const onLoad = async () => {
     try {
       _loading.value = true
 
@@ -66,7 +66,7 @@ export const useConfigStore = defineStore('config', () => {
     }
   }
 
-  const save = async () => {
+  const onSave = async () => {
     try {
       // win: user\AppData\Roaming\com.tauri.dev\config.yaml
       const text = yamlDump(env)
@@ -79,11 +79,11 @@ export const useConfigStore = defineStore('config', () => {
   }
 
   return {
-    embed: readonly(embed),
+    embed: computed(() => embed),
     env,
 
-    load,
-    save,
+    onLoad,
+    onSave,
   }
 })
 

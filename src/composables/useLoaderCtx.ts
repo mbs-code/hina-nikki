@@ -66,6 +66,9 @@ export const useLoaderCtx = (editorCtx: EditorCtx) => {
 
     // エディタページであることを確認
     await appRouter.editor()
+
+    // フォーカス処理
+    editorCtx.onFocus()
   }
 
   const save = async () => {
@@ -85,9 +88,6 @@ export const useLoaderCtx = (editorCtx: EditorCtx) => {
   const init = (report?: Report) => {
     formReport.title = report?.title ?? _loadedTitle.value
     formReport.text = report?.text ?? ''
-
-    // フォーカス処理
-    editorCtx.onFocus()
   }
 
   const resetTitle = () => {

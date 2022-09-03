@@ -48,8 +48,8 @@ export const useEditorCtx = () => {
   const onFocus = () => {
     // エディタの読み込み待機
     const id = setInterval(() => {
-      if (_editor) {
-        _editor.focus() // フォーカス
+      if (_editor && _editor?.focus) {
+        _editor?.focus() // フォーカス
         clearInterval(id)
       }
     }, 100)

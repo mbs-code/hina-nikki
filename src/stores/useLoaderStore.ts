@@ -8,6 +8,7 @@ import { RegexUtil } from '~~/src/utils/RegexUtil'
 export type ReportStatus = 'empty' | 'dirty' | 'new' | 'none'
 
 export const useLoaderStore = defineStore('loader', () => {
+  const editorStore = useEditorStore()
   const displayStore = useDisplayStore()
 
   const _loadedTitle = ref<string>() // 読み込んだ際のタイトル
@@ -64,8 +65,8 @@ export const useLoaderStore = defineStore('loader', () => {
     // 読み込みイベント // TODO:
     // // エディタページであることを確認
     // await appRouter.editor()
-    // // フォーカス処理
-    // editorCtx.onFocus()
+    // フォーカス処理
+    editorStore.onFocus()
   }
 
   const onSave = async () => {

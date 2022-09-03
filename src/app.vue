@@ -20,10 +20,4 @@ const key = ref<number>(Date.now())
 const theme = computed(() =>
   configStore.env.isDark ? darkTheme : lightTheme
 )
-
-///
-
-const editorCtx = useEditorCtx()
-
-provide(EditorCtxKey, editorCtx)
 </script>

@@ -33,11 +33,10 @@ import '@toast-ui/editor/dist/i18n/ja-jp'
 
 const configStore = useConfigStore()
 const loaderStore = useLoaderStore()
+const editorStore = useEditorStore()
 
 const editorRef = ref<HTMLDivElement>()
 let editor: Editor
-
-const editorCtx = inject(EditorCtxKey)
 
 const text = computed({
   get: () => loaderStore.formReport.text ?? '',
@@ -76,11 +75,14 @@ const editorInit = () => {
     },
   })
 
-  editorCtx.bindEditor(editor)
+  editorStore.bindEditor(editor)
 }
 
 onMounted(() => editorInit())
-onUnmounted(() => editor.destroy())
+onUnmounted(() => {
+  editorStore.unbindEditor()
+  editor.destroy()
+})
 
 /// ////////////////////
 /// ズーム関係

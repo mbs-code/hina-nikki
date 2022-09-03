@@ -9,7 +9,7 @@
       <n-button
         quaternary
         size="large"
-        @click="loaderCtx.loadByDateAndMove(-1)"
+        @click="loaderStore.onLoadByDateAndMove(-1)"
       >
         <template #icon>
           <n-icon :component="ChevronBack" />
@@ -19,7 +19,7 @@
       <n-button
         quaternary
         size="large"
-        @click="loaderCtx.loadByToday()"
+        @click="loaderStore.onLoadByToday()"
       >
         <template #icon>
           <n-icon :component="TodayOutline" />
@@ -30,7 +30,7 @@
       <n-button
         quaternary
         size="large"
-        @click="loaderCtx.loadByDateAndMove(1)"
+        @click="loaderStore.onLoadByDateAndMove(1)"
       >
         <template #icon>
           <n-icon :component="ChevronForward" />
@@ -53,7 +53,7 @@
     <div class="m-1 pr-2 flex flex-col gap-2">
       <!-- カレンダー -->
       <DatePicker
-        :value="loaderCtx.loadedTitleDate.value"
+        :value="loaderStore.loadedTitleDate"
         @update:value="onChangeDate"
       />
 
@@ -79,7 +79,7 @@
         <!-- TODO: タブでお気に入りを実装 -->
         <n-card title="最近の更新" size="small">
           <SimpleReportList
-            :value="loaderCtx.selectedReport.value"
+            :value="loaderStore.selectedReport"
             :reports="displayCtx.recentReports.value"
             @update:value="onChangeReport"
           />
@@ -100,7 +100,8 @@ import {
 import { useThemeVars } from 'naive-ui'
 import { Report } from '~~/src/databases/models/Report'
 
-const loaderCtx = inject(LoaderCtxKey)
+const loaderStore = useLoaderStore()
+
 const explorerCtx = inject(ExplorerCtxKey)
 const displayCtx = inject(DisplayCtxKey)
 const themeVars = useThemeVars()
@@ -120,29 +121,29 @@ const onSearchText = async () => {
 
 // 日付が変更されたとき
 const onChangeDate = async (date?: Date) => {
-  await loaderCtx.loadByDate(date)
+  await loaderStore.onLoadByDate(date)
 }
 
 // レポートが選択されたとき
 const onChangeReport = async (report?: Report) => {
-  await loaderCtx.loadByReport(report)
+  await loaderStore.onLoadByReport(report)
 }
 
 // 自身の次のレポートを読み込む
 // TODO: まとめる
 const onLatestReport = async () => {
-  const selected = loaderCtx.selectedReport.value
+  const selected = loaderStore.selectedReport
   const reports = displayCtx.recentReports.value
 
   if (selected) {
     const index = reports.findIndex(r => r.id === selected.id)
     if (index >= 0) {
       const next = reports.at(index + 1)
-      await loaderCtx.loadByReport(next)
+      await loaderStore.onLoadByReport(next)
     }
   } else {
     // 選択が無い場合は、最新のやつ
-    await loaderCtx.loadByReport(reports.at(0))
+    await loaderStore.onLoadByReport(reports.at(0))
   }
 }
 </script>

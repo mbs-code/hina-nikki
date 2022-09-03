@@ -88,6 +88,8 @@ import { useThemeVars } from 'naive-ui'
 import { Search } from '@vicons/ionicons5'
 import { Report } from '~~/src/databases/models/Report'
 
+const loaderStore = useLoaderStore()
+
 const props = defineProps<{
   show: boolean,
 }>()
@@ -103,7 +105,6 @@ const _show = computed({
 
 ///
 
-const loadCtx = inject(LoaderCtxKey)
 const explorerCtx = inject(ExplorerCtxKey)
 const themeVars = useThemeVars()
 
@@ -121,12 +122,12 @@ const onSearchText = async () => {
 // ノート読み込み
 
 const onClickReport = async (report: Report) => {
-  await loadCtx.loadByReport(report)
+  await loaderStore.onLoadByReport(report)
   _show.value = false
 }
 
 const onClickCreate = async (hashtag: string) => {
-  await loadCtx.loadByTitle(hashtag)
+  await loaderStore.onLoadByTitle(hashtag)
   _show.value = false
 }
 </script>

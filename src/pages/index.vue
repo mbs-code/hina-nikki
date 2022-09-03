@@ -59,24 +59,30 @@ import {
   Pricetags,
 } from '@vicons/ionicons5'
 
+const loaderStore = useLoaderStore()
+
 // const editorCtx = inject(EditorCtxKey)
-const loaderCtx = inject(LoaderCtxKey)
+// const loaderCtx = inject(LoaderCtxKey)
 const explorerCtx = inject(ExplorerCtxKey)
 const displayCtx = inject(DisplayCtxKey)
 
 // startup
 onMounted(async () => {
   // 何も表示していなければ、今日を表示する
-  if (!loaderCtx.selectedReport.value) {
-    await loaderCtx.loadByToday()
+  if (!loaderStore.isLoaded) {
+    await loaderStore.onLoadByToday()
   }
 })
 
-const title = computed(() => loaderCtx.formReport?.title ?? '---')
-const hashtags = computed(() => loaderCtx.selectedReport.value?.tags ?? [])
+/// ////////////////////
+// 描画系
+
+const title = computed(() => loaderStore.formReport?.title ?? '---')
+const hashtags = computed(() => loaderStore.selectedReport?.tags ?? [])
 
 const statucColor = computed(() => {
-  switch (loaderCtx?.getStatus.value) {
+  switch (loaderStore.status) {
+    case 'empty': return undefined
     case 'dirty': return 'warning'
     case 'new': return 'error'
     case 'none': return undefined
@@ -108,7 +114,7 @@ const onSearchHashtag = async (hashtag: string) => {
 }
 
 /// ////////////////////
-// ダイアログ
+// レポート詳細ダイアログ
 
 const showMetaDialog = ref<boolean>(false)
 const openMetaDialog = () => {

@@ -12,7 +12,7 @@
       <n-button
         quaternary
         size="small"
-        @click="loaderCtx.loadByDateAndMove(-1)"
+        @click="loaderStore.onLoadByDateAndMove(-1)"
       >
         <template #icon>
           <n-icon :component="ChevronBack" />
@@ -22,7 +22,7 @@
       <n-button
         quaternary
         size="small"
-        @click="loaderCtx.loadByToday()"
+        @click="loaderStore.onLoadByToday()"
       >
         <template #icon>
           <n-icon :component="TodayOutline" />
@@ -32,7 +32,7 @@
       <n-button
         quaternary
         size="small"
-        @click="loaderCtx.loadByDateAndMove(1)"
+        @click="loaderStore.onLoadByDateAndMove(1)"
       >
         <template #icon>
           <n-icon :component="ChevronForward" />
@@ -98,6 +98,7 @@ import {
 import { useConfigStore } from '~~/src/stores/useConfigStore'
 
 const configStore = useConfigStore()
+const loaderStore = useLoaderStore()
 
 const emit = defineEmits<{ // eslint-disable-line func-call-spacing
   (e: 'click:config'): void
@@ -105,7 +106,6 @@ const emit = defineEmits<{ // eslint-disable-line func-call-spacing
 
 /// ////////////////////
 
-const loaderCtx = inject(LoaderCtxKey)
 const explorerCtx = inject(ExplorerCtxKey)
 const displayCtx = inject(DisplayCtxKey)
 
@@ -128,18 +128,18 @@ const movePage = async (name: string) => {
 // 自身の次のレポートを読み込む
 // TODO: まとめる
 const onLatestReport = async () => {
-  const selected = loaderCtx.selectedReport.value
+  const selected = loaderStore.selectedReport
   const reports = displayCtx.recentReports.value
 
   if (selected) {
     const index = reports.findIndex(r => r.id === selected.id)
     if (index >= 0) {
       const next = reports.at(index + 1)
-      await loaderCtx.loadByReport(next)
+      await loaderStore.onLoadByReport(next)
     }
   } else {
     // 選択が無い場合は、最新のやつ
-    await loaderCtx.loadByReport(reports.at(0))
+    await loaderStore.onLoadByReport(reports.at(0))
   }
 }
 </script>

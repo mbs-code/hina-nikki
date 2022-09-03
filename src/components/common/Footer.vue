@@ -19,12 +19,13 @@ import {
   Remove,
 } from '@vicons/ionicons5'
 
-const loaderCtx = inject(LoaderCtxKey)
+const loaderStore = useLoaderStore()
 
-const title = computed(() => loaderCtx.formReport?.title ?? '---')
+const title = computed(() => loaderStore.formReport?.title ?? '---')
 
 const statusIcon = computed(() => {
-  switch (loaderCtx.getStatus.value) {
+  switch (loaderStore.status) {
+    case 'empty': return CheckmarkSharp
     case 'dirty': return Alert
     case 'new': return Remove
     case 'none': return CheckmarkSharp

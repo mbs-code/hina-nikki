@@ -31,8 +31,6 @@
 </template>
 
 <script setup lang="ts">
-import { useConfigStore } from '~~/src/stores/useConfigStore'
-
 const configStore = useConfigStore()
 
 /// //////////
@@ -49,7 +47,6 @@ const openConfigDrawer = () => {
 
 /// //////////
 
-const loaderCtx = inject(LoaderCtxKey)
 const explorerCtx = inject(ExplorerCtxKey)
 const displayCtx = inject(DisplayCtxKey)
 
@@ -60,7 +57,7 @@ const loadUiData = async () => {
 
 onMounted(async () => {
   // イベント関数のバインド
-  loaderCtx.bindOnSaved(loadUiData)
+  // loaderStore.bindOnSaved(loadUiData) // TODO: これloader に入れる
   explorerCtx.bindOnSearch(openSearchModal)
 
   // loading ui

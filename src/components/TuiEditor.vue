@@ -1,13 +1,14 @@
 <template>
   <div class="h-full">
     <div
-      v-show="loaderCtx.formReport.title"
+      v-show="loaderStore.isLoaded"
       ref="editorRef"
       class="tui-editor relative"
-      @keydown.ctrl.s="loaderCtx.save()"
+      @keydown.ctrl.s="loaderStore.onSave()"
       @wheel.ctrl.passive="onZoom"
     />
 
+    <!-- 何も読み込んでいない場合(背景に描画) -->
     <n-card class="absolute w-full h-full">
       <div class="h-full flex items-center justify-center">
         <n-empty
@@ -15,7 +16,7 @@
           description="ノートを選択してください"
         >
           <template #extra>
-            <n-button @click="loaderCtx.loadByToday()">
+            <n-button @click="loaderStore.onLoadByToday()">
               今日のノート
             </n-button>
           </template>
@@ -29,19 +30,18 @@
 import { Editor } from '@toast-ui/editor'
 import '@/assets/toastui.scss'
 import '@toast-ui/editor/dist/i18n/ja-jp'
-import { useConfigStore } from '~~/src/stores/useConfigStore'
 
 const configStore = useConfigStore()
+const loaderStore = useLoaderStore()
 
 const editorRef = ref<HTMLDivElement>()
 let editor: Editor
 
-const loaderCtx = inject(LoaderCtxKey)
 const editorCtx = inject(EditorCtxKey)
 
 const text = computed({
-  get: () => loaderCtx.formReport.text ?? '',
-  set: (value: string) => (loaderCtx.formReport.text = value),
+  get: () => loaderStore.formReport.text ?? '',
+  set: (value: string) => (loaderStore.formReport.text = value),
 })
 
 // 外部から値の挿入があった場合の処理

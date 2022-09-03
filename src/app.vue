@@ -10,7 +10,6 @@
 
 <script setup lang="ts">
 import { darkTheme, lightTheme } from 'naive-ui'
-import { useConfigStore } from '~~/src/stores/useConfigStore'
 
 const configStore = useConfigStore()
 
@@ -25,12 +24,10 @@ const theme = computed(() =>
 ///
 
 const editorCtx = useEditorCtx()
-const loaderCtx = useLoaderCtx(editorCtx)
 const explorerCtx = useExplorerCtx()
 const displayCtx = useDisplayCtx()
 
 provide(EditorCtxKey, editorCtx)
-provide(LoaderCtxKey, loaderCtx)
 provide(ExplorerCtxKey, explorerCtx)
 provide(DisplayCtxKey, displayCtx)
 </script>

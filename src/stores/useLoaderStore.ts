@@ -144,6 +144,24 @@ export const useLoaderStore = defineStore('loader', () => {
     await onLoadByDate(date)
   }
 
+  // 自身の一つ前のレポートを読み込む
+  const onLoadByPrevious = async () => {
+    const selected = _selectedReport.value
+    const reports = displayStore.recentReports
+
+    if (selected) {
+      // 選択中は一つ前を探す
+      const index = reports.findIndex(r => r.id === selected.id)
+      if (index >= 0) {
+        const next = reports.at(index + 1)
+        await onLoadByReport(next)
+      }
+    } else {
+      // 選択が無い場合は、最新のやつ
+      await onLoadByReport(reports.at(0))
+    }
+  }
+
   return {
     formReport,
 
@@ -165,5 +183,6 @@ export const useLoaderStore = defineStore('loader', () => {
     onLoadByDate,
     onLoadByToday,
     onLoadByDateAndMove,
+    onLoadByPrevious,
   }
 })

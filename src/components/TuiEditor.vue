@@ -71,7 +71,7 @@ const editorInit = () => {
     useCommandShortcut: false,
     usageStatistics: false,
     events: {
-      change: () => (text.value = editor.getMarkdown())
+      change: () => (text.value = editor.getMarkdown()),
     },
   })
 

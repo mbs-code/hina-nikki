@@ -1,6 +1,6 @@
 <template>
   <n-card
-    v-if="loaderStore.isLoaded"
+    v-if="!loaderStore.isNew"
     size="small"
   >
     <div class="flex flex-col gap-2">

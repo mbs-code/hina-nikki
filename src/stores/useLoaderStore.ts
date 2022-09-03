@@ -10,6 +10,7 @@ export type ReportStatus = 'empty' | 'dirty' | 'new' | 'none'
 export const useLoaderStore = defineStore('loader', () => {
   const editorStore = useEditorStore()
   const displayStore = useDisplayStore()
+  const appRouter = useAppRouter()
 
   const _loadedTitle = ref<string>() // 読み込んだ際のタイトル
   const _selectedReport = ref<Report>() // 読み込んだノート
@@ -33,13 +34,16 @@ export const useLoaderStore = defineStore('loader', () => {
   const isLoaded = computed(() => Boolean(_loadedTitle.value))
 
   // DBに存在するか
-  const isNew = computed(() => isLoaded.value && !_selectedReport.value)
+  const isNew = computed(() => !_selectedReport.value)
 
   // new なら本文があるか、それ以外は本文が一致しているか
-  const isDirty = computed(() => isNew.value
-    ? Boolean(formReport.text)
-    : _selectedReport.value?.text !== formReport.text
-  )
+  const isDirty = computed(() => {
+    if (!isLoaded) { return false }
+
+    return isNew.value
+      ? Boolean(formReport.text)
+      : _selectedReport.value?.text !== formReport.text
+  })
 
   const status = computed<ReportStatus>(() => {
     // 優先度: 読み込みなし > 編集中 > 新規 > 保存済
@@ -62,9 +66,8 @@ export const useLoaderStore = defineStore('loader', () => {
     _selectedReport.value = report
     onReset()
 
-    // 読み込みイベント // TODO:
-    // // エディタページであることを確認
-    // await appRouter.editor()
+    // エディタページであることを確認
+    await appRouter.editor()
     // フォーカス処理
     editorStore.onFocus()
   }
@@ -99,6 +102,7 @@ export const useLoaderStore = defineStore('loader', () => {
     // TODO: アラートか設定行き
     if (withSave && isDirty.value) { await onSave() }
 
+    _loadedTitle.value = undefined
     _selectedReport.value = undefined
     onReset()
   }

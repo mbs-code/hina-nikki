@@ -1,6 +1,6 @@
 <template>
   <n-card
-    v-if="loaderStore.isLoaded"
+    v-if="!loaderStore.isNew"
     title="タイトルを編集する"
     size="small"
   >

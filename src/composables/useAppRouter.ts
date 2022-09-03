@@ -11,21 +11,17 @@ export const useAppRouter = () => {
   }
 
   const tags = async () => {
-    if (route.name === 'index' && loaderStore.isDirty) {
-      await loaderStore.onSave()
+    if (route.name !== 'tags') {
+      await router.push({ name: 'tags' })
+      await loaderStore.onClose()
     }
-
-    await router.push({ name: 'tags' })
-    await loaderStore.onClose(false)
   }
 
   const reports = async () => {
-    if (route.name === 'index' && loaderStore.isDirty) {
-      await loaderStore.onSave()
+    if (route.name !== 'reports') {
+      await router.push({ name: 'reports' })
+      await loaderStore.onClose()
     }
-
-    await router.push({ name: 'reports' })
-    await loaderStore.onClose(false)
   }
 
   return {

@@ -10,14 +10,14 @@
       <!-- 検索フィールド -->
       <n-input-group>
         <n-input
-          v-model:value="explorerCtx.params.phrase"
+          v-model:value="explorerStore.searchText"
           type="text"
           clearable
           placeholder="Search"
-          @keydown.enter="onSearchText"
+          @keydown.enter="explorerStore.onSearchText()"
         />
 
-        <n-button ghost @click="onSearchText">
+        <n-button ghost @click="explorerStore.onSearchText()">
           <template #icon>
             <n-icon :component="Search" />
           </template>
@@ -25,29 +25,29 @@
       </n-input-group>
 
       <!-- 完全一致レポート -->
-      <div v-if="explorerCtx.matchReport.value || explorerCtx.params.match">
+      <div v-if="explorerStore.matchReport || explorerStore.params.match">
         <div>完全一致</div>
         <n-list hoverable clickable bordered>
           <!-- 完全一致 -->
-          <template v-if="explorerCtx.matchReport.value">
+          <template v-if="explorerStore.matchReport">
             <n-list-item
               class="border-2"
               :style="{ borderColor: themeVars.primaryColor }"
-              @click="onClickReport(explorerCtx.matchReport.value)"
+              @click="onClickReport(explorerStore.matchReport)"
             >
-              <ReportPanel :report="explorerCtx.matchReport.value" />
+              <ReportPanel :report="explorerStore.matchReport" />
             </n-list-item>
           </template>
 
           <!-- 完全一致が無い場合は、作成アシスト -->
-          <template v-else-if="explorerCtx.params.match">
+          <template v-else-if="explorerStore.params.match">
             <n-list-item
               class="border-2"
               :style="{ borderColor: themeVars.infoColor }"
-              @click="onClickCreate(explorerCtx.params.match)"
+              @click="onClickCreate(explorerStore.params.match)"
             >
               <CreationReportPanel
-                :title="explorerCtx.params.match"
+                :title="explorerStore.params.match"
                 :icon-color="themeVars.infoColor"
               />
             </n-list-item>
@@ -57,12 +57,12 @@
 
       <!-- 検索結果 -->
       <div>
-        <div>検索結果 ({{ explorerCtx.reports.value?.length }})</div>
+        <div>検索結果 ({{ explorerStore.reports.length }})</div>
         <div class="flex flex-col gap-2">
           <n-list hoverable clickable bordered>
             <!-- 検索要素 -->
             <n-list-item
-              v-for="(report, _) of explorerCtx.reports.value"
+              v-for="(report, _) of explorerStore.reports"
               :key="_"
               @click="onClickReport(report)"
             >
@@ -71,7 +71,7 @@
 
             <!-- 一つもなかったら -->
             <n-empty
-              v-if="!explorerCtx.reports.value?.length"
+              v-if="!explorerStore.reports.length"
               class="m-2"
               size="huge"
               description="検索結果が空です"
@@ -89,6 +89,8 @@ import { Search } from '@vicons/ionicons5'
 import { Report } from '~~/src/databases/models/Report'
 
 const loaderStore = useLoaderStore()
+const explorerStore = useExplorerStore()
+const themeVars = useThemeVars()
 
 const props = defineProps<{
   show: boolean,
@@ -102,21 +104,6 @@ const _show = computed({
   get: () => props.show,
   set: (val: boolean) => emit('update:show', val),
 })
-
-///
-
-const explorerCtx = inject(ExplorerCtxKey)
-const themeVars = useThemeVars()
-
-/// ////////////////////
-// ノート検索
-
-const onSearchText = async () => {
-  const text = explorerCtx.params.phrase
-  await explorerCtx.onSearch({
-    phrase: text,
-  })
-}
 
 /// ////////////////////
 // ノート読み込み

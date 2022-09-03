@@ -22,7 +22,7 @@
             v-for="(hashtag, _) of hashtags"
             :key="_"
             size="small"
-            @click="onSearchHashtag(hashtag)"
+            @click="explorerStore.onSearchByHashtag(hashtag)"
           >
             <template #icon>
               <n-icon :component="PricetagOutline" />
@@ -60,10 +60,8 @@ import {
 } from '@vicons/ionicons5'
 
 const loaderStore = useLoaderStore()
+const explorerStore = useExplorerStore()
 
-// const editorCtx = inject(EditorCtxKey)
-// const loaderCtx = inject(LoaderCtxKey)
-const explorerCtx = inject(ExplorerCtxKey)
 const displayCtx = inject(DisplayCtxKey)
 
 // startup
@@ -104,13 +102,6 @@ const onTagSelect = (_val: string) => {
   // TODO: タグ選択機能
   // editorCtx.insertHashtag(val)
   // editorCtx.onFocus()
-}
-
-const onSearchHashtag = async (hashtag: string) => {
-  await explorerCtx?.onSearch({
-    match: hashtag,
-    hashtags: [hashtag],
-  })
 }
 
 /// ////////////////////

@@ -60,14 +60,14 @@
       <!-- 文字列検索 -->
       <n-input-group>
         <n-input
-          v-model:value="explorerCtx.params.phrase"
+          v-model:value="explorerStore.searchText"
           type="text"
           clearable
           placeholder="Search"
-          @keydown.enter="onSearchText"
+          @keydown.enter="explorerStore.onSearchText()"
         />
 
-        <n-button ghost @click="onSearchText">
+        <n-button ghost @click="explorerStore.onSearchText()">
           <template #icon>
             <n-icon :component="Search" />
           </template>
@@ -101,20 +101,10 @@ import { useThemeVars } from 'naive-ui'
 import { Report } from '~~/src/databases/models/Report'
 
 const loaderStore = useLoaderStore()
+const explorerStore = useExplorerStore()
 
-const explorerCtx = inject(ExplorerCtxKey)
 const displayCtx = inject(DisplayCtxKey)
 const themeVars = useThemeVars()
-
-/// ////////////////////
-// ノート検索
-
-const onSearchText = async () => {
-  const text = explorerCtx.params.phrase
-  await explorerCtx.onSearch({
-    phrase: text,
-  })
-}
 
 /// ////////////////////
 // ノート読み込み

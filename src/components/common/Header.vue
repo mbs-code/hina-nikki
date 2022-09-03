@@ -52,7 +52,7 @@
       <n-button
         quaternary
         size="small"
-        @click="explorerCtx.onSearched()"
+        @click="explorerStore.showSearchModal = true"
       >
         <template #icon>
           <n-icon :component="Search" />
@@ -99,6 +99,7 @@ import { useConfigStore } from '~~/src/stores/useConfigStore'
 
 const configStore = useConfigStore()
 const loaderStore = useLoaderStore()
+const explorerStore = useExplorerStore()
 
 const emit = defineEmits<{ // eslint-disable-line func-call-spacing
   (e: 'click:config'): void
@@ -106,7 +107,6 @@ const emit = defineEmits<{ // eslint-disable-line func-call-spacing
 
 /// ////////////////////
 
-const explorerCtx = inject(ExplorerCtxKey)
 const displayCtx = inject(DisplayCtxKey)
 
 const toggleSidebar = () => {

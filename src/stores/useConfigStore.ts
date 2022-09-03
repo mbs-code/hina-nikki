@@ -1,4 +1,4 @@
-import { InjectionKey } from 'nuxt/dist/app/compat/capi'
+import { defineStore } from 'pinia'
 import { readTextFile, writeTextFile, BaseDirectory } from '@tauri-apps/api/fs'
 import { load as yamlLoad, dump as yamlDump } from 'js-yaml'
 
@@ -14,14 +14,17 @@ export type Config = {
   }
 }
 
-export const useConfigStore = () => {
-  const loading = ref<boolean>(false)
+export const useConfigStore = defineStore('config', () => {
+  const _fileName = 'config.yaml'
+  const _loading = ref<boolean>(false)
 
+  // 定数
   const embed = reactive({
     minZoomSize: 0.5,
     maxZoomSize: 3,
   })
 
+  // 変数
   const env = reactive<Config>({
     isDark: false,
     useSidebar: true,
@@ -34,26 +37,17 @@ export const useConfigStore = () => {
   })
 
   // auto save
-  watch(env, () => { loading.value && save() }, { deep: true })
+  watch(env, () => { _loading.value && save() }, { deep: true })
 
-  ///
-
-  const _attachBool = (value: any, defaultValue: any) => {
-    if (value === null) { return defaultValue }
-    return !!value
-  }
-
-  const _attachNumber = (value: any, defaultValue: any) => {
-    if (value === null) { return defaultValue }
-    return Number(value)
-  }
+  /// ////////////////////
+  // action
 
   const load = async () => {
     try {
-      loading.value = true
+      _loading.value = true
 
       // win: user\AppData\Roaming\com.tauri.dev\config.yaml
-      const text = await readTextFile('config.yaml', { dir: BaseDirectory.App })
+      const text = await readTextFile(_fileName, { dir: BaseDirectory.App })
       const obj = yamlLoad(text) as any
 
       env.isDark = _attachBool(obj?.isDark, env.isDark)
@@ -64,34 +58,44 @@ export const useConfigStore = () => {
       env.editor.lineWrap = _attachBool(obj?.editor?.lineWrap, env.editor.lineWrap)
       env.editor.zoom = _attachNumber(obj?.editor?.zoom, env.editor.zoom)
     } catch (err) {
-      /** */
+      // eslint-disable-next-line no-console
+      console.error(err)
+      window.alert('設定ファイルの読み込みに失敗しました。')
     } finally {
-      loading.value = false
+      _loading.value = false
     }
   }
 
   const save = async () => {
-    if (loading.value) { return }
-
     try {
       // win: user\AppData\Roaming\com.tauri.dev\config.yaml
       const text = yamlDump(env)
-      await writeTextFile('config.yaml', text, { dir: BaseDirectory.App })
+      await writeTextFile(_fileName, text, { dir: BaseDirectory.App })
     } catch (err) {
-      window.alert(err) // TODO:
+      // eslint-disable-next-line no-console
+      console.error(err)
+      window.alert('設定ファイルの保存に失敗しました。')
     }
   }
 
   return {
-    embed,
+    embed: readonly(embed),
     env,
 
     load,
     save,
   }
+})
+
+/// ////////////////////
+// Util
+
+const _attachBool = (value: any, defaultValue: any) => {
+  if (value === null) { return defaultValue }
+  return !!value
 }
 
-export type ConfigStore = ReturnType<typeof useConfigStore>
-
-export const ConfigStoreKey: InjectionKey<ConfigStore> =
-  (Symbol('ConfigStoreKey'))
+const _attachNumber = (value: any, defaultValue: any) => {
+  if (value === null) { return defaultValue }
+  return Number(value)
+}

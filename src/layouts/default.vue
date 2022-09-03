@@ -31,6 +31,11 @@
 </template>
 
 <script setup lang="ts">
+import { useConfigStore } from '~~/src/stores/useConfigStore'
+
+const configStore = useConfigStore()
+
+/// //////////
 
 const showExploreModal = ref<boolean>(false)
 const openSearchModal = () => {
@@ -44,7 +49,6 @@ const openConfigDrawer = () => {
 
 /// //////////
 
-const configStore = inject(ConfigStoreKey)
 const loaderCtx = inject(LoaderCtxKey)
 const explorerCtx = inject(ExplorerCtxKey)
 const displayCtx = inject(DisplayCtxKey)

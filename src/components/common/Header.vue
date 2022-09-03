@@ -95,12 +95,16 @@ import {
   DocumentTextOutline,
   PricetagsOutline,
 } from '@vicons/ionicons5'
+import { useConfigStore } from '~~/src/stores/useConfigStore'
+
+const configStore = useConfigStore()
 
 const emit = defineEmits<{ // eslint-disable-line func-call-spacing
   (e: 'click:config'): void
 }>()
 
-const configStore = inject(ConfigStoreKey)
+/// ////////////////////
+
 const loaderCtx = inject(LoaderCtxKey)
 const explorerCtx = inject(ExplorerCtxKey)
 const displayCtx = inject(DisplayCtxKey)

@@ -29,13 +29,15 @@
 import { Editor } from '@toast-ui/editor'
 import '@/assets/toastui.scss'
 import '@toast-ui/editor/dist/i18n/ja-jp'
+import { useConfigStore } from '~~/src/stores/useConfigStore'
+
+const configStore = useConfigStore()
 
 const editorRef = ref<HTMLDivElement>()
 let editor: Editor
 
 const loaderCtx = inject(LoaderCtxKey)
 const editorCtx = inject(EditorCtxKey)
-const configStore = inject(ConfigStoreKey)
 
 const text = computed({
   get: () => loaderCtx.formReport.text ?? '',

@@ -8,6 +8,8 @@ import { RegexUtil } from '~~/src/utils/RegexUtil'
 export type ReportStatus = 'empty' | 'dirty' | 'new' | 'none'
 
 export const useLoaderStore = defineStore('loader', () => {
+  const displayStore = useDisplayStore()
+
   const _loadedTitle = ref<string>() // 読み込んだ際のタイトル
   const _selectedReport = ref<Report>() // 読み込んだノート
 
@@ -76,7 +78,8 @@ export const useLoaderStore = defineStore('loader', () => {
     _selectedReport.value = report
     onReset()
 
-    // _onSaved() // イベント発火 // TODO:
+    // UIデータを読み込み直す
+    await displayStore.onLoad()
   }
 
   const onReset = () => {

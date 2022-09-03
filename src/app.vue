@@ -24,8 +24,6 @@ const theme = computed(() =>
 ///
 
 const editorCtx = useEditorCtx()
-const displayCtx = useDisplayCtx()
 
 provide(EditorCtxKey, editorCtx)
-provide(DisplayCtxKey, displayCtx)
 </script>

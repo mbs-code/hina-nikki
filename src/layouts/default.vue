@@ -42,21 +42,4 @@ const showConfigDrawer = ref<boolean>(false)
 const openConfigDrawer = () => {
   showConfigDrawer.value = true
 }
-
-/// //////////
-
-const displayCtx = inject(DisplayCtxKey)
-
-const loadUiData = async () => {
-  // UI データを読み込み直す
-  await displayCtx.load()
-}
-
-onMounted(async () => {
-  // イベント関数のバインド
-  // loaderStore.bindOnSaved(loadUiData) // TODO: これloader に入れる
-
-  // loading ui
-  await loadUiData()
-})
 </script>

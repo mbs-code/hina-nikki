@@ -61,8 +61,7 @@ import {
 
 const loaderStore = useLoaderStore()
 const explorerStore = useExplorerStore()
-
-const displayCtx = inject(DisplayCtxKey)
+const displayStore = useDisplayStore()
 
 // startup
 onMounted(async () => {
@@ -88,7 +87,7 @@ const statucColor = computed(() => {
 })
 
 const tagOptions = computed(() => {
-  return displayCtx?.tags.value.map(tag => ({
+  return displayStore.tags.map(tag => ({
     label: tag.name,
     key: tag.name,
   }))

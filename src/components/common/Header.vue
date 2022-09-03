@@ -100,14 +100,13 @@ import { useConfigStore } from '~~/src/stores/useConfigStore'
 const configStore = useConfigStore()
 const loaderStore = useLoaderStore()
 const explorerStore = useExplorerStore()
+const displayStore = useDisplayStore()
 
 const emit = defineEmits<{ // eslint-disable-line func-call-spacing
   (e: 'click:config'): void
 }>()
 
 /// ////////////////////
-
-const displayCtx = inject(DisplayCtxKey)
 
 const toggleSidebar = () => {
   configStore.env.useSidebar = !configStore.env.useSidebar
@@ -129,7 +128,7 @@ const movePage = async (name: string) => {
 // TODO: まとめる
 const onLatestReport = async () => {
   const selected = loaderStore.selectedReport
-  const reports = displayCtx.recentReports.value
+  const reports = displayStore.recentReports
 
   if (selected) {
     const index = reports.findIndex(r => r.id === selected.id)

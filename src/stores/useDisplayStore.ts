@@ -10,6 +10,9 @@ export const useDisplayStore = defineStore('display', () => {
   const _recentReports = ref<Report[]>([]) // 最近の更新
   const _tags = ref<Tag[]>([]) // タグ一覧
 
+  const _reportCount = ref<number>(0)
+  const _tagCount = ref<number>(0)
+
   const onLoad = async () => {
     // 最近の更新を最新順に
     _recentReports.value = await ReportAPI.getAll({
@@ -22,6 +25,10 @@ export const useDisplayStore = defineStore('display', () => {
       sorts: [['updated_at', 'desc']],
       limit: 100, // TODO: 暫定
     })
+
+    // 総数
+    _reportCount.value = await ReportAPI.count()
+    _tagCount.value = await TagAPI.count()
   }
 
   // 個数が変わったら再ロード
@@ -30,6 +37,9 @@ export const useDisplayStore = defineStore('display', () => {
   return {
     recentReports: computed(() => _recentReports.value),
     tags: computed(() => _tags.value),
+
+    reportCount: computed(() => _reportCount.value),
+    tagCount: computed(() => _tagCount.value),
 
     onLoad,
   }

@@ -84,4 +84,15 @@ export class TagAPI {
 
     return true
   }
+
+  public static async count (): Promise<number> {
+    // レポートの数を数える
+    const db = Database.getDB()
+    const { count } = await db
+      .selectFrom('tags')
+      .select([db.fn.count('id').as('count')])
+      .executeTakeFirst()
+
+    return Number(count)
+  }
 }

@@ -1,10 +1,19 @@
 <template>
   <div class="h-full flex items-center gap-2">
-    <div>Footer</div>
+    <!-- db stat -->
+    <div class="flex items-center gap-1">
+      <n-icon :component="DocumentsOutline" />
+      {{ displayStore.reportCount?.toLocaleString() ?? '-' }}
+    </div>
+
+    <div class="flex items-center gap-1">
+      <n-icon :component="PricetagsOutline" />
+      {{ displayStore.tagCount?.toLocaleString() ?? '-' }}
+    </div>
 
     <div class="flex-grow" name="padding" />
 
-    <!-- stat -->
+    <!-- page stat -->
     <div v-if="loaderStore.isLoaded" class="flex items-center gap-2">
       <span>{{ lines?.toLocaleString() ?? '-' }}行</span>
       <span>{{ count?.toLocaleString() ?? '-' }}文字</span>
@@ -24,10 +33,13 @@ import {
   Alert,
   CheckmarkSharp,
   Remove,
+  DocumentsOutline,
+  PricetagsOutline,
 } from '@vicons/ionicons5'
 import { TextUtil } from '~~/src/utils/TextUtil'
 
 const loaderStore = useLoaderStore()
+const displayStore = useDisplayStore()
 
 const title = computed(() => loaderStore.formReport?.title ?? '---')
 

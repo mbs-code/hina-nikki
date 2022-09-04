@@ -121,6 +121,17 @@ export class ReportAPI {
     return true
   }
 
+  public static async count (): Promise<number> {
+    // レポートの数を数える
+    const db = Database.getDB()
+    const { count } = await db
+      .selectFrom('reports')
+      .select([db.fn.count('id').as('count')])
+      .executeTakeFirst()
+
+    return Number(count)
+  }
+
   ///
 
   protected static async _attachTags (parse: ReturnType<typeof parseReport>) {

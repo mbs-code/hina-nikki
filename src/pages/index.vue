@@ -8,7 +8,6 @@
         :type="statucColor"
         @click="openMetaDialog"
       >
-        <!-- TODO: レポートダイアログを作成 -->
         <template #icon>
           <n-icon :component="Document" />
         </template>
@@ -69,6 +68,7 @@ import {
 
 const configStore = useConfigStore()
 const loaderStore = useLoaderStore()
+const editorStore = useEditorStore()
 const explorerStore = useExplorerStore()
 const displayStore = useDisplayStore()
 
@@ -107,9 +107,7 @@ const tagOptions = computed(() => {
 
 const onTagSelect = (_val: string) => {
   // タグを選択したら、カーソル位置に挿入する
-  // TODO: タグ選択機能
-  // editorCtx.insertHashtag(val)
-  // editorCtx.onFocus()
+  editorStore.onInsertText(`[${_val}]`)
 }
 
 /// ////////////////////

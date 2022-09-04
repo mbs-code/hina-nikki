@@ -17,6 +17,7 @@ tauri-build = { version = "1.0.0", features = [] }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "1.0.0", features = ["api-all"] }
+tauri-plugin-sql = { git = "https://github.com/mbs-code/tauri-plugin-sql", rev = "f5ee65ba19fb9c3143dc20c857a370ab52bed45b", features = ["sqlite"] }
 
 [features]
 # by default Tauri runs in production mode

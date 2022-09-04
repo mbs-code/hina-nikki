@@ -4,9 +4,35 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "tauri": "tauri"
+    "generate": "nuxt generate",
+    "dev": "nuxt dev",
+    "tauri": "tauri",
+    "nuxt": "nuxt",
+    "lint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore"
+  },
+  "dependencies": {
+    "@pinia/nuxt": "^0.4.1",
+    "@toast-ui/editor": "^3.2.0",
+    "date-fns": "^2.29.2",
+    "js-yaml": "^4.1.0",
+    "kysely": "^0.21.4",
+    "pinia": "^2.0.21",
+    "tauri-plugin-sql-api": "github:mbs-code/tauri-plugin-sql#bed077ab82d05fb07e64634cba8826e1af6057e1"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^1.0.5"
+    "@nuxtjs/eslint-config": "^10.0.0",
+    "@nuxtjs/eslint-config-typescript": "^10.0.0",
+    "@tauri-apps/cli": "^1.0.5",
+    "@types/js-yaml": "^4.0.5",
+    "@vicons/ionicons5": "^0.12.0",
+    "@vueuse/core": "^9.1.1",
+    "@vueuse/nuxt": "^9.1.1",
+    "eslint": "^8.22.0",
+    "naive-ui": "^2.32.2",
+    "nuxt": "3.0.0-rc.8",
+    "nuxt-windicss": "^2.5.1",
+    "sass": "^1.54.5",
+    "typescript": "^4.8.2",
+    "vfonts": "^0.0.3"
   }
 }

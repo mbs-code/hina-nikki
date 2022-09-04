@@ -1,3 +1,6 @@
 <template>
-  <div>reports</div>
+  <div>
+    <div>reports</div>
+    <ReportCalendar />
+  </div>
 </template>

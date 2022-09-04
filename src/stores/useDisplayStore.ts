@@ -5,6 +5,8 @@ import { Report } from '~~/src/databases/models/Report'
 import { Tag } from '~~/src/databases/models/Tag'
 
 export const useDisplayStore = defineStore('display', () => {
+  const configStore = useConfigStore()
+
   const _recentReports = ref<Report[]>([]) // 最近の更新
   const _tags = ref<Tag[]>([]) // タグ一覧
 
@@ -12,7 +14,7 @@ export const useDisplayStore = defineStore('display', () => {
     // 最近の更新を最新順に
     _recentReports.value = await ReportAPI.getAll({
       sorts: [['updated_at', 'desc']],
-      limit: 10, // TODO: サイズ
+      limit: configStore.env.latestReportNum,
     })
 
     // 一通りのタグ
@@ -21,6 +23,9 @@ export const useDisplayStore = defineStore('display', () => {
       limit: 100, // TODO: 暫定
     })
   }
+
+  // 個数が変わったら再ロード
+  watch(() => configStore.env.latestReportNum, () => onLoad())
 
   return {
     recentReports: computed(() => _recentReports.value),

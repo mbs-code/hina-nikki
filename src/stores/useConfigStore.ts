@@ -6,8 +6,8 @@ export type Config = {
   isDark: boolean
   useSidebar: boolean
   useCalendar: boolean
-
-  saveWhenLeave: boolean
+  latestReportNum: number // 最近の更新の数
+  saveWhenLeave: boolean // TODO:
   editor: {
     splitPane: boolean
     tagWidget: boolean
@@ -24,6 +24,7 @@ export const useConfigStore = defineStore('config', () => {
   const embed = reactive({
     minZoomSize: 0.5,
     maxZoomSize: 3,
+    maxLatestReportNum: 100,
   })
 
   // 変数
@@ -31,6 +32,7 @@ export const useConfigStore = defineStore('config', () => {
     isDark: false,
     useSidebar: true,
     useCalendar: true,
+    latestReportNum: 10,
     saveWhenLeave: true,
     editor: {
       splitPane: true,
@@ -61,6 +63,7 @@ export const useConfigStore = defineStore('config', () => {
       env.isDark = _attachBool(obj?.isDark, env.isDark)
       env.useSidebar = _attachBool(obj?.useSidebar, env.useSidebar)
       env.useCalendar = _attachBool(obj?.useCalendar, env.useCalendar)
+      env.latestReportNum = _attachNumber(obj?.latestReportNum, env.latestReportNum)
       env.saveWhenLeave = _attachBool(obj?.saveWhenLeave, env.saveWhenLeave)
 
       env.editor.splitPane = _attachBool(obj?.editor?.splitPane, env.editor.splitPane)

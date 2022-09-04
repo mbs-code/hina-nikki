@@ -27,6 +27,15 @@
               <n-form-item label="カレンダーを使用する">
                 <n-switch v-model:value="configStore.env.useCalendar" />
               </n-form-item>
+
+              <n-form-item label="最近の更新：表示数">
+                <n-input-number
+                  v-model:value="configStore.env.latestReportNum"
+                  :min="1"
+                  :max="configStore.embed.maxLatestReportNum"
+                  step="1"
+                />
+              </n-form-item>
             </div>
           </n-card>
 

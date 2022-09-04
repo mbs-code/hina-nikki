@@ -14,15 +14,16 @@
     <div class="flex-grow" name="padding" />
 
     <!-- page stat -->
-    <div v-if="loaderStore.isLoaded" class="flex items-center gap-2">
-      <span>{{ lines?.toLocaleString() ?? '-' }}行</span>
-      <span>{{ count?.toLocaleString() ?? '-' }}文字</span>
-    </div>
+    <template v-if="loaderStore.isLoaded">
+      <div>{{ lines?.toLocaleString() ?? '-' }}行</div>
+      <div>{{ count?.toLocaleString() ?? '-' }}文字</div>
+
+      <div>|</div>
+    </template>
 
     <!-- 読み込みステータス -->
     <div class="flex items-center gap-1">
       <span>{{ title }}</span>
-
       <n-icon :component="statusIcon" />
     </div>
   </div>

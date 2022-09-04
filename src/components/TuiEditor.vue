@@ -70,6 +70,7 @@ const editorInit = async () => {
     initialValue: text.value,
     placeholder: '空のノートです ...',
     initialEditType: 'markdown',
+    hideModeSwitch: true, // TODO: zoom のせいで壊れる
     previewStyle: configStore.env.editor.splitPane ? 'vertical' : 'tab',
     language: 'ja-JP',
     theme: configStore.env.isDark ? 'dark' : 'light',

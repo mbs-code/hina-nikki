@@ -9,7 +9,7 @@
     />
 
     <!-- 何も読み込んでいない場合(背景に描画) -->
-    <n-card class="absolute w-full h-full">
+    <n-card class="absolute w-full h-full" style="top: 0; left: 0; z-index: -1">
       <div class="h-full flex items-center justify-center">
         <n-empty
           size="huge"

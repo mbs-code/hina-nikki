@@ -155,6 +155,14 @@ const lineWrap = computed(() => {
   return configStore.env.editor.lineWrap ? 'break-spaces' : 'nowrap'
 })
 
+const liOddTextColor = computed(() => {
+  return configStore.env.editor.paintListItem ? '#4b96e6' : 'inherit'
+})
+
+const liEvenTextColor = computed(() => {
+  return configStore.env.editor.paintListItem ? '#ef6767' : 'inherit'
+})
+
 /// ////////////////////
 /// イベント
 
@@ -212,6 +220,18 @@ const onClickTextTag = async (hashtag: string) => {
     border-radius: 4px;
 
     white-space: nowrap;
+  }
+
+  // リスト要素の色つけ
+  ::v-deep(.toastui-editor-md-list-item-odd) {
+    ~ .toastui-editor-md-marked-text {
+      color: v-bind(liOddTextColor);
+    }
+  }
+  ::v-deep(.toastui-editor-md-list-item-even) {
+    ~ .toastui-editor-md-marked-text {
+      color: v-bind(liEvenTextColor);
+    }
   }
 }
 </style>

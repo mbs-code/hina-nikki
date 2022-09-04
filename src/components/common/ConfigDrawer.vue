@@ -45,8 +45,16 @@
                 <n-switch v-model:value="configStore.env.editor.splitPane" />
               </n-form-item>
 
+              <n-form-item label="タグをHTML化する">
+                <n-switch v-model:value="configStore.env.editor.tagWidget" />
+              </n-form-item>
+
               <n-form-item label="右端で折り返す">
                 <n-switch v-model:value="configStore.env.editor.lineWrap" />
+              </n-form-item>
+
+              <n-form-item label="li文字に色を付ける">
+                <n-switch v-model:value="configStore.env.editor.paintListItem" />
               </n-form-item>
 
               <n-form-item label="ズーム率">

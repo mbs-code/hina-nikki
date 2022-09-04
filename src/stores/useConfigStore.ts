@@ -12,6 +12,7 @@ export type Config = {
     splitPane: boolean
     tagWidget: boolean
     lineWrap: boolean
+    paintListItem: boolean // li テキストにも色を付ける
     zoom: number
   }
 }
@@ -38,6 +39,7 @@ export const useConfigStore = defineStore('config', () => {
       splitPane: true,
       tagWidget: false,
       lineWrap: false,
+      paintListItem: false,
       zoom: 1,
     },
   })
@@ -69,6 +71,7 @@ export const useConfigStore = defineStore('config', () => {
       env.editor.splitPane = _attachBool(obj?.editor?.splitPane, env.editor.splitPane)
       env.editor.tagWidget = _attachBool(obj?.editor?.tagWidget, env.editor.tagWidget)
       env.editor.lineWrap = _attachBool(obj?.editor?.lineWrap, env.editor.lineWrap)
+      env.editor.paintListItem = _attachBool(obj?.editor?.paintListItem, env.editor.paintListItem)
       env.editor.zoom = _attachNumber(obj?.editor?.zoom, env.editor.zoom)
     } catch (err) {
       // eslint-disable-next-line no-console

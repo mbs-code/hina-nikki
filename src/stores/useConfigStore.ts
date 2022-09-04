@@ -37,7 +37,11 @@ export const useConfigStore = defineStore('config', () => {
   })
 
   // auto save
-  watch(env, () => { _loading.value && onSave() }, { deep: true })
+  watch(env, async () => {
+    if (!_loading.value) {
+      await onSave()
+    }
+  }, { deep: true })
 
   /// ////////////////////
   // action

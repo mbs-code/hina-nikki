@@ -32,6 +32,13 @@
         </div>
       </n-scrollbar>
 
+      <!-- タグウィジェットの展開スイッチ -->
+      <n-switch v-model:value="configStore.env.editor.tagWidget" class="w-[120px]">
+        <template #icon>
+          <n-icon :component="Code" />
+        </template>
+      </n-switch>
+
       <!-- タグ選択セレクト -->
       <n-dropdown trigger="hover" :options="tagOptions" @select="onTagSelect">
         <n-button size="large">
@@ -57,8 +64,10 @@ import {
   ChevronDown,
   PricetagOutline,
   Pricetags,
+  Code,
 } from '@vicons/ionicons5'
 
+const configStore = useConfigStore()
 const loaderStore = useLoaderStore()
 const explorerStore = useExplorerStore()
 const displayStore = useDisplayStore()

@@ -9,6 +9,7 @@ export type Config = {
 
   saveWhenLeave: boolean
   editor: {
+    tagWidget: boolean
     lineWrap: boolean
     zoom: number
   }
@@ -31,6 +32,7 @@ export const useConfigStore = defineStore('config', () => {
     useCalendar: true,
     saveWhenLeave: true,
     editor: {
+      tagWidget: false,
       lineWrap: false,
       zoom: 1,
     },
@@ -59,6 +61,7 @@ export const useConfigStore = defineStore('config', () => {
       env.useCalendar = _attachBool(obj?.useCalendar, env.useCalendar)
       env.saveWhenLeave = _attachBool(obj?.saveWhenLeave, env.saveWhenLeave)
 
+      env.editor.tagWidget = _attachBool(obj?.editor?.tagWidget, env.editor.tagWidget)
       env.editor.lineWrap = _attachBool(obj?.editor?.lineWrap, env.editor.lineWrap)
       env.editor.zoom = _attachNumber(obj?.editor?.zoom, env.editor.zoom)
     } catch (err) {

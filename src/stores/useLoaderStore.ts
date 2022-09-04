@@ -45,6 +45,7 @@ export const useLoaderStore = defineStore('loader', () => {
       : _selectedReport.value?.text !== formReport.text
   })
 
+  // ステータス
   const status = computed<ReportStatus>(() => {
     // 優先度: 読み込みなし > 編集中 > 新規 > 保存済
     if (!isLoaded) { return 'empty' }
@@ -105,6 +106,9 @@ export const useLoaderStore = defineStore('loader', () => {
     _loadedTitle.value = undefined
     _selectedReport.value = undefined
     onReset()
+
+    // UIデータを読み込み直す
+    await displayStore.onLoad()
   }
 
   /// ////////////////////

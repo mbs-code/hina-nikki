@@ -38,7 +38,7 @@ const _value = computed({
 const options = computed<MenuOption[]>(() => {
   return props.reports.map(report => ({
     key: String(report.id),
-    label: report.formattedTitle,
+    label: report.title,
     icon: () => h(NIcon, null, { default: () => h(report.isDiary ? CalendarOutline : PricetagOutline) },
     ),
   }))

@@ -1,23 +1,19 @@
 <template>
   <n-thing
     v-if="report"
-    :title="report.formattedTitle"
+    :title="report.title"
     content-style="margin-top: 10px;"
   >
     <template #avatar>
       <n-avatar>
-        <n-icon>
-          <CalendarOutline v-if="report.isDiary" />
-          <PricetagOutline v-else />
-        </n-icon>
+        <!-- TODO: ハッシュタグとプレーンを分ける -->
+        <n-icon :component="report.isDiary ? CalendarOutline : PricetagOutline" />
       </n-avatar>
     </template>
 
     <template #header-extra>
       <div class="flex items-center gap-1">
-        <n-icon size="16">
-          <TimeOutline />
-        </n-icon>
+        <n-icon :component="TimeOutline" />
 
         <span>{{ lastUpdatedStr }}</span>
       </div>

@@ -1,13 +1,30 @@
 <template>
   <div class="h-full flex items-center gap-2">
-    <div>Footer</div>
+    <!-- db stat -->
+    <div class="flex items-center gap-1">
+      <n-icon :component="DocumentsOutline" />
+      {{ displayStore.reportCount?.toLocaleString() ?? '-' }}
+    </div>
+
+    <div class="flex items-center gap-1">
+      <n-icon :component="PricetagsOutline" />
+      {{ displayStore.tagCount?.toLocaleString() ?? '-' }}
+    </div>
 
     <div class="flex-grow" name="padding" />
 
+    <!-- page stat -->
+    <template v-if="loaderStore.isLoaded">
+      <div>{{ lines?.toLocaleString() ?? '-' }}行</div>
+      <div>{{ count?.toLocaleString() ?? '-' }}文字</div>
+
+      <div>|</div>
+    </template>
+
+    <!-- 読み込みステータス -->
     <div class="flex items-center gap-1">
       <span>{{ title }}</span>
-
-      <n-icon size="16" :component="statusIcon" />
+      <n-icon :component="statusIcon" />
     </div>
   </div>
 </template>
@@ -17,17 +34,32 @@ import {
   Alert,
   CheckmarkSharp,
   Remove,
+  DocumentsOutline,
+  PricetagsOutline,
 } from '@vicons/ionicons5'
+import { TextUtil } from '~~/src/utils/TextUtil'
 
-const loaderCtx = inject(LoaderCtxKey)
+const loaderStore = useLoaderStore()
+const displayStore = useDisplayStore()
 
-const title = computed(() => loaderCtx.formReport?.title ?? '---')
+const title = computed(() => loaderStore.formReport?.title ?? '---')
+
+const count = computed(() => {
+  const text = loaderStore.formReport.text
+  return TextUtil.charCount(text)
+})
+
+const lines = computed(() => {
+  const text = loaderStore.formReport.text
+  return TextUtil.lineLength(text)
+})
+
 const statusIcon = computed(() => {
-  // 優先度: 編集中 > 新規 > 保存済
-  const isDarty = loaderCtx.isDirty.value
-  if (isDarty) { return Alert }
-
-  const isNew = loaderCtx.isNew.value
-  return isNew ? Remove : CheckmarkSharp
+  switch (loaderStore.status) {
+    case 'empty': return CheckmarkSharp
+    case 'dirty': return Alert
+    case 'new': return Remove
+    case 'none': return CheckmarkSharp
+  }
 })
 </script>

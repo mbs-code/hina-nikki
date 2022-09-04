@@ -20,34 +20,49 @@
                 <n-switch v-model:value="configStore.env.isDark" />
               </n-form-item>
 
+              <n-form-item label="サイドバーを表示する">
+                <n-switch v-model:value="configStore.env.useSidebar" />
+              </n-form-item>
+
               <n-form-item label="カレンダーを使用する">
                 <n-switch v-model:value="configStore.env.useCalendar" />
+              </n-form-item>
+
+              <n-form-item label="最近の更新：表示数">
+                <n-input-number
+                  v-model:value="configStore.env.latestReportNum"
+                  :min="1"
+                  :max="configStore.embed.maxLatestReportNum"
+                  step="1"
+                />
               </n-form-item>
             </div>
           </n-card>
 
           <n-card title="エディタ設定" size="small">
             <div class="flex flex-col gap-2">
+              <n-form-item label="分割ビューを使用">
+                <n-switch v-model:value="configStore.env.editor.splitPane" />
+              </n-form-item>
+
+              <n-form-item label="タグをHTML化する">
+                <n-switch v-model:value="configStore.env.editor.tagWidget" />
+              </n-form-item>
+
               <n-form-item label="右端で折り返す">
                 <n-switch v-model:value="configStore.env.editor.lineWrap" />
               </n-form-item>
 
-              <n-form-item label="印刷ガイドの表示">
-                <n-switch v-model:value="configStore.env.editor.printMargin" />
+              <n-form-item label="li文字に色を付ける">
+                <n-switch v-model:value="configStore.env.editor.paintListItem" />
               </n-form-item>
 
-              <n-form-item label="フォントサイズ">
+              <n-form-item label="ズーム率">
                 <n-input-number
-                  v-model:value="configStore.env.editor.fontSize"
-                  :min="configStore.embed.minFontSize"
-                  :max="48"
-                />
-              </n-form-item>
-
-              <n-form-item label="Tabサイズ" path="sliderValue">
-                <n-input-number
-                  v-model:value="configStore.env.editor.tabSize"
-                  :min="1"
+                  v-model:value="configStore.env.editor.zoom"
+                  :min="configStore.embed.minZoomSize"
+                  :max="configStore.embed.maxZoomSize"
+                  step="0.1"
                 />
               </n-form-item>
             </div>
@@ -81,6 +96,9 @@
 <script setup lang="ts">
 import { useDialog } from 'naive-ui'
 import { Database } from '~~/src/databases/Database'
+import { useConfigStore } from '~~/src/stores/useConfigStore'
+
+const configStore = useConfigStore()
 
 const props = defineProps<{
   show: boolean,
@@ -94,8 +112,6 @@ const _show = computed({
   get: () => props.show,
   set: (val: boolean) => emit('update:show', val),
 })
-
-const configStore = inject(ConfigStoreKey)
 
 /// ////////////////////
 /// DB周り

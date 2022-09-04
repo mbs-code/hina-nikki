@@ -44,4 +44,16 @@ export class DateUtil {
     }
     return undefined
   }
+
+  public static formatDisplay (date?: Date, hasHumanity = true): string | undefined {
+    if (date) {
+      let str = dateFormat(date, 'yyyy-MM-dd HH:mm:ss')
+      if (hasHumanity) {
+        const hum = this.formatHumanity(date)
+        str += ` (${hum})`
+      }
+      return str
+    }
+    return undefined
+  }
 }

@@ -1,13 +1,13 @@
 <template>
   <div class="h-full flex flex-col">
-    <div class="p-2 flex flex-wrap items-center gap-2">
+    <div class="flex items-center gap-2">
       <!-- タイトル -->
       <n-button
+        size="large"
         quaternary
-        size="small"
         :type="statucColor"
+        @click="openMetaDialog"
       >
-        <!-- TODO: レポートダイアログを作成 -->
         <template #icon>
           <n-icon :component="Document" />
         </template>
@@ -15,59 +15,106 @@
       </n-button>
 
       <!-- ハッシュタグ -->
-      <n-button
-        v-for="(hashtag, _) of hashtags"
-        :key="_"
-        size="small"
-        @click="onSearchHashtag(hashtag)"
-      >
+      <n-scrollbar x-scrollable>
+        <div class="flex flex-grow shrink gap-2 mt-1.5">
+          <n-button
+            v-for="(hashtag, _) of hashtags"
+            :key="_"
+            size="small"
+            @click="explorerStore.onSearchByHashtag(hashtag)"
+          >
+            <template #icon>
+              <n-icon :component="PricetagOutline" />
+            </template>
+            {{ hashtag }}
+          </n-button>
+        </div>
+      </n-scrollbar>
+
+      <!-- タグウィジェットの展開スイッチ -->
+      <n-switch v-model:value="configStore.env.editor.tagWidget" class="w-[120px]">
         <template #icon>
-          <n-icon><PricetagOutline /></n-icon>
+          <n-icon :component="Code" />
         </template>
-        {{ hashtag }}
-      </n-button>
+      </n-switch>
+
+      <!-- タグ選択セレクト -->
+      <n-dropdown trigger="hover" :options="tagOptions" @select="onTagSelect">
+        <n-button size="large">
+          <template #icon>
+            <n-icon :component="Pricetags" />
+          </template>
+          <n-icon :component="ChevronDown" />
+        </n-button>
+      </n-dropdown>
     </div>
 
     <div class="flex-grow">
-      <TextEditor />
+      <TuiEditor />
     </div>
+
+    <ReportMetaModal v-model:show="showMetaDialog" />
   </div>
 </template>
 
 <script setup lang="ts">
 import {
-  PricetagOutline,
   Document,
+  ChevronDown,
+  PricetagOutline,
+  Pricetags,
+  Code,
 } from '@vicons/ionicons5'
 
-const loaderCtx = inject(LoaderCtxKey)
-const explorerCtx = inject(ExplorerCtxKey)
+const configStore = useConfigStore()
+const loaderStore = useLoaderStore()
+const editorStore = useEditorStore()
+const explorerStore = useExplorerStore()
+const displayStore = useDisplayStore()
 
 // startup
 onMounted(async () => {
-  // 今日を表示する // TODO: ここ？
-  await loaderCtx.loadByToday()
+  // 何も表示していなければ、今日を表示する
+  if (!loaderStore.isLoaded) {
+    await loaderStore.onLoadByToday()
+  }
 })
 
-const title = computed(() => loaderCtx.formReport?.title ?? '---')
-const hashtags = computed(() => loaderCtx.selectedReport.value?.tags ?? [])
+/// ////////////////////
+// 描画系
+
+const title = computed(() => loaderStore.formReport?.title ?? '---')
+const hashtags = computed(() => loaderStore.selectedReport?.tags ?? [])
 
 const statucColor = computed(() => {
-  // 優先度: 編集中 > 新規 > 保存済
-  const isDarty = loaderCtx.isDirty.value
-  if (isDarty) { return 'warning' }
+  switch (loaderStore.status) {
+    case 'empty': return undefined
+    case 'dirty': return 'warning'
+    case 'new': return 'error'
+    case 'none': return undefined
+  }
+})
 
-  const isNew = loaderCtx.isNew.value
-  return isNew ? 'error' : undefined
+const tagOptions = computed(() => {
+  return displayStore.tags.map(tag => ({
+    label: tag.name,
+    key: tag.name,
+  }))
 })
 
 /// ////////////////////
 // Toolbar アクション
 
-const onSearchHashtag = async (hashtag: string) => {
-  await explorerCtx.onSearch({
-    match: hashtag,
-    hashtags: [hashtag],
-  })
+const onTagSelect = (_val: string) => {
+  // タグを選択したら、カーソル位置に挿入する
+  editorStore.onInsertText(`[${_val}]`)
+}
+
+/// ////////////////////
+// レポート詳細ダイアログ
+
+const showMetaDialog = ref<boolean>(false)
+const openMetaDialog = () => {
+  showMetaDialog.value = true
 }
 </script>

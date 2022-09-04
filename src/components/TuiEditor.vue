@@ -70,7 +70,7 @@ const editorInit = async () => {
     initialValue: text.value,
     placeholder: '空のノートです ...',
     initialEditType: 'markdown',
-    previewStyle: 'vertical', // v / h
+    previewStyle: configStore.env.editor.splitPane ? 'vertical' : 'tab',
     language: 'ja-JP',
     theme: configStore.env.isDark ? 'dark' : 'light',
     useCommandShortcut: false,
@@ -94,9 +94,10 @@ onUnmounted(() => editorDestroy())
 
 // テーマ変更時、エディタを作り直す
 watch(() => configStore.env.isDark, () => editorInit())
-
 // widget モードを切り替えるとき、エディタを作り直す
 watch(() => configStore.env.editor.tagWidget, () => editorInit())
+// splitView を切り替えたとき、エディタを作り直す
+watch(() => configStore.env.editor.splitPane, () => editorInit())
 
 ///
 

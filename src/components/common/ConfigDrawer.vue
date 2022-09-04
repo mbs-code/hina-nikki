@@ -32,6 +32,10 @@
 
           <n-card title="エディタ設定" size="small">
             <div class="flex flex-col gap-2">
+              <n-form-item label="分割ビューを使用">
+                <n-switch v-model:value="configStore.env.editor.splitPane" />
+              </n-form-item>
+
               <n-form-item label="右端で折り返す">
                 <n-switch v-model:value="configStore.env.editor.lineWrap" />
               </n-form-item>

@@ -1,13 +1,14 @@
 <template>
   <div class="h-full">
     <div
-      v-show="loaderCtx.formReport.title"
+      v-show="loaderStore.isLoaded"
       ref="editorRef"
       class="tui-editor relative"
-      @keydown.ctrl.s="loaderCtx.save()"
+      @keydown.ctrl.s="loaderStore.onSave()"
       @wheel.ctrl.passive="onZoom"
     />
 
+    <!-- 何も読み込んでいない場合(背景に描画) -->
     <n-card class="absolute w-full h-full">
       <div class="h-full flex items-center justify-center">
         <n-empty
@@ -15,7 +16,7 @@
           description="ノートを選択してください"
         >
           <template #extra>
-            <n-button @click="loaderCtx.loadByToday()">
+            <n-button @click="loaderStore.onLoadByToday()">
               今日のノート
             </n-button>
           </template>
@@ -29,17 +30,20 @@
 import { Editor } from '@toast-ui/editor'
 import '@/assets/toastui.scss'
 import '@toast-ui/editor/dist/i18n/ja-jp'
+import { useThemeVars } from 'naive-ui'
+
+const configStore = useConfigStore()
+const loaderStore = useLoaderStore()
+const explorerStore = useExplorerStore()
+const editorStore = useEditorStore()
+const themeVars = useThemeVars()
 
 const editorRef = ref<HTMLDivElement>()
 let editor: Editor
 
-const loaderCtx = inject(LoaderCtxKey)
-const editorCtx = inject(EditorCtxKey)
-const configStore = inject(ConfigStoreKey)
-
 const text = computed({
-  get: () => loaderCtx.formReport.text ?? '',
-  set: (value: string) => (loaderCtx.formReport.text = value),
+  get: () => loaderStore.formReport.text ?? '',
+  set: (value: string) => (loaderStore.formReport.text = value),
 })
 
 // 外部から値の挿入があった場合の処理
@@ -50,13 +54,15 @@ watch(text, () => {
   }
 })
 
-// テーマ変更時、エディタを作り直す
-watch(() => configStore.env.isDark, () => {
-  editorInit()
-})
+/// ////////////////////
 
-const editorInit = () => {
-  if (editor) { editor.destroy() }
+const editorInit = async () => {
+  if (editor) { editorDestroy() }
+  await nextTick()
+
+  // ウィジェット
+  const widgetRules = []
+  if (!configStore.env.editor.tagWidget) { widgetRules.push(tagWidget()) }
 
   editor = new Editor({
     el: editorRef.value,
@@ -69,16 +75,49 @@ const editorInit = () => {
     theme: configStore.env.isDark ? 'dark' : 'light',
     useCommandShortcut: false,
     usageStatistics: false,
+    widgetRules,
     events: {
-      change: () => (text.value = editor.getMarkdown())
+      change: () => (text.value = editor.getMarkdown()),
     },
   })
 
-  editorCtx.bindEditor(editor)
+  editorStore.bindEditor(editor)
+}
+
+const editorDestroy = () => {
+  editorStore.unbindEditor()
+  editor.destroy()
 }
 
 onMounted(() => editorInit())
-onUnmounted(() => editor.destroy())
+onUnmounted(() => editorDestroy())
+
+// テーマ変更時、エディタを作り直す
+watch(() => configStore.env.isDark, () => editorInit())
+
+// widget モードを切り替えるとき、エディタを作り直す
+watch(() => configStore.env.editor.tagWidget, () => editorInit())
+
+///
+
+const tagWidget = () => {
+  // eslint-disable-next-line no-useless-escape
+  const tagRegex = /\[(#[^\s\[\]]{1,15})\]/ // [#asdf]
+  return {
+    rule: tagRegex,
+    toDOM (text: string) {
+      const matched = text.match(tagRegex)
+
+      const span = document.createElement('span')
+      span.classList.add('widget-tag')
+      span.innerText = matched[1]
+      span.style.backgroundColor = themeVars.value.tagColor
+      span.addEventListener('click', () => onClickTextTag(matched[1]))
+
+      return span
+    },
+  }
+}
 
 /// ////////////////////
 /// ズーム関係
@@ -108,14 +147,19 @@ const onZoom = ({ deltaY }: WheelEvent) => {
 }
 
 /// ////////////////////
-/// その他設定
+/// CSS埋め込み
 
 const lineWrap = computed(() => {
   return configStore.env.editor.lineWrap ? 'break-spaces' : 'nowrap'
 })
 
-// /// ////////////////////
-// /// イベント
+/// ////////////////////
+/// イベント
+
+const onClickTextTag = async (hashtag: string) => {
+  await explorerStore.onSearchByHashtag(hashtag)
+}
+
 // TODO: タグ追加機能
 // const onClickPhrase = async () => {
 //   // 選択フレーズを取り出す
@@ -144,12 +188,28 @@ const lineWrap = computed(() => {
     div {
       zoom: v-bind(zoom);
       white-space: v-bind(lineWrap);
+      word-break: break-all; // 常に折り返し
     }
   }
 
   // ビューワー
   ::v-deep(.toastui-editor-contents) {
     zoom: v-bind(zoom);
+    word-break: break-all; // 常に折り返し
+  }
+
+  // widget タグ
+  ::v-deep(.ProseMirror) {
+    .widget-tag {
+      cursor: pointer;
+    }
+  }
+  ::v-deep(.widget-tag) {
+    margin: 0px 2px;
+    padding: 0px 5px;
+    border-radius: 4px;
+
+    white-space: nowrap;
   }
 }
 </style>

@@ -9,6 +9,10 @@
 </template>
 
 <script setup lang="ts">
+import { useConfigStore } from '~~/src/stores/useConfigStore'
+
+const configStore = useConfigStore()
+
 const props = defineProps<{
   value?: Date,
 }>()
@@ -16,6 +20,8 @@ const props = defineProps<{
 const emit = defineEmits<{ // eslint-disable-line func-call-spacing
   (e: 'update:value', value?: Date): void
 }>()
+
+/// ////////////////////
 
 // FIXME: 内部更新時に外まで伝搬させないフラグ
 const isInnerUpdate = ref<boolean>(false)
@@ -29,8 +35,6 @@ const _value = computed({
     }
   },
 })
-
-const configStore = inject(ConfigStoreKey)
 
 ///
 

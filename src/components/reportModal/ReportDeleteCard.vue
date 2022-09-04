@@ -1,6 +1,6 @@
 <template>
   <n-card
-    v-if="loaderCtx.selectedReport.value?.id"
+    v-if="!loaderStore.isNew"
     size="small"
   >
     <div class="flex flex-col gap-2">
@@ -25,11 +25,13 @@ import {
 import { useDialog } from 'naive-ui'
 import { ReportAPI } from '~~/src/apis/ReportAPI'
 
+const loaderStore = useLoaderStore()
+
 const emit = defineEmits<{ // eslint-disable-line func-call-spacing
   (e: 'deleted'): void
 }>()
 
-const loaderCtx = inject(LoaderCtxKey)
+/// ////////////////////
 
 const dialog = useDialog()
 const onDelete = () => {
@@ -39,10 +41,10 @@ const onDelete = () => {
     positiveText: '削除',
     negativeText: 'キャンセル',
     onPositiveClick: async () => {
-      const id = loaderCtx.selectedReport.value?.id
+      const id = loaderStore.selectedReport?.id
       if (id) {
         await ReportAPI.remove(id)
-        await loaderCtx.loadByTitle()
+        await loaderStore.onClose(false)
 
         emit('deleted')
       }

@@ -1,6 +1,6 @@
 <template>
   <n-card
-    v-if="loaderCtx.selectedReport.value?.id"
+    v-if="!loaderStore.isNew"
     title="タイトルを編集する"
     size="small"
   >
@@ -13,7 +13,7 @@
           <n-icon :component="canEditTitle ? LockOpenOutline : LockClosedOutline" />
         </n-button>
         <n-input
-          v-model:value="loaderCtx.formReport.title"
+          v-model:value="loaderStore.formReport.title"
           type="text"
           :disabled="!canEditTitle"
         />
@@ -48,21 +48,23 @@ import {
 } from '@vicons/ionicons5'
 import { useThemeVars } from 'naive-ui'
 
-const loaderCtx = inject(LoaderCtxKey)
+const loaderStore = useLoaderStore()
 const themeVars = useThemeVars()
+
+/// ////////////////////
 
 const canEditTitle = ref<boolean>(false)
 
 const onReset = () => {
-  loaderCtx.resetTitle()
+  loaderStore.onResetTitle()
 }
 
 const onSave = async () => {
-  if (!loaderCtx.formReport.title?.trim()) { return }
+  if (!loaderStore.formReport.title?.trim()) { return }
 
   // TODO: エラートースト
 
-  await loaderCtx.save()
+  await loaderStore.onSave()
   canEditTitle.value = false
 }
 </script>

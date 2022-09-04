@@ -1,72 +1,56 @@
 <template>
-  <div class="h-full flex items-center gap-2">
-    <n-button quaternary size="small" @click="toggleSidebar">
-      <template #icon>
-        <n-icon
-          :component="configStore.env.useSidebar ? CaretBack : ReorderThree"
-        />
-      </template>
-    </n-button>
+  <div class="h-full flex items-center gap-1">
+    <HeaderButton
+      :tooltip="configStore.env.useSidebar ? 'サイドバーを閉じる' : 'サイドバーを開く'"
+      :icon="configStore.env.useSidebar ? CaretBack : ReorderThree"
+      @click="toggleSidebar"
+    />
 
-    <template v-if="!configStore.env.useSidebar">
-      <n-button
-        quaternary
-        size="small"
-        @click="loaderCtx.loadByDateAndMove(-1)"
-      >
-        <template #icon>
-          <n-icon :component="ChevronBack" />
-        </template>
-      </n-button>
+    <div>|</div>
 
-      <n-button
-        quaternary
-        size="small"
-        @click="loaderCtx.loadByToday()"
-      >
-        <template #icon>
-          <n-icon :component="TodayOutline" />
-        </template>
-      </n-button>
-
-      <n-button
-        quaternary
-        size="small"
-        @click="loaderCtx.loadByDateAndMove(1)"
-      >
-        <template #icon>
-          <n-icon :component="ChevronForward" />
-        </template>
-      </n-button>
-
-      <n-button
-        quaternary
-        size="small"
-        @click="onLatestReport"
-      >
-        <template #icon>
-          <n-icon :component="ArrowUndoOutline" />
-        </template>
-      </n-button>
-
-      <n-button
-        quaternary
-        size="small"
-        @click="explorerCtx.onSearched()"
-      >
-        <template #icon>
-          <n-icon :component="Search" />
-        </template>
-      </n-button>
-    </template>
+    <HeaderButton
+      tooltip="検索"
+      :icon="Search"
+      @click="explorerStore.showSearchModal = true"
+    />
+    <HeaderButton
+      tooltip="前日に移動"
+      :icon="ChevronBack"
+      @click="loaderStore.onLoadByDateAndMove(-1)"
+    />
+    <HeaderButton
+      tooltip="今日に移動"
+      :icon="TodayOutline"
+      @click="loaderStore.onLoadByToday()"
+    />
+    <HeaderButton
+      tooltip="翌日に移動"
+      :icon="ChevronForward"
+      @click="loaderStore.onLoadByDateAndMove(1)"
+    />
+    <HeaderButton
+      tooltip="一つ前のノートを表示"
+      :icon="ArrowUndoOutline"
+      @click="loaderStore.onLoadByPrevious()"
+    />
 
     <div class="flex-grow" name="padding" />
 
-    <n-button quaternary size="small" @click="emit('click:config')">
-      <template #icon>
-        <n-icon :component="Cog" />
-      </template>
-    </n-button>
+    <HeaderButton
+      tooltip="ノート一覧"
+      :icon="DocumentTextOutline"
+      @click="movePage('reports')"
+    />
+    <HeaderButton
+      tooltip="タグ一覧"
+      :icon="PricetagsOutline"
+      @click="movePage('tags')"
+    />
+    <HeaderButton
+      tooltip="設定"
+      :icon="Cog"
+      @click="emit('click:config')"
+    />
   </div>
 </template>
 
@@ -80,36 +64,34 @@ import {
   TodayOutline,
   ArrowUndoOutline,
   Search,
+  DocumentTextOutline,
+  PricetagsOutline,
 } from '@vicons/ionicons5'
+import { useConfigStore } from '~~/src/stores/useConfigStore'
+
+const configStore = useConfigStore()
+const loaderStore = useLoaderStore()
+const explorerStore = useExplorerStore()
 
 const emit = defineEmits<{ // eslint-disable-line func-call-spacing
   (e: 'click:config'): void
 }>()
 
-const configStore = inject(ConfigStoreKey)
-const loaderCtx = inject(LoaderCtxKey)
-const explorerCtx = inject(ExplorerCtxKey)
-const displayCtx = inject(DisplayCtxKey)
+/// ////////////////////
 
 const toggleSidebar = () => {
   configStore.env.useSidebar = !configStore.env.useSidebar
 }
 
-// 自身の次のレポートを読み込む
-// TODO: まとめる
-const onLatestReport = async () => {
-  const selected = loaderCtx.selectedReport.value
-  const reports = displayCtx.recentReports.value
-
-  if (selected) {
-    const index = reports.findIndex(r => r.id === selected.id)
-    if (index >= 0) {
-      const next = reports.at(index + 1)
-      await loaderCtx.loadByReport(next)
-    }
-  } else {
-    // 選択が無い場合は、最新のやつ
-    await loaderCtx.loadByReport(reports.at(0))
+const appRouter = useAppRouter()
+const movePage = async (name: string) => {
+  switch (name) {
+    case 'tags':
+      await appRouter.tags()
+      break
+    case 'reports':
+      await appRouter.reports()
+      break
   }
 }
 </script>

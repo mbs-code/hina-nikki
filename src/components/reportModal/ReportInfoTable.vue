@@ -19,7 +19,7 @@
         </tr>
         <tr>
           <th>行数 / 文字数</th>
-          <td>{{ lines?.toLocaleString() ?? '-' }} 行 / {{ length?.toLocaleString() ?? '-' }} 文字</td>
+          <td>{{ lines?.toLocaleString() ?? '-' }} 行 / {{ size?.toLocaleString() ?? '-' }} 文字</td>
         </tr>
         <tr>
           <th>初回作成日</th>
@@ -44,29 +44,29 @@
 <script setup lang="ts">
 import { useThemeVars } from 'naive-ui'
 import { DateUtil } from '~~/src/utils/DateUtil'
+import { TextUtil } from '~~/src/utils/TextUtil'
 
-///
+const loaderStore = useLoaderStore()
 
-const loaderCtx = inject(LoaderCtxKey)
+/// ////////////////////
+
 const themeVars = useThemeVars()
 
-const report = computed(() => loaderCtx.selectedReport.value)
+const report = computed(() => loaderStore.selectedReport)
 
 const tags = computed(() => {
   if (!report.value?.tags?.length) { return undefined }
   return report.value.tags.join(' ')
 })
 
-const length = computed(() => {
-  if (!report.value?.text?.length) { return undefined }
-  return report.value.text.length
+const size = computed(() => {
+  const text = report.value?.text
+  return TextUtil.charCount(text)
 })
 
 const lines = computed(() => {
-  if (!report.value?.text?.length) { return undefined }
-
-  const res = (report.value?.text ?? '').match(/\r\n|\n/g)
-  return (res ? res.length : 0) + 1
+  const text = report.value?.text
+  return TextUtil.lineLength(text)
 })
 
 const createdAt = computed(() =>
@@ -77,7 +77,8 @@ const updatedAt = computed(() =>
 )
 
 const statusMessage = computed(() => {
-  switch (loaderCtx.getStatus.value) {
+  switch (loaderStore.status) {
+    case 'empty' : return '未ロード'
     case 'dirty': return '編集中'
     case 'new': return '新規'
     case 'none': return '保存済み'

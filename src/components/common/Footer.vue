@@ -4,6 +4,13 @@
 
     <div class="flex-grow" name="padding" />
 
+    <!-- stat -->
+    <div v-if="loaderStore.isLoaded" class="flex items-center gap-2">
+      <span>{{ lines?.toLocaleString() ?? '-' }}行</span>
+      <span>{{ count?.toLocaleString() ?? '-' }}文字</span>
+    </div>
+
+    <!-- 読み込みステータス -->
     <div class="flex items-center gap-1">
       <span>{{ title }}</span>
 
@@ -18,13 +25,25 @@ import {
   CheckmarkSharp,
   Remove,
 } from '@vicons/ionicons5'
+import { TextUtil } from '~~/src/utils/TextUtil'
 
-const loaderCtx = inject(LoaderCtxKey)
+const loaderStore = useLoaderStore()
 
-const title = computed(() => loaderCtx.formReport?.title ?? '---')
+const title = computed(() => loaderStore.formReport?.title ?? '---')
+
+const count = computed(() => {
+  const text = loaderStore.formReport.text
+  return TextUtil.charCount(text)
+})
+
+const lines = computed(() => {
+  const text = loaderStore.formReport.text
+  return TextUtil.lineLength(text)
+})
 
 const statusIcon = computed(() => {
-  switch (loaderCtx.getStatus.value) {
+  switch (loaderStore.status) {
+    case 'empty': return CheckmarkSharp
     case 'dirty': return Alert
     case 'new': return Remove
     case 'none': return CheckmarkSharp

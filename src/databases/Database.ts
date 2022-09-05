@@ -9,6 +9,7 @@ import { BuildinMigrationProvider } from './libs/BuildinMigrationProvider'
 
 import * as CreateInitTable from './migrations/20220826_create_init_table'
 import * as AppednTagTable from './migrations/20220831_append_tag_table'
+import * as AppendPinTagTable from './migrations/20220905_append_pin_tag_table'
 
 import { DBReport } from '~~/src/databases/models/Report'
 import { DBTag } from '~~/src/databases/models/Tag'
@@ -23,6 +24,7 @@ export interface Tables {
 export const migrations: Record<string, Migration> = {
   '20220826_create_init_table': CreateInitTable,
   '20220831_append_tag_table': AppednTagTable,
+  '20220905_append_pin_tag_table': AppendPinTagTable,
 }
 
 // singleton connection

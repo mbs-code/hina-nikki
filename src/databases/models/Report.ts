@@ -60,13 +60,13 @@ export const parseReport = (form: FormReport) => {
     hashtags.unshift(form.title)
   }
   // 重複を削除してSSVへ
-  const ssvTag = Array.from(new Set(hashtags)).join(' ') ?? null
+  const tagSSV = Array.from(new Set(hashtags)).join(' ') ?? null
 
   return {
     title,
     text: form.text,
-    is_diary: isDiary,
-    is_hashtag: isHashtag,
-    tags: ssvTag ?? null,
+    is_diary: isDiary ? 1 : 0,
+    is_hashtag: isHashtag ? 1 : 0,
+    tags: tagSSV ?? null,
   }
 }

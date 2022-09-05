@@ -6,6 +6,7 @@ import { Tag } from '~~/src/databases/models/Tag'
 
 export const useDisplayStore = defineStore('display', () => {
   const configStore = useConfigStore()
+  const calendarStore = useCalendarStore()
 
   const _recentReports = ref<Report[]>([]) // 最近の更新
   const _tags = ref<Tag[]>([]) // タグ一覧
@@ -29,6 +30,9 @@ export const useDisplayStore = defineStore('display', () => {
     // 総数
     _reportCount.value = await ReportAPI.count()
     _tagCount.value = await TagAPI.count()
+
+    // カレンダー
+    await calendarStore.onLoad()
   }
 
   // 個数が変わったら再ロード

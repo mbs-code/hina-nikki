@@ -2,7 +2,7 @@
   <n-card size="small">
     <div class="flex flex-col gap-1">
       <!-- ヘッダ -->
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1.5">
         <n-button size="tiny" class="cell-item" @click="onPrevYear">
           <template #icon>
             <n-icon :component="ArrowBack" />
@@ -14,7 +14,7 @@
           </template>
         </n-button>
 
-        <n-button size="tiny" quaternary class="flex-grow cell-item" @click="onToday">
+        <n-button size="tiny" quaternary class="flex-grow cell-item text-base" @click="onToday">
           {{ yearMonth }}
         </n-button>
 
@@ -31,15 +31,15 @@
       </div>
 
       <!-- 週要素 -->
-      <div class="flex gap-2">
+      <div class="flex gap-1.5">
         <div v-for="(dd, _) of weekHeaders" :key="_" class="cell-item">
           {{ dd }}
         </div>
       </div>
 
       <!-- カレンダー -->
-      <div class="flex flex-col gap-2">
-        <div v-for="(ww, _) of dateMap" :key="_" class="flex gap-2">
+      <div class="flex flex-col gap-1.5">
+        <div v-for="(ww, _) of dateMap" :key="_" class="flex gap-1.5">
           <template v-for="(dd, __) of ww" :key="`${_}-${__}`">
             <n-badge class="cell-item" dot type="info" :show="dd.hasBadge">
               <n-button
@@ -73,6 +73,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{ // eslint-disable-line func-call-spacing
   (e: 'update:date', val?: Date): void,
+  (e: 'change:month', start: Date, end: Date): void,
 }>()
 
 const _selectedDate = computed({
@@ -82,9 +83,12 @@ const _selectedDate = computed({
 
 /// ////////////////////
 
-// const selectedDate = ref<Date>(new Date()) // 選択
 const innerDate = ref<Date>(new Date()) // 表示している基準
 const startWod = ref<0 | 2 | 3 | 1 | 4 | 5 | 6>(1) // 週の開始曜日
+
+watch(innerDate, () => {
+  nextTick(() => emit('change:month', startDate.value, endDate.value))
+}, { immediate: true })
 
 type DateParams = {
   date: Date,
@@ -94,6 +98,19 @@ type DateParams = {
 }
 
 /// ////////////////////
+
+const startDate = computed(() => {
+  const startOfMonthDate = startOfMonth(innerDate.value)
+  const wod = startOfMonthDate.getDay()
+  let add = startWod.value - wod
+  if (add > 0) { add = add - 7 }
+
+  return startOfWeek(startOfMonthDate, { locale: ja, weekStartsOn: startWod.value })
+})
+
+const endDate = computed(() => {
+  return addDays(startDate.value, 7 * 6 - 1)
+})
 
 const yearMonth = computed(() => format(innerDate.value, 'yyyy年M月'))
 
@@ -109,12 +126,7 @@ const weekHeaders = computed(() => {
 
 const dateMap = computed(() => {
   // 左上要素を検索
-  const startOfMonthDate = startOfMonth(innerDate.value)
-  const wod = startOfMonthDate.getDay()
-  let add = startWod.value - wod
-  if (add > 0) { add = add - 7 }
-
-  let ptr = startOfWeek(startOfMonthDate, { locale: ja, weekStartsOn: startWod.value })
+  let ptr = startDate.value
 
   // 週 x 曜日 で回してカレンダーを生成
   const now = new Date()
@@ -177,10 +189,10 @@ const onNextYear = () => (innerDate.value = addYears(innerDate.value, 1))
 }
 
 .cell-item {
-  width: 26px;
-  height: 26px;
-  min-width: 26px;
-  min-height: 26px;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  min-height: 28px;
   text-align: center;
   text-justify: middle;
 }

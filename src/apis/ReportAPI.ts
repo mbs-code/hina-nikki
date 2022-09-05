@@ -132,6 +132,21 @@ export class ReportAPI {
     return Number(count)
   }
 
+  public static async hasCalendar (before: Date, after: Date): Promise<Date[]> {
+    // 範囲のレポートの取得
+    const reports = await Database.getDB()
+      .selectFrom('reports')
+      .select('title')
+      .distinct()
+      .where('is_diary', '=', 1)
+      .where('title', '>=', DateUtil.formatDate(before))
+      .where('title', '<=', DateUtil.formatDate(after))
+      .execute()
+
+    return reports
+      .map(report => new Date(report.title)) // タイトルを取り出して日付にする
+  }
+
   ///
 
   protected static async _attachTags (parse: ReturnType<typeof parseReport>) {

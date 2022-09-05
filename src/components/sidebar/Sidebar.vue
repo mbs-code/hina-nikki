@@ -18,9 +18,11 @@
     </n-input-group>
 
     <!-- カレンダー -->
-    <DatePicker
-      :value="loaderStore.loadedTitleDate"
-      @update:value="loaderStore.onLoadByDate($event)"
+    <CalendarPicker
+      :date="loaderStore.loadedTitleDate"
+      :badges="calendarStore.badges.value"
+      @update:date="loaderStore.onLoadByDate($event)"
+      @change:month="onChangeMonth"
     />
 
     <!-- クイックアクセス -->
@@ -43,4 +45,11 @@ import { Search } from '@vicons/ionicons5'
 const loaderStore = useLoaderStore()
 const explorerStore = useExplorerStore()
 const displayStore = useDisplayStore()
+const calendarStore = useCalendarStore()
+
+const onChangeMonth = async (start: Date, end: Date) => {
+  calendarStore.startDate = start
+  calendarStore.endDate = end
+  await calendarStore.onLoad()
+}
 </script>

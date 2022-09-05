@@ -8,6 +8,7 @@ extends:
   - '@nuxtjs/eslint-config-typescript'
 rules:
   '@typescript-eslint/no-unused-vars': 'warn'
+  'no-trailing-spaces': 'warn'
   'vue/multi-word-component-names': 'off'
   'vue/no-v-model-argument': 'off'
   'vue/no-v-for-template-key': 'off'

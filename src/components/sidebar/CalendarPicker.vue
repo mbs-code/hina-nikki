@@ -41,7 +41,7 @@
       <div class="flex flex-col gap-2">
         <div v-for="(ww, _) of dateMap" :key="_" class="flex gap-2">
           <template v-for="(dd, __) of ww" :key="`${_}-${__}`">
-            <n-badge class="cell-item" dot type="info">
+            <n-badge class="cell-item" dot type="info" :show="dd.hasBadge">
               <n-button
                 v-bind="dd.buttonBind"
                 size="tiny"
@@ -68,6 +68,7 @@ import { ArrowBack, ArrowForward, ChevronBack, ChevronForward } from '@vicons/io
 
 const props = defineProps<{
   date?: Date,
+  badges?: Date[],
 }>()
 
 const emit = defineEmits<{ // eslint-disable-line func-call-spacing
@@ -89,6 +90,7 @@ type DateParams = {
   date: Date,
   day: number,
   buttonBind: { [key: string]: unknown },
+  hasBadge: boolean,
 }
 
 /// ////////////////////
@@ -137,10 +139,14 @@ const dateMap = computed(() => {
         bind.quaternary = true
       }
 
+      // バッジの状態確認
+      const hasBadge = (props.badges ?? []).some(date => isSameDay(ptr, date))
+
       dd.push({
         date: ptr,
         day: ptr.getDate(),
         buttonBind: bind,
+        hasBadge,
       })
       ptr = addDays(ptr, 1)
     }

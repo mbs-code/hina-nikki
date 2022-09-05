@@ -18,9 +18,9 @@
     </n-input-group>
 
     <!-- カレンダー -->
-    <DatePicker
-      :value="loaderStore.loadedTitleDate"
-      @update:value="loaderStore.onLoadByDate($event)"
+    <CalendarPicker
+      :date="loaderStore.loadedTitleDate"
+      @update:date="loaderStore.onLoadByDate($event)"
     />
 
     <!-- クイックアクセス -->

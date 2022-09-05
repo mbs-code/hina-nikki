@@ -8,7 +8,7 @@
       <n-layout style="top: 30px; bottom: 30px;" position="absolute" has-sider>
         <n-layout-sider
           v-if="configStore.env.useSidebar"
-          width="306"
+          width="281"
           :native-scrollbar="false"
           bordered
         >

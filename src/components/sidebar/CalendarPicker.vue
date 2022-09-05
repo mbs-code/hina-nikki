@@ -1,5 +1,5 @@
 <template>
-  <n-alert>
+  <n-card size="small">
     <div class="flex flex-col gap-1">
       <!-- ヘッダ -->
       <div class="flex items-center gap-2">
@@ -58,7 +58,7 @@
         </div>
       </div>
     </div>
-  </n-alert>
+  </n-card>
 </template>
 
 <script setup lang="ts">
@@ -166,11 +166,8 @@ const onNextYear = () => (innerDate.value = addYears(innerDate.value, 1))
 </script>
 
 <style scoped lang="scss">
-.n-alert {
-  width: 246px;
-  ::v-deep(.n-alert-body) {
-    padding: 8px;
-  }
+.n-card {
+  width: 265px;
 }
 
 .cell-item {

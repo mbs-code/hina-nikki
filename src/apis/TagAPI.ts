@@ -38,13 +38,24 @@ export class TagAPI {
   }
 
   public static async create(form: FormTag): Promise<Tag> {
+    const db = Database.getDB()
+
     const now = DateUtil.formatISO(new Date())
+    const parse = parseTag(form)
+
+    // 名前重複確認
+    const { count } = await db
+      .selectFrom('tags')
+      .select([db.fn.count('id').as('count')])
+      .where('name', '=', parse.name)
+      .executeTakeFirst()
+    if (count > 0) { throw new Error('Duplicate name.') }
 
     // タグを作成
-    const { insertId } = await Database.getDB()
+    const { insertId } = await db
       .insertInto('tags')
       .values({
-        ...(await parseTag(form)),
+        ...parse,
         created_at: now,
         updated_at: now,
       })
@@ -54,13 +65,25 @@ export class TagAPI {
   }
 
   public static async update(tagId: number, form: FormTag): Promise<Tag> {
+    const db = Database.getDB()
+
     const now = DateUtil.formatISO(new Date())
+    const parse = parseTag(form)
+
+    // 名前重複確認
+    const { count } = await db
+      .selectFrom('tags')
+      .select([db.fn.count('id').as('count')])
+      .where('name', '=', parse.name)
+      .where('id', '<>', tagId)
+      .executeTakeFirst()
+    if (count > 0) { throw new Error('Duplicate name.') }
 
     // タグを更新
-    const { numUpdatedRows } = await Database.getDB()
+    const { numUpdatedRows } = await db
       .updateTable('tags')
       .set({
-        ...(await parseTag(form)),
+        ...parseTag(form),
         updated_at: now,
       })
       .where('id', '=', tagId)
@@ -74,11 +97,12 @@ export class TagAPI {
   }
 
   public static async remove(tagId: number): Promise<boolean> {
+    const db = Database.getDB()
+
     // タグを取ってくる
     const tag = await this.get(tagId)
 
     // レポートに使われているか確認する
-    const db = Database.getDB()
     const { count } = await db
       .selectFrom('reports')
       .select([db.fn.count('id').as('count')])
@@ -87,7 +111,7 @@ export class TagAPI {
     if (count > 0) { throw new Error('This tag in used.') }
 
     // タグを削除
-    const { numDeletedRows } = await Database.getDB()
+    const { numDeletedRows } = await db
       .deleteFrom('tags')
       .where('id', '=', tagId)
       .executeTakeFirst()
@@ -100,8 +124,9 @@ export class TagAPI {
   }
 
   public static async count(): Promise<number> {
-    // レポートの数を数える
     const db = Database.getDB()
+
+    // レポートの数を数える
     const { count } = await db
       .selectFrom('tags')
       .select([db.fn.count('id').as('count')])

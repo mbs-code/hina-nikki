@@ -4,6 +4,7 @@
     :columns="columns"
     size="small"
     flex-height
+    scroll-x="400"
     style="height: calc(100vh - 60px)"
   />
 </template>

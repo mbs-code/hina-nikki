@@ -5,6 +5,7 @@ import { DateUtil } from '~~/src/utils/DateUtil'
 export type SearchTag = {
   name?: string // 完全一致
   names?: string[] // 完全一致
+  hasPinned?: boolean
   limit?: number
   sorts?: [keyof DBTag, 'asc' | 'desc'][]
 }
@@ -17,6 +18,7 @@ export class TagAPI {
       .selectAll()
       .if(Boolean(search?.name), qb => qb.where('name', '=', search.name))
       .if(Boolean(search?.names), qb => qb.where('name', 'in', search.names))
+      .if(Boolean(search?.hasPinned), qb => qb.where('is_pinned', '=', 1))
       .if(Boolean(search?.limit), qb => qb.limit(search.limit))
       .if(Boolean(search?.sorts), qb => search.sorts.reduce(
         (qb2, sort) => qb2.orderBy(sort[0], sort[1]), qb)

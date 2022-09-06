@@ -35,6 +35,7 @@ import { useThemeVars } from 'naive-ui'
 const configStore = useConfigStore()
 const loaderStore = useLoaderStore()
 const explorerStore = useExplorerStore()
+const displayStore = useDisplayStore()
 const editorStore = useEditorStore()
 const themeVars = useThemeVars()
 
@@ -113,8 +114,11 @@ const tagWidget = () => {
       const span = document.createElement('span')
       span.classList.add('widget-tag')
       span.innerText = matched[1]
-      span.style.backgroundColor = themeVars.value.tagColor
       span.addEventListener('click', () => onClickTextTag(matched[1]))
+
+      // 色探索
+      const tag = displayStore.tags.find((tag) => tag.name === matched[1])
+      span.style.backgroundColor = tag?.color || themeVars.value.tagColor
 
       return span
     },

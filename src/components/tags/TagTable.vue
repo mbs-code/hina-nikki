@@ -22,6 +22,7 @@ defineProps<{
 const emit = defineEmits<{ // eslint-disable-line func-call-spacing
   (e: 'click', val: MouseEvent): void,
   (e: 'edit', val: Tag): void,
+  (e: 'search', val: Tag): void,
 }>()
 
 ///
@@ -57,7 +58,10 @@ const columns = [
     key: 'action',
     align: 'center',
     title: (row: Tag) => h(TagTableActionHeader, { onCreate: () => emit('edit', row) }),
-    render: (row: Tag) => h(TagTableActionColumn, { onEdit: () => emit('edit', row) }),
+    render: (row: Tag) => h(TagTableActionColumn, {
+      onSearch: () => emit('search', row),
+      onEdit: () => emit('edit', row),
+    }),
   },
 ]
 </script>

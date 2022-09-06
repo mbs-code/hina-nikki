@@ -1,4 +1,3 @@
-import { TagAPI } from '~~/src/apis/TagAPI'
 import { RegexUtil } from '~~/src/utils/RegexUtil'
 
 export type DBTag = {
@@ -43,8 +42,8 @@ export const formatTag = (db: DBTag): Tag => {
 export const parseTag = (form: FormTag) => {
   // バリデ
   const name = form.name?.trim()
-  if (!name) { throw new Error('Name is empty.') }
-  if (!RegexUtil.isHashtagTitle(name)) { throw new Error('Name has different format.') }
+  if (!name) { throw new Error('名前が空欄です') }
+  if (!RegexUtil.isHashtagTitle(name)) { throw new Error('名前のフォーマットが異なります') }
 
   return {
     name,

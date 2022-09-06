@@ -49,7 +49,7 @@ export class TagAPI {
       .select([db.fn.count('id').as('count')])
       .where('name', '=', parse.name)
       .executeTakeFirst()
-    if (count > 0) { throw new Error('Duplicate name.') }
+    if (count > 0) { throw new Error('名前が重複しています') }
 
     // タグを作成
     const { insertId } = await db
@@ -77,7 +77,7 @@ export class TagAPI {
       .where('name', '=', parse.name)
       .where('id', '<>', tagId)
       .executeTakeFirst()
-    if (count > 0) { throw new Error('Duplicate name.') }
+    if (count > 0) { throw new Error('名前が重複しています') }
 
     // タグを更新
     const { numUpdatedRows } = await db
@@ -108,7 +108,7 @@ export class TagAPI {
       .select([db.fn.count('id').as('count')])
       .where('tags', 'like', `%${tag.name}%`)
       .executeTakeFirst()
-    if (count > 0) { throw new Error('This tag in used.') }
+    if (count > 0) { throw new Error('このタグは使用中です') }
 
     // タグを削除
     const { numDeletedRows } = await db

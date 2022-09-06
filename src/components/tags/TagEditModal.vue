@@ -16,7 +16,7 @@
       >
         <div class="flex flex-col gap-2">
           <n-form-item label="タグ名">
-            <n-input v-model:value="form.name" />
+            <n-input v-model:value="form.name" placeholder="#xxxxxx" />
           </n-form-item>
 
           <n-form-item label="色">

@@ -1,9 +1,11 @@
 <template>
   <n-config-provider :theme="theme">
     <n-dialog-provider>
-      <NuxtLayout>
-        <NuxtPage :key="key" />
-      </NuxtLayout>
+      <n-message-provider>
+        <NuxtLayout>
+          <NuxtPage :key="key" />
+        </NuxtLayout>
+      </n-message-provider>
     </n-dialog-provider>
   </n-config-provider>
 </template>

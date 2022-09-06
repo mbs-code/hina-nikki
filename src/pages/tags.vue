@@ -1,9 +1,11 @@
 <template>
   <div>
-    <TagTable
-      :tags="tags"
-      @edit="openEditDialog"
-    />
+    <n-spin :show="loading">
+      <TagTable
+        :tags="tags"
+        @edit="openEditDialog"
+      />
+    </n-spin>
 
     <TagEditModal
       v-model:show="showEditDialog"
@@ -17,11 +19,23 @@
 <script setup lang="ts">
 import { Tag } from '~~/src/databases/models/Tag'
 import { TagAPI } from '~~/src/apis/TagAPI'
+import { useMessage } from 'naive-ui'
 
+const message = useMessage()
+
+const loading = ref<boolean>(false)
 const tags = ref<Tag[]>([])
 
 const fetchTags = async () => {
-  tags.value = await TagAPI.getAll({})
+  loading.value = false
+
+  try {
+    tags.value = await TagAPI.getAll({})
+  } catch (err) {
+    message.error(err.toString())
+  } finally {
+    loading.value = false
+  }
 }
 
 onMounted(() => fetchTags())

@@ -1,3 +1,4 @@
+import { TagAPI } from '~~/src/apis/TagAPI'
 import { RegexUtil } from '~~/src/utils/RegexUtil'
 
 export type DBTag = {
@@ -39,11 +40,15 @@ export const formatTag = (db: DBTag): Tag => {
   }
 }
 
-export const parseTag = (form: FormTag) => {
+export const parseTag = async (form: FormTag) => {
   // バリデ
   const name = form.name?.trim()
   if (!name) { throw new Error('Name is empty.') }
   if (!RegexUtil.isHashtagTitle(name)) { throw new Error('Name has different format.') }
+
+  // 名前重複確認
+  const exists = await TagAPI.getAll({ name })
+  if (exists.length > 0) { throw new Error('Duplidate name.') }
 
   return {
     name,

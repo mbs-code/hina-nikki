@@ -2,8 +2,9 @@
   <n-data-table
     :data="tags"
     :columns="columns"
-    :max-height="250"
     size="small"
+    flex-height
+    style="height: calc(100vh - 60px)"
   />
 </template>
 

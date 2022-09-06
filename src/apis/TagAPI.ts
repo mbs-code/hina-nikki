@@ -3,6 +3,7 @@ import { DBTag, formatTag, FormTag, parseTag, Tag } from '~~/src/databases/model
 import { DateUtil } from '~~/src/utils/DateUtil'
 
 export type SearchTag = {
+  name?: string // 完全一致
   names?: string[] // 完全一致
   limit?: number
   sorts?: [keyof DBTag, 'asc' | 'desc'][]
@@ -14,6 +15,7 @@ export class TagAPI {
     const tags = await Database.getDB()
       .selectFrom('tags')
       .selectAll()
+      .if(Boolean(search?.name), qb => qb.where('name', '=', search.name))
       .if(Boolean(search?.names), qb => qb.where('name', 'in', search.names))
       .if(Boolean(search?.limit), qb => qb.limit(search.limit))
       .if(Boolean(search?.sorts), qb => search.sorts.reduce(
@@ -42,7 +44,7 @@ export class TagAPI {
     const { insertId } = await Database.getDB()
       .insertInto('tags')
       .values({
-        ...parseTag(form),
+        ...(await parseTag(form)),
         created_at: now,
         updated_at: now,
       })
@@ -58,7 +60,7 @@ export class TagAPI {
     const { numUpdatedRows } = await Database.getDB()
       .updateTable('tags')
       .set({
-        ...parseTag(form),
+        ...(await parseTag(form)),
         updated_at: now,
       })
       .where('id', '=', tagId)

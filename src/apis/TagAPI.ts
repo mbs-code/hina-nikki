@@ -9,7 +9,7 @@ export type SearchTag = {
 }
 
 export class TagAPI {
-  public static async getAll (search?: SearchTag): Promise<Tag[]> {
+  public static async getAll(search?: SearchTag): Promise<Tag[]> {
     // タグの取得
     const tags = await Database.getDB()
       .selectFrom('tags')
@@ -24,7 +24,7 @@ export class TagAPI {
     return tags.map(tag => formatTag(tag))
   }
 
-  public static async get (tagId: number): Promise<Tag> {
+  public static async get(tagId: number): Promise<Tag> {
     // タグの取得
     const tag = await Database.getDB()
       .selectFrom('tags')
@@ -35,7 +35,7 @@ export class TagAPI {
     return formatTag(tag)
   }
 
-  public static async create (form: FormTag): Promise<Tag> {
+  public static async create(form: FormTag): Promise<Tag> {
     const now = DateUtil.formatISO(new Date())
 
     // タグを作成
@@ -51,7 +51,7 @@ export class TagAPI {
     return await this.get(Number(insertId))
   }
 
-  public static async update (tagId: number, form: FormTag): Promise<Tag> {
+  public static async update(tagId: number, form: FormTag): Promise<Tag> {
     const now = DateUtil.formatISO(new Date())
 
     // タグを更新
@@ -71,7 +71,19 @@ export class TagAPI {
     return await this.get(Number(tagId))
   }
 
-  public static async remove (tagId: number): Promise<boolean> {
+  public static async remove(tagId: number): Promise<boolean> {
+    // タグを取ってくる
+    const tag = await this.get(tagId)
+
+    // レポートに使われているか確認する
+    const db = Database.getDB()
+    const { count } = await db
+      .selectFrom('reports')
+      .select([db.fn.count('id').as('count')])
+      .where('tags', 'like', `%${tag.name}%`)
+      .executeTakeFirst()
+    if (count > 0) { throw new Error('This tag in used.') }
+
     // タグを削除
     const { numDeletedRows } = await Database.getDB()
       .deleteFrom('tags')
@@ -85,7 +97,7 @@ export class TagAPI {
     return true
   }
 
-  public static async count (): Promise<number> {
+  public static async count(): Promise<number> {
     // レポートの数を数える
     const db = Database.getDB()
     const { count } = await db

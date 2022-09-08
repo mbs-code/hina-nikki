@@ -50,7 +50,6 @@ onMounted(() => fetchTags())
 ///
 
 const onRemoveUnusedTag = async () => {
-  console.log('kitazo')
   let deleteCnt = 0
 
   // タグ一つ一つ検索していく

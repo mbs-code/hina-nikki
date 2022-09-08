@@ -213,7 +213,6 @@ const onClickTextTag = async (hashtag: string) => {
 
       white-space: nowrap;
 
-      pointer-events: none;
       cursor: pointer;
     }
   }

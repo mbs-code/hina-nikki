@@ -160,7 +160,7 @@ export class ReportAPI {
     for (const name of tagNames) {
       const exist = dbTags.find(tag => tag.name === name)
       if (!exist) {
-        await TagAPI.create({ name })
+        await TagAPI.create({ name, isPinned: false, order: 0 })
       }
     }
 

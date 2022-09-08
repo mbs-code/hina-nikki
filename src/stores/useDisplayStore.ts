@@ -23,7 +23,8 @@ export const useDisplayStore = defineStore('display', () => {
 
     // 一通りのタグ
     _tags.value = await TagAPI.getAll({
-      sorts: [['updated_at', 'desc']],
+      hasPinned: true,
+      sorts: [['is_pinned', 'desc'], ['order', 'desc'], ['id', 'asc']],
       limit: 100, // TODO: 暫定
     })
 

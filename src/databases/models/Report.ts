@@ -52,21 +52,24 @@ export const parseReport = (form: FormReport) => {
   const isHashtag = RegexUtil.isHashtagTitle(form.title) ? 1 : 0
 
   // 本文からハッシュタグを抽出
+  const tagRegex = /\[(#[^\s[\]]{1,15})\]/g // [#asdf]
   const hashtags = (form.text ?? '')
-    .split(RegexUtil.separateRegex)
-    .filter(text => RegexUtil.isHashtagTitle(text))
+    .match(tagRegex)
+    .map(str => str.slice(1, -1)) // 先頭と末尾の[]を削除する
+
   // もしタイトルがハッシュタグなら、先頭に追加
   if (RegexUtil.isHashtagTitle(form.title)) {
     hashtags.unshift(form.title)
   }
+
   // 重複を削除してSSVへ
-  const ssvTag = Array.from(new Set(hashtags)).join(' ') ?? null
+  const tagSSV = Array.from(new Set(hashtags)).join(' ') ?? null
 
   return {
     title,
     text: form.text,
-    is_diary: isDiary,
-    is_hashtag: isHashtag,
-    tags: ssvTag ?? null,
+    is_diary: isDiary ? 1 : 0,
+    is_hashtag: isHashtag ? 1 : 0,
+    tags: tagSSV ?? null,
   }
 }

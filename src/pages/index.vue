@@ -65,6 +65,7 @@ import {
   Pricetags,
   Code,
 } from '@vicons/ionicons5'
+import TagDropdownLabelIcon from '~~/src/components/editor/TagDropdownLabelIcon.vue'
 
 const configStore = useConfigStore()
 const loaderStore = useLoaderStore()
@@ -99,6 +100,7 @@ const tagOptions = computed(() => {
   return displayStore.tags.map(tag => ({
     label: tag.name,
     key: tag.name,
+    icon: () => h(TagDropdownLabelIcon, { color: tag.color }),
   }))
 })
 

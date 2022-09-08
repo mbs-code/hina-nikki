@@ -1,4 +1,5 @@
 import { defineNuxtConfig } from 'nuxt'
+import eslint from 'vite-plugin-eslint'
 
 const isProduct = process.env.NODE_ENV === 'production'
 
@@ -28,4 +29,8 @@ export default defineNuxtConfig({
     path: '~/components',
     pathPrefix: false,
   }],
+
+  vite: {
+    plugins: [eslint({ fix: true })],
+  },
 })

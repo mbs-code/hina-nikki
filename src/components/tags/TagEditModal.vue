@@ -5,6 +5,7 @@
     preset="dialog"
     :block-scroll="false"
     style="width: 500px;"
+    :mask-closable="false"
   >
     <n-spin :show="loading">
       <n-form
@@ -20,12 +21,7 @@
           </n-form-item>
 
           <n-form-item label="色">
-            <n-input-group>
-              <n-color-picker v-model:value="form.color" />
-              <n-button secondary>
-                <n-icon :component="Close" @click="form.color = null" />
-              </n-button>
-            </n-input-group>
+            <InputColorPicker v-model:value="form.color" />
           </n-form-item>
 
           <n-form-item label="ピンどめ">
@@ -69,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import { Close, Checkmark } from '@vicons/ionicons5'
+import { Checkmark } from '@vicons/ionicons5'
 import { useDialog, useMessage } from 'naive-ui'
 import { TagAPI } from '~~/src/apis/TagAPI'
 import { FormTag, Tag } from '~~/src/databases/models/Tag'

@@ -14,6 +14,7 @@ export type Config = {
     lineWrap: boolean
     paintListItem: boolean // li テキストにも色を付ける
     zoom: number
+    insertTagWithSpace: boolean // タグ挿入時に空白を入れる
   }
 }
 
@@ -41,6 +42,7 @@ export const useConfigStore = defineStore('config', () => {
       lineWrap: false,
       paintListItem: false,
       zoom: 1,
+      insertTagWithSpace: false,
     },
   })
 
@@ -73,6 +75,7 @@ export const useConfigStore = defineStore('config', () => {
       env.editor.lineWrap = _attachBool(obj?.editor?.lineWrap, env.editor.lineWrap)
       env.editor.paintListItem = _attachBool(obj?.editor?.paintListItem, env.editor.paintListItem)
       env.editor.zoom = _attachNumber(obj?.editor?.zoom, env.editor.zoom)
+      env.editor.insertTagWithSpace = _attachNumber(obj?.editor?.insertTagWithSpace, env.editor.insertTagWithSpace)
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error(err)

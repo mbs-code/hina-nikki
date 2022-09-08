@@ -112,7 +112,11 @@ const tagOptions = computed(() => {
 
 const onTagSelect = (_val: string) => {
   // タグを選択したら、カーソル位置に挿入する
-  editorStore.onInsertText(`[${_val}]`)
+  const insert = configStore.env.editor.insertTagWithSpace
+    ? ` [${_val}] `
+    : `[${_val}]`
+
+  editorStore.onInsertText(insert)
 }
 
 /// ////////////////////

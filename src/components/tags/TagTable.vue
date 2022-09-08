@@ -9,12 +9,12 @@
 </template>
 
 <script setup lang="ts">
+import { TableColumn } from 'naive-ui/es/data-table/src/interface'
 import TagTableColorColumn from '~~/src/components/tags/TagTableColorColumn.vue'
 import TagTablePinnedColumn from '~~/src/components/tags/TagTablePinnedColumn.vue'
 import TagTableActionColumn from '~~/src/components/tags/TagTableActionColumn.vue'
 import TagTableActionHeader from '~~/src/components/tags/TagTableActionHeader.vue'
 import { Tag } from '~~/src/databases/models/Tag'
-import { TableColumn } from 'naive-ui/es/data-table/src/interface'
 
 defineProps<{
   tags: Tag[],

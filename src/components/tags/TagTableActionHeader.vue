@@ -5,10 +5,16 @@
     </template>
     追加
   </n-button>
+
+  <n-button>
+    <template #icon>
+      <n-icon :component="EllipsisVertical" />
+    </template>
+  </n-button>
 </template>
 
 <script setup lang="ts">
-import { Add } from '@vicons/ionicons5'
+import { Add, EllipsisVertical } from '@vicons/ionicons5'
 
 const emit = defineEmits<{(e: 'create'): void }>()
 </script>

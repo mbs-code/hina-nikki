@@ -14,7 +14,7 @@ export type SearchReport = {
 const isBool = (val: unknown) => typeof val === 'boolean'
 
 export class ReportAPI {
-  public static async getAll(search?: SearchReport): Promise<Report[]> {
+  public static async getAll (search?: SearchReport): Promise<Report[]> {
     // レポートの取得
     const reports = await Database.getDB()
       .selectFrom('reports')
@@ -39,7 +39,7 @@ export class ReportAPI {
     return reports.map(report => formatReport(report))
   }
 
-  public static async get(reportId: number): Promise<Report> {
+  public static async get (reportId: number): Promise<Report> {
     // レポートの取得
     const report = await Database.getDB()
       .selectFrom('reports')
@@ -50,7 +50,7 @@ export class ReportAPI {
     return formatReport(report)
   }
 
-  public static async getByTitle(pageTitle: string): Promise<Report | undefined> {
+  public static async getByTitle (pageTitle: string): Promise<Report | undefined> {
     // レポートの取得
     const report = await Database.getDB()
       .selectFrom('reports')
@@ -63,7 +63,7 @@ export class ReportAPI {
     return formatReport(report)
   }
 
-  public static async create(form: FormReport): Promise<Report> {
+  public static async create (form: FormReport): Promise<Report> {
     const now = DateUtil.formatISO(new Date())
 
     // レポートを作成
@@ -83,7 +83,7 @@ export class ReportAPI {
     return await this.get(Number(insertId))
   }
 
-  public static async update(reportId: number, form: FormReport): Promise<Report> {
+  public static async update (reportId: number, form: FormReport): Promise<Report> {
     const now = DateUtil.formatISO(new Date())
 
     // レポートを更新
@@ -107,7 +107,7 @@ export class ReportAPI {
     return await this.get(Number(reportId))
   }
 
-  public static async remove(reportId: number): Promise<boolean> {
+  public static async remove (reportId: number): Promise<boolean> {
     // レポートを削除
     const { numDeletedRows } = await Database.getDB()
       .deleteFrom('reports')
@@ -121,7 +121,7 @@ export class ReportAPI {
     return true
   }
 
-  public static async count(): Promise<number> {
+  public static async count (): Promise<number> {
     // レポートの数を数える
     const db = Database.getDB()
     const { count } = await db
@@ -132,7 +132,7 @@ export class ReportAPI {
     return Number(count)
   }
 
-  public static async hasCalendar(before: Date, after: Date): Promise<Date[]> {
+  public static async hasCalendar (before: Date, after: Date): Promise<Date[]> {
     // 範囲のレポートの取得
     const reports = await Database.getDB()
       .selectFrom('reports')
@@ -149,7 +149,7 @@ export class ReportAPI {
 
   ///
 
-  protected static async _attachTags(parse: ReturnType<typeof parseReport>) {
+  protected static async _attachTags (parse: ReturnType<typeof parseReport>) {
     // タグ名リストから完全一致するタグを探す
     const tagNames = parse.tags ? parse.tags.split(' ') : []
     const dbTags = await TagAPI.getAll({

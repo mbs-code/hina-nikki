@@ -55,7 +55,6 @@ const openEditDialog = (tag?: Tag) => {
 }
 
 const onSearchHashtag = async (tag: Tag) => {
-  console.log('search')
   await explorerStore.onSearchByHashtag(tag.name)
 }
 </script>

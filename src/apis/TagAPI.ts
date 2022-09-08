@@ -11,7 +11,7 @@ export type SearchTag = {
 }
 
 export class TagAPI {
-  public static async getAll(search?: SearchTag): Promise<Tag[]> {
+  public static async getAll (search?: SearchTag): Promise<Tag[]> {
     // タグの取得
     const tags = await Database.getDB()
       .selectFrom('tags')
@@ -28,7 +28,7 @@ export class TagAPI {
     return tags.map(tag => formatTag(tag))
   }
 
-  public static async get(tagId: number): Promise<Tag> {
+  public static async get (tagId: number): Promise<Tag> {
     // タグの取得
     const tag = await Database.getDB()
       .selectFrom('tags')
@@ -39,7 +39,7 @@ export class TagAPI {
     return formatTag(tag)
   }
 
-  public static async create(form: FormTag): Promise<Tag> {
+  public static async create (form: FormTag): Promise<Tag> {
     const db = Database.getDB()
 
     const now = DateUtil.formatISO(new Date())
@@ -66,7 +66,7 @@ export class TagAPI {
     return await this.get(Number(insertId))
   }
 
-  public static async update(tagId: number, form: FormTag): Promise<Tag> {
+  public static async update (tagId: number, form: FormTag): Promise<Tag> {
     const db = Database.getDB()
 
     const now = DateUtil.formatISO(new Date())
@@ -98,7 +98,7 @@ export class TagAPI {
     return await this.get(Number(tagId))
   }
 
-  public static async remove(tagId: number): Promise<boolean> {
+  public static async remove (tagId: number): Promise<boolean> {
     const db = Database.getDB()
 
     // タグを取ってくる
@@ -125,7 +125,7 @@ export class TagAPI {
     return true
   }
 
-  public static async count(): Promise<number> {
+  public static async count (): Promise<number> {
     const db = Database.getDB()
 
     // レポートの数を数える

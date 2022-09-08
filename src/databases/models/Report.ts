@@ -52,7 +52,7 @@ export const parseReport = (form: FormReport) => {
   const isHashtag = RegexUtil.isHashtagTitle(form.title) ? 1 : 0
 
   // 本文からハッシュタグを抽出
-  const tagRegex = /\[(#[^\s\[\]]{1,15})\]/g // [#asdf] // TODO: まとめる？
+  const tagRegex = /\[(#[^\s[\]]{1,15})\]/g // [#asdf]
   const hashtags = (form.text ?? '')
     .match(tagRegex)
     .map(str => str.slice(1, -1)) // 先頭と末尾の[]を削除する

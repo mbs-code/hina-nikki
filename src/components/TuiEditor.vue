@@ -117,7 +117,7 @@ const tagWidget = () => {
       span.addEventListener('click', () => onClickTextTag(matched[1]))
 
       // 色探索
-      const tag = displayStore.tags.find((tag) => tag.name === matched[1])
+      const tag = displayStore.tags.find(tag => tag.name === matched[1])
       span.style.backgroundColor = tag?.color || themeVars.value.tagColor
 
       return span

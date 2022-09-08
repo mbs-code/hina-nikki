@@ -24,6 +24,7 @@ const emit = defineEmits<{ // eslint-disable-line func-call-spacing
   (e: 'click', val: MouseEvent): void,
   (e: 'edit', val: Tag): void,
   (e: 'search', val: Tag): void,
+  (e: 'remove:unused'): void,
 }>()
 
 ///
@@ -66,7 +67,10 @@ const columns: TableColumn<Tag>[] = [
     key: 'action',
     align: 'center',
     width: 190,
-    title: () => h(TagTableActionHeader, { onCreate: () => emit('edit', undefined) }),
+    title: () => h(TagTableActionHeader, {
+      onCreate: () => emit('edit', undefined),
+      'onRemove:unused': () => emit('remove:unused')
+    }),
     render: (row: Tag) => h(TagTableActionColumn, {
       onSearch: () => emit('search', row),
       onEdit: () => emit('edit', row),

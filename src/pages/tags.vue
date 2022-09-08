@@ -6,6 +6,7 @@
         style="height: calc(100vh - 60px)"
         @edit="openEditDialog"
         @search="onSearchHashtag"
+        @remove:unused="onRemoveUnusedTag"
       />
     </n-spin>
 
@@ -22,6 +23,7 @@
 import { useMessage } from 'naive-ui'
 import { Tag } from '~~/src/databases/models/Tag'
 import { TagAPI } from '~~/src/apis/TagAPI'
+import { ReportAPI } from '~~/src/apis/ReportAPI'
 
 const message = useMessage()
 const explorerStore = useExplorerStore()
@@ -44,6 +46,30 @@ const fetchTags = async () => {
 }
 
 onMounted(() => fetchTags())
+
+///
+
+const onRemoveUnusedTag = async () => {
+  console.log('kitazo')
+  let deleteCnt = 0
+
+  // タグ一つ一つ検索していく
+  for (const tag of tags.value) {
+    // ピンがあるものは削除しない
+    if (!tag.isPinned) {
+      const exists = await ReportAPI.getAll({
+        hashtags: [tag.name],
+      })
+      if (exists.length === 0) {
+        await TagAPI.remove(tag.id)
+        deleteCnt++
+      }
+    }
+  }
+
+  message.success(`${deleteCnt} 個のタグを削除しました`)
+  await fetchTags()
+}
 
 ///
 

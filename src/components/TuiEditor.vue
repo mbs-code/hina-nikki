@@ -91,7 +91,10 @@ const editorDestroy = () => {
   editor.destroy()
 }
 
-onMounted(() => editorInit())
+onMounted(() => {
+  editorStore.bindReloadFunc(editorInit)
+  editorInit()
+})
 onUnmounted(() => editorDestroy())
 
 // テーマ変更時、エディタを作り直す

@@ -9,7 +9,7 @@
         size="small"
         label-placement="left"
         label-align="left"
-        label-width="140px"
+        label-width="160px"
         :show-feedback="false"
         @submit.prevent
       >
@@ -64,6 +64,10 @@
                   :max="configStore.embed.maxZoomSize"
                   step="0.1"
                 />
+              </n-form-item>
+
+              <n-form-item label="タグにスペースを付けて挿入">
+                <n-switch v-model:value="configStore.env.editor.insertTagWithSpace" />
               </n-form-item>
             </div>
           </n-card>

@@ -13,8 +13,8 @@
     <TagEditModal
       v-model:show="showEditDialog"
       :tag="selectedTag"
-      @saved="fetchTags"
-      @deleted="fetchTags"
+      @saved="onChange"
+      @deleted="onChange"
     />
   </div>
 </template>
@@ -27,6 +27,7 @@ import { ReportAPI } from '~~/src/apis/ReportAPI'
 
 const message = useMessage()
 const explorerStore = useExplorerStore()
+const displayStore = useDisplayStore()
 
 const loading = ref<boolean>(false)
 const tags = ref<Tag[]>([])
@@ -46,6 +47,11 @@ const fetchTags = async () => {
 }
 
 onMounted(() => fetchTags())
+
+const onChange = async () => {
+  await displayStore.onLoad()
+  await fetchTags()
+}
 
 ///
 
@@ -67,7 +73,7 @@ const onRemoveUnusedTag = async () => {
   }
 
   message.success(`${deleteCnt} 個のタグを削除しました`)
-  await fetchTags()
+  await onChange()
 }
 
 ///

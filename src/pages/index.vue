@@ -75,6 +75,9 @@ const displayStore = useDisplayStore()
 
 // startup
 onMounted(async () => {
+  // エディタの更新
+  await editorStore.onReload()
+
   // 何も表示していなければ、今日を表示する
   if (!loaderStore.isLoaded) {
     await loaderStore.onLoadByToday()
@@ -109,7 +112,11 @@ const tagOptions = computed(() => {
 
 const onTagSelect = (_val: string) => {
   // タグを選択したら、カーソル位置に挿入する
-  editorStore.onInsertText(`[${_val}]`)
+  const insert = configStore.env.editor.insertTagWithSpace
+    ? ` [${_val}] `
+    : `[${_val}]`
+
+  editorStore.onInsertText(insert)
 }
 
 /// ////////////////////

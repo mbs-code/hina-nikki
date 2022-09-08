@@ -7,8 +7,17 @@ export const useEditorStore = defineStore('editor', () => {
   const bindEditor = (e: Editor) => { _editor = e }
   const unbindEditor = () => { _editor = undefined }
 
+  const _onReload = ref<() => Promise<void>>()
+  const bindReloadFunc = (func: () => Promise<void>) => {
+    _onReload.value = func
+  }
+
   /// //////////
   /// actions
+
+  const onReload = async () => {
+    _onReload.value && await _onReload.value()
+  }
 
   const onFocus = () => {
     // エディタの読み込み待機
@@ -28,7 +37,9 @@ export const useEditorStore = defineStore('editor', () => {
   return {
     bindEditor,
     unbindEditor,
+    bindReloadFunc,
 
+    onReload,
     onFocus,
     onInsertText,
   }

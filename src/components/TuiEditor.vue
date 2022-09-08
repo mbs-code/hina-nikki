@@ -173,17 +173,6 @@ const liEvenTextColor = computed(() => {
 const onClickTextTag = async (hashtag: string) => {
   await explorerStore.onSearchByHashtag(hashtag)
 }
-
-// TODO: タグ追加機能
-// const onClickPhrase = async () => {
-//   // 選択フレーズを取り出す
-//   const phrase = editorCtx.getCursorPhrase()
-
-//   // もしハッシュタグなら検索をかける
-//   if (RegexUtil.isHashtagTitle(phrase)) {
-//     await explorerCtx.onSearch({ phrase })
-//   }
-// }
 </script>
 
 <style scoped lang="scss">
@@ -215,16 +204,18 @@ const onClickTextTag = async (hashtag: string) => {
   // widget タグ
   ::v-deep(.ProseMirror) {
     .widget-tag {
+      margin: 0px;
+      padding: 0px 5px;
+      border-radius: 4px;
+
+      white-space: nowrap;
+
+      pointer-events: none;
       cursor: pointer;
     }
   }
-  ::v-deep(.widget-tag) {
-    margin: 0px 2px;
-    padding: 0px 5px;
-    border-radius: 4px;
-
-    white-space: nowrap;
-  }
+  // ::v-deep(.widget-tag) {
+  // }
 
   // リスト要素の色つけ
   ::v-deep(.toastui-editor-md-list-item-odd) {

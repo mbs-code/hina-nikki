@@ -4,8 +4,7 @@
     :columns="columns"
     size="small"
     flex-height
-    scroll-x="400"
-    style="height: calc(100vh - 60px)"
+    :scroll-x="0"
   />
 </template>
 
@@ -15,6 +14,7 @@ import TagTablePinnedColumn from '~~/src/components/tags/TagTablePinnedColumn.vu
 import TagTableActionColumn from '~~/src/components/tags/TagTableActionColumn.vue'
 import TagTableActionHeader from '~~/src/components/tags/TagTableActionHeader.vue'
 import { Tag } from '~~/src/databases/models/Tag'
+import { TableColumn } from 'naive-ui/es/data-table/src/interface'
 
 defineProps<{
   tags: Tag[],
@@ -28,37 +28,45 @@ const emit = defineEmits<{ // eslint-disable-line func-call-spacing
 
 ///
 
-const columns = [
+const columns: TableColumn<Tag>[] = [
   {
     key: 'id',
     title: 'ID',
     align: 'center',
+    width: 60,
+    fixed: 'left',
   },
   {
     key: 'name',
-    title: 'タグ名'
+    title: 'タグ名',
+    width: 160,
+    fixed: 'left',
   },
   {
     key: 'color',
     align: 'center',
     title: '色',
+    width: 60,
     render: (row: Tag) => h(TagTableColorColumn, { color: row.color }),
   },
   {
     key: 'is_pinned',
     align: 'center',
     title: 'ピン',
+    width: 60,
     render: (row: Tag) => h(TagTablePinnedColumn, { show: row.isPinned }),
   },
   {
     key: 'order',
     align: 'center',
     title: 'オーダー',
+    width: 60,
   },
   {
     key: 'action',
     align: 'center',
-    title: (row: Tag) => h(TagTableActionHeader, { onCreate: () => emit('edit', row) }),
+    width: 190,
+    title: () => h(TagTableActionHeader, { onCreate: () => emit('edit', undefined) }),
     render: (row: Tag) => h(TagTableActionColumn, {
       onSearch: () => emit('search', row),
       onEdit: () => emit('edit', row),

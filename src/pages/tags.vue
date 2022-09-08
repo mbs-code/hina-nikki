@@ -3,6 +3,7 @@
     <n-spin :show="loading">
       <TagTable
         :tags="tags"
+        style="height: calc(100vh - 60px)"
         @edit="openEditDialog"
         @search="onSearchHashtag"
       />

@@ -1,6 +1,6 @@
 <template>
-  <div class="flex gap-2">
-    <n-button quaternary type="info" @click="emit('search')">
+  <div class="flex justify-center gap-2">
+    <n-button quaternary type="warning" @click="emit('search')">
       <template #icon>
         <n-icon :component="Search" />
       </template>

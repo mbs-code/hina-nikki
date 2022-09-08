@@ -73,7 +73,6 @@ import { Close, Checkmark } from '@vicons/ionicons5'
 import { useDialog, useMessage } from 'naive-ui'
 import { TagAPI } from '~~/src/apis/TagAPI'
 import { FormTag, Tag } from '~~/src/databases/models/Tag'
-import { RegexUtil } from '~~/src/utils/RegexUtil';
 
 const message = useMessage()
 const dialog = useDialog()

@@ -16,7 +16,7 @@
       >
         <div class="flex flex-col gap-2">
           <n-form-item label="タグ名">
-            <n-input v-model:value="form.name" placeholder="#xxxxxx" />
+            <n-input v-model:value="form.name" placeholder="#xxxxxx" ref="autofocusRef" />
           </n-form-item>
 
           <n-form-item label="色">
@@ -96,6 +96,7 @@ const _show = computed({
 /// ////////////////////
 
 const loading = ref<boolean>(false)
+const autofocusRef = ref()
 
 const form = reactive<FormTag>({
   name: '',
@@ -109,6 +110,8 @@ const onInit = () => {
   form.color = props.tag?.color || null
   form.isPinned = props.tag?.isPinned || false
   form.order = props.tag?.order || 0
+
+  nextTick(() => autofocusRef.value?.focus())
 }
 
 watch(_show, val => val && onInit())

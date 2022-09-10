@@ -18,7 +18,7 @@ export type Report = {
   title: string // unique
   text: string
   isDiary: boolean
-  is_hashtag: boolean
+  isHashtag: boolean
   tags: string[] // SSV形式
   createdAt: Date
   updatedAt: Date
@@ -35,7 +35,7 @@ export const formatReport = (db: DBReport): Report => {
     title: db.title,
     text: db.text,
     isDiary: Boolean(db.is_diary),
-    is_hashtag: Boolean(db.is_hashtag),
+    isHashtag: Boolean(db.is_hashtag),
     tags: db.tags ? db.tags.split(' ') : [],
     createdAt: new Date(db.created_at),
     updatedAt: new Date(db.updated_at),
@@ -53,14 +53,11 @@ export const parseReport = (form: FormReport) => {
 
   // 本文からハッシュタグを抽出
   const tagRegex = /\[(#[^\s[\]]{1,15})\]/g // [#asdf]
-  const hashtags = (form.text ?? '')
-    .match(tagRegex)
+  const hashtags = ((form.text ?? '').match(tagRegex) ?? [])
     .map(str => str.slice(1, -1)) // 先頭と末尾の[]を削除する
 
   // もしタイトルがハッシュタグなら、先頭に追加
-  if (RegexUtil.isHashtagTitle(form.title)) {
-    hashtags.unshift(form.title)
-  }
+  if (isHashtag) { hashtags.unshift(form.title) }
 
   // 重複を削除してSSVへ
   const tagSSV = Array.from(new Set(hashtags)).join(' ') ?? null

@@ -174,7 +174,7 @@ const liEvenTextColor = computed(() => {
 /// イベント
 
 const onClickTextTag = async (hashtag: string) => {
-  await explorerStore.onSearchByHashtag(hashtag)
+  await explorerStore.onSearchWithText(hashtag)
 }
 </script>
 

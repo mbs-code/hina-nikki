@@ -21,7 +21,7 @@
             v-for="(hashtag, _) of hashtags"
             :key="_"
             size="small"
-            @click="explorerStore.onSearchByHashtag(hashtag)"
+            @click="explorerStore.onSearchWithText(hashtag)"
           >
             <template #icon>
               <n-icon :component="PricetagOutline" />

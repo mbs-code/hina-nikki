@@ -14,10 +14,10 @@
           type="text"
           clearable
           placeholder="Search"
-          @keydown.enter="explorerStore.onSearchText()"
+          @keydown.enter="explorerStore.onSearch()"
         />
 
-        <n-button ghost @click="explorerStore.onSearchText()">
+        <n-button ghost @click="explorerStore.onSearch()">
           <template #icon>
             <n-icon :component="Search" />
           </template>
@@ -25,7 +25,7 @@
       </n-input-group>
 
       <!-- 完全一致レポート -->
-      <div v-if="explorerStore.matchReport || explorerStore.params.match">
+      <div v-if="explorerStore.matchReport || explorerStore.matchText">
         <div>完全一致</div>
         <n-list hoverable clickable bordered>
           <!-- 完全一致 -->
@@ -40,14 +40,14 @@
           </template>
 
           <!-- 完全一致が無い場合は、作成アシスト -->
-          <template v-else-if="explorerStore.params.match">
+          <template v-else-if="explorerStore.matchText">
             <n-list-item
               class="border-2"
               :style="{ borderColor: themeVars.infoColor }"
-              @click="onClickCreate(explorerStore.params.match)"
+              @click="onClickCreate(explorerStore.matchText)"
             >
               <CreationReportPanel
-                :title="explorerStore.params.match"
+                :title="explorerStore.matchText"
                 :icon-color="themeVars.infoColor"
               />
             </n-list-item>
@@ -58,26 +58,12 @@
       <!-- 検索結果 -->
       <div>
         <div>検索結果 ({{ explorerStore.reports.length }})</div>
-        <div class="flex flex-col gap-2">
-          <n-list hoverable clickable bordered>
-            <!-- 検索要素 -->
-            <n-list-item
-              v-for="(report, _) of explorerStore.reports"
-              :key="_"
-              @click="onClickReport(report)"
-            >
-              <ReportPanel :report="report" />
-            </n-list-item>
-
-            <!-- 一つもなかったら -->
-            <n-empty
-              v-if="!explorerStore.reports.length"
-              class="m-2"
-              size="huge"
-              description="検索結果が空です"
-            />
-          </n-list>
-        </div>
+        <ReportInstantTable
+          :reports="explorerStore.reports"
+          :search-text="explorerStore.searchText"
+          style="height: 300px"
+          @click="onClickReport"
+        />
       </div>
     </div>
   </n-modal>

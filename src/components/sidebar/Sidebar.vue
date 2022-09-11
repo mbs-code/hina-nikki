@@ -7,10 +7,10 @@
         type="text"
         clearable
         placeholder="Search"
-        @keydown.enter="explorerStore.onSearchText()"
+        @keydown.enter="explorerStore.onSearch()"
       />
 
-      <n-button ghost @click="explorerStore.onSearchText()">
+      <n-button ghost @click="explorerStore.onSearch()">
         <template #icon>
           <n-icon :component="Search" />
         </template>
